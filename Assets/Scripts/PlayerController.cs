@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Added player");
     }
 
-    public void SwitchPlayers()
+    public void SwitchPlayers() //Arrayoutofbound exception.... need to fix
     {
         if(currentPlayer == null || currentPlayer == players[(players.Length - 1)])
         {
