@@ -3,17 +3,16 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
-    private int mana;
-    private int gold;
-    private int lumber;
+    public int mana;
+    public int gold;
+    public int lumber;
+    public string playerName;
 
     public Camera playerCamera;
 
-    public Player(int mana, int gold, int lumber)
+    public void addPlayerName(string playerName)
     {
-        this.mana = mana;
-        this.gold = gold;
-        this.lumber = lumber;
+        this.playerName = playerName;
     }
 	
     public void addResources(int mana, int gold, int lumber)
