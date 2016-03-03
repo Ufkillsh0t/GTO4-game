@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void AddPlayers(Player player)
+    public void addPlayers(Player player)
     {
         Player[] next = new Player[(players.Length + 1)];
         for (int i = 0; i < players.Length; i++)
@@ -34,9 +34,9 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Added player");
     }
 
-    public void SwitchPlayers() //Arrayoutofbound exception.... need to fix
+    public void switchPlayers() //Arrayoutofbound exception.... need to fix
     {
-        if(currentPlayer == null || currentPlayer == players[(players.Length - 1)])
+        if(currentPlayer == null || currentPlayer == players[(players.Length - 1)] || players.Length == 1)
         {
             currentPlayer.addResources(10, 5, 5);
             currentPlayer = players[0];

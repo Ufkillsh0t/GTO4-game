@@ -7,7 +7,9 @@ public class GameManager : MonoBehaviour
 
     public GameManager instance;
 
+    [Range(1,4)]
     public int amountOfPlayers;
+
     public int startMana;
     public int startGold;
     public int startLumber;
@@ -38,7 +40,7 @@ public class GameManager : MonoBehaviour
             string playerNameString = "Player" + (i + 1).ToString();
             p.addPlayerName(playerNameString);
             p.addResources(startMana, startGold, startLumber);
-            playerController.AddPlayers(p);
+            playerController.addPlayers(p);
         }
     }
 
@@ -54,5 +56,10 @@ public class GameManager : MonoBehaviour
         playerManaText.text = "Mana: " + playerController.currentPlayer.mana.ToString();
         playerGoldText.text = "Gold: " + playerController.currentPlayer.gold.ToString();
         playerLumberText.text = "Lumber: " + playerController.currentPlayer.lumber.ToString();
+    }
+
+    public void addBuilding()
+    {
+
     }
 }
