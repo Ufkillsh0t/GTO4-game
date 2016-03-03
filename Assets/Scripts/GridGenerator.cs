@@ -63,7 +63,6 @@ public class GridGenerator : MonoBehaviour
         }
     }
 
-
     public Transform GetTileTerrain(int x, int y)
     {
         if (x < 0 || y < 0 || x > terrainWidth || y > terrainHeight)
