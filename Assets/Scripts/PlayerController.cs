@@ -38,19 +38,21 @@ public class PlayerController : MonoBehaviour
     {
         if(currentPlayer == null || currentPlayer == players[(players.Length - 1)])
         {
+            currentPlayer.addResources(10, 5, 5);
             currentPlayer = players[0];
         }
         else
         {
-            for(int i = 0; i < players.Length; i++)
+            currentPlayer.addResources(10, 5, 5);
+            for (int i = 0; i < players.Length; i++)
             {
                 if(currentPlayer == players[i])
                 {
                     currentPlayer = players[(i + 1)];
+                    return;
                 }
             }
         }
-        
     }
 
     public void setCurrentPlayerCamera(Camera camera)
