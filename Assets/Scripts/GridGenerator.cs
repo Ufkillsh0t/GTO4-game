@@ -6,15 +6,15 @@ public class GridGenerator : MonoBehaviour
 
     public Transform tilePrefab;
 
-    public float pointX = 0;
+    public float pointX = -5;
 
-    public float pointY = 0;
-
-    [Range(1, 128)]
-    public int terrainWidth = 5;
+    public float pointZ = -10;
 
     [Range(1, 128)]
-    public int terrainHeight = 5;
+    public int terrainWidth = 20;
+
+    [Range(1, 128)]
+    public int terrainHeight = 20;
 
     [Range(1, 128)] //Can be used for offsets or objects which are larger than 1 x 1.
     public float tilesize = 1f;
@@ -54,7 +54,7 @@ public class GridGenerator : MonoBehaviour
         {
             for (int y = 0; y < terrainHeight; y++)
             {
-                Transform tile = Instantiate(tilePrefab, new Vector3(pointX + (x * tilesize), 0, pointY + (y * tilesize)), tilePrefab.rotation) as Transform;
+                Transform tile = Instantiate(tilePrefab, new Vector3(pointX + (x * tilesize), 0, pointZ + (y * tilesize)), tilePrefab.rotation) as Transform;
 
                 tile.parent = transform;
 
@@ -75,11 +75,11 @@ public class GridGenerator : MonoBehaviour
 
     public Transform GetTileWorldSpace(float x, float y)
     {
-        if(x < pointX || y < pointY || x > (pointX + terrainWidth) || y > (pointY + terrainHeight))
+        if(x < pointX || y < pointZ || x > (pointX + (terrainWidth * tilesize)) || y > (pointZ + (terrainHeight * tilesize)))
         {
             Debug.LogWarning("The inserted x and y are OutOfBound!");
             return null;
         }
-        return terrain[(int)(x - pointX), (int)(y - pointY)];
+        return terrain[(int)(x - pointX), (int)(y - pointZ)];
     }
 }
