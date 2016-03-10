@@ -5,7 +5,9 @@ using System.Collections;
 public class GameManager : MonoBehaviour
 {
 
-    public GameManager instance;
+    public static GameManager instance;
+    public GameObject selectedTile;
+    public Canvas informationPanel;
 
     [Range(1,4)]
     public int amountOfPlayers;
@@ -13,6 +15,8 @@ public class GameManager : MonoBehaviour
     public int startMana;
     public int startGold;
     public int startLumber;
+
+    public int[][] startResources;
 
     public Camera currentCamera;
     public Text playerNameText; 
@@ -48,6 +52,11 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         uiUpdate();
+    }
+
+    public static GameManager GetGameManager()
+    {
+        return instance;
     }
 
     public void uiUpdate()

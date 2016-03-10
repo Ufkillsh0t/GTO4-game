@@ -37,6 +37,9 @@ public class GridGenerator : MonoBehaviour
         GenerateTerrain();
     }
 
+    /// <summary>
+    /// Dit zorgt er voor dat alle opnieuw gegenereert word indien je in engine iets aan de x en y as veranderd.
+    /// </summary>
     public void Refresh()
     {
         foreach(Transform child in terrain)
@@ -46,6 +49,9 @@ public class GridGenerator : MonoBehaviour
         GenerateTerrain();
     }
 
+    /// <summary>
+    /// Genereert een array met tiles afhankelijk van de x en y die je gegeven hebt.
+    /// </summary>
     public void GenerateTerrain()
     {
         terrain = new Transform[terrainWidth, terrainHeight];
@@ -63,6 +69,12 @@ public class GridGenerator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Verkrijgt een tile in de terrain array op basis van zijn x en y positie in die array;
+    /// </summary>
+    /// <param name="x">X positie in de array</param>
+    /// <param name="y">Y positie in de array</param>
+    /// <returns></returns>
     public Transform GetTileTerrain(int x, int y)
     {
         if (x < 0 || y < 0 || x > terrainWidth || y > terrainHeight)
@@ -73,6 +85,12 @@ public class GridGenerator : MonoBehaviour
         return terrain[x, y];
     }
 
+    /// <summary>
+    /// Verkrijgt de array op basis van de wereld.
+    /// </summary>
+    /// <param name="x">De x float in de wereld</param>
+    /// <param name="y">De y float in de wereld</param>
+    /// <returns></returns>
     public Transform GetTileWorldSpace(float x, float y)
     {
         if(x < pointX || y < pointZ || x > (pointX + (terrainWidth * tilesize)) || y > (pointZ + (terrainHeight * tilesize)))
