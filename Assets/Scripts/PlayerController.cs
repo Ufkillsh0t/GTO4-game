@@ -8,19 +8,15 @@ public class PlayerController : MonoBehaviour
 
     public Player[] players;
 
-    // Use this for initialization
-    void Start()
-    {
+    public int[] defaultResourceIncrease;
+    private int amountOfResources;
 
+    void Awake()
+    {
+        CheckResourceArrayLength();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    public void addPlayers(Player player)
+    public void AddPlayers(Player player)
     {
         Player[] next = new Player[(players.Length + 1)];
         for (int i = 0; i < players.Length; i++)
@@ -34,16 +30,16 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Added player");
     }
 
-    public void switchPlayers() //Arrayoutofbound exception.... need to fix
+    public void SwitchPlayers()
     {
         if(currentPlayer == null || currentPlayer == players[(players.Length - 1)] || players.Length == 1)
         {
-            currentPlayer.addResources(10, 5, 5);
+            IncreasePlayerResources();
             currentPlayer = players[0];
         }
         else
         {
-            currentPlayer.addResources(10, 5, 5);
+            IncreasePlayerResources();
             for (int i = 0; i < players.Length; i++)
             {
                 if(currentPlayer == players[i])
@@ -55,12 +51,35 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void setCurrentPlayerCamera(Camera camera)
+    public void IncreasePlayerResources()
+    {
+        for (int i = 0; i < defaultResourceIncrease.Length; i++)
+        {
+            currentPlayer.addResources((ResourceType)i, defaultResourceIncrease[i]);
+        }
+    }
+
+    public void CheckResourceArrayLength()
+    {
+        amountOfResources = System.Enum.GetNames(typeof(ResourceType)).Length;
+        if (defaultResourceIncrease.Length < amountOfResources)
+        {
+            Debug.LogError("Array length needs to be:" + amountOfResources);
+            defaultResourceIncrease = new int[amountOfResources];
+        }
+        else if (defaultResourceIncrease.Length > amountOfResources)
+        {
+            Debug.LogError("The array is a bit too long so not all values will be used!");
+            defaultResourceIncrease = new int[amountOfResources];
+        }
+    }
+
+    public void SetCurrentPlayerCamera(Camera camera)
     {
         currentPlayer.playerCamera = camera;
     }
 
-    public Camera getCurrentPlayerCamera(Camera camera)
+    public Camera GetCurrentPlayerCamera(Camera camera)
     {
         return currentPlayer.playerCamera;
     }

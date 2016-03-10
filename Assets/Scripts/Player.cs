@@ -3,29 +3,29 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
-    public int mana;
-    public int gold;
-    public int lumber;
+    public int[] resources;
+
     public string playerName;
 
     public Camera playerCamera;
+
+    void Awake()
+    {
+        resources = new int[System.Enum.GetNames(typeof(ResourceType)).Length];
+    }
 
     public void addPlayerName(string playerName)
     {
         this.playerName = playerName;
     }
 	
-    public void addResources(int mana, int gold, int lumber)
+    public void addResources(ResourceType resource, int amount)
     {
-        this.mana += mana;
-        this.gold += gold;
-        this.lumber += lumber;
+        resources[(int)resource] += amount;
     }
 
-    public void removeResources(int mana, int gold, int lumber)
+    public void removeResources(ResourceType resource, int amount)
     {
-        this.mana -= mana;
-        this.gold -= gold;
-        this.lumber -= lumber;
+        resources[(int)resource] -= amount;
     }
 }

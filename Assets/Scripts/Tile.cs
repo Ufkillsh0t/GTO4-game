@@ -37,6 +37,16 @@ public class Tile : MonoBehaviour
         if (!tilePressed)
         {
             render.material.color = defaultMaterialColor;
+            //Code hieronder is misschien overbodig.
+            GameManager gm = GameManager.GetGameManager();
+            if (gm.selectedTile != null)
+            {
+                Tile t = gm.selectedTile.GetComponent<Tile>();
+                if (t.ID == ID)
+                {
+                    gm.selectedTile = gameObject;
+                }
+            }
         }
     }
 
@@ -49,7 +59,7 @@ public class Tile : MonoBehaviour
         if (gm.selectedTile != null)
         {
             Tile t = gm.selectedTile.GetComponent<Tile>();
-            if (t != null)
+            if (t != null && t.ID != ID)
             {
                 t.ResetTile();
                 gm.selectedTile = gameObject;
