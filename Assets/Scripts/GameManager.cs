@@ -8,8 +8,14 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public GameObject selectedTile;
 
+    //UI
     public Canvas canvas;
     public GameObject informationPanel;
+    public GameObject textPreFab;
+    public float textStartPosition = 20f;
+    private GameObject infoPanel;
+    private GameObject[] panelText;
+
 
     [Range(1, 4)]
     public int amountOfPlayers;
@@ -19,10 +25,6 @@ public class GameManager : MonoBehaviour
     public int[] startResources;
 
     public Camera currentCamera;
-    public Text playerNameText;
-    public Text playerManaText;
-    public Text playerGoldText;
-    public Text playerLumberText;
 
     private PlayerController playerController;
 
@@ -30,6 +32,35 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
         CheckResourceArrayLength();
+
+        informationPanel = (GameObject)Resources.Load("Prefabs/UI/UIPanel");
+        textPreFab = (GameObject)Resources.Load("Prefabs/UI/UIText");
+
+        infoPanel = (GameObject)Instantiate(informationPanel);
+        infoPanel.transform.SetParent(canvas.transform, false);
+
+        panelText = new GameObject[amountOfResources + 1];
+
+
+        panelText[0] = (GameObject)Instantiate(textPreFab);
+        panelText[0].transform.SetParent(infoPanel.transform, false);
+        panelText[0].transform.localPosition = new Vector3(panelText[0].transform.localPosition.x, textStartPosition, panelText[0].transform.localPosition.z);
+
+        Text playerName = panelText[0].GetComponent<Text>();
+        playerName.text = "Playername:";
+
+        for (int i = 1; i < (amountOfResources + 1); i++)
+        {
+            textStartPosition -= 20;
+            panelText[i] = (GameObject)Instantiate(textPreFab);
+            panelText[i].transform.SetParent(infoPanel.transform, false);
+            panelText[i].transform.localPosition = new Vector3(panelText[i].transform.localPosition.x, textStartPosition, panelText[i].transform.localPosition.z);
+
+            Text t = panelText[i].GetComponent<Text>();
+
+            ResourceType r = (ResourceType)i - 1;
+            t.text = r.ToString() + ": 0";
+        }
     }
 
     // Use this for initialization
@@ -80,9 +111,10 @@ public class GameManager : MonoBehaviour
 
     public void UiUpdate()
     {
+        /*
         playerNameText.text = "Name: " + playerController.currentPlayer.playerName;
         playerManaText.text = "Mana: " + playerController.currentPlayer.resources[(int)ResourceType.Mana].ToString();
         playerGoldText.text = "Gold: " + playerController.currentPlayer.resources[(int)ResourceType.Gold].ToString();
-        playerLumberText.text = "Lumber: " + playerController.currentPlayer.resources[(int)ResourceType.Lumber].ToString();
+        playerLumberText.text = "Lumber: " + playerController.currentPlayer.resources[(int)ResourceType.Lumber].ToString();*/
     }
 }
