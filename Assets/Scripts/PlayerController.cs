@@ -74,13 +74,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void SetCurrentPlayerCamera(Camera camera)
+    public void SetCurrentPlayerCameraPosition(Camera camera)
     {
-        currentPlayer.playerCamera = camera;
+        currentPlayer.cameraPosition = camera.transform.position;
     }
 
     public Camera GetCurrentPlayerCamera(Camera camera)
     {
-        return currentPlayer.playerCamera;
+        camera.transform.position = currentPlayer.cameraPosition;
+        return camera;
     }
 }

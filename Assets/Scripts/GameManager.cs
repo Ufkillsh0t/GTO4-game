@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public GameObject informationPanel;
     public GameObject textPreFab;
     public float textStartPosition = 20f;
+    private float textPosition;
     private GameObject infoPanel;
     private GameObject[] panelText;
 
@@ -39,22 +40,23 @@ public class GameManager : MonoBehaviour
         infoPanel = (GameObject)Instantiate(informationPanel);
         infoPanel.transform.SetParent(canvas.transform, false);
 
-        panelText = new GameObject[amountOfResources + 1];
+        textPosition = textStartPosition;
 
+        panelText = new GameObject[amountOfResources + 1];
 
         panelText[0] = (GameObject)Instantiate(textPreFab);
         panelText[0].transform.SetParent(infoPanel.transform, false);
-        panelText[0].transform.localPosition = new Vector3(panelText[0].transform.localPosition.x, textStartPosition, panelText[0].transform.localPosition.z);
+        panelText[0].transform.localPosition = new Vector3(panelText[0].transform.localPosition.x, textPosition, panelText[0].transform.localPosition.z);
 
         Text playerName = panelText[0].GetComponent<Text>();
-        playerName.text = "Playername:";
+        playerName.text = "Name: ";
 
         for (int i = 1; i < (amountOfResources + 1); i++)
         {
-            textStartPosition -= 20;
+            textPosition -= 20;
             panelText[i] = (GameObject)Instantiate(textPreFab);
             panelText[i].transform.SetParent(infoPanel.transform, false);
-            panelText[i].transform.localPosition = new Vector3(panelText[i].transform.localPosition.x, textStartPosition, panelText[i].transform.localPosition.z);
+            panelText[i].transform.localPosition = new Vector3(panelText[i].transform.localPosition.x, textPosition, panelText[i].transform.localPosition.z);
 
             Text t = panelText[i].GetComponent<Text>();
 
@@ -111,10 +113,14 @@ public class GameManager : MonoBehaviour
 
     public void UiUpdate()
     {
-        /*
-        playerNameText.text = "Name: " + playerController.currentPlayer.playerName;
-        playerManaText.text = "Mana: " + playerController.currentPlayer.resources[(int)ResourceType.Mana].ToString();
-        playerGoldText.text = "Gold: " + playerController.currentPlayer.resources[(int)ResourceType.Gold].ToString();
-        playerLumberText.text = "Lumber: " + playerController.currentPlayer.resources[(int)ResourceType.Lumber].ToString();*/
+        Text playerName = panelText[0].GetComponent<Text>();
+        playerName.text = "Name: " + playerController.currentPlayer.playerName;
+
+        for (int i = 1; i < (amountOfResources + 1); i++)
+        {
+            Text t = panelText[i].GetComponent<Text>();
+            ResourceType r = (ResourceType)i - 1;
+            t.text = r.ToString() + ": " + playerController.currentPlayer.resources[(int)r];
+        }
     }
 }

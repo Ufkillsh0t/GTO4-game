@@ -7,7 +7,7 @@ public class Player : MonoBehaviour {
 
     public string playerName;
 
-    public Camera playerCamera;
+    public Vector3 cameraPosition;
 
     void Awake()
     {
