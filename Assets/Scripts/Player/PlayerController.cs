@@ -5,7 +5,6 @@ public class PlayerController : MonoBehaviour
 {
 
     public Player currentPlayer;
-
     public Player[] players;
 
     public int[] defaultResourceIncrease;
@@ -18,6 +17,7 @@ public class PlayerController : MonoBehaviour
 
     public void AddPlayers(Player player)
     {
+        player.cameraPosition = GameManager.GetGameManager().currentCamera.transform.position;
         Player[] next = new Player[(players.Length + 1)];
         for (int i = 0; i < players.Length; i++)
         {
@@ -32,19 +32,22 @@ public class PlayerController : MonoBehaviour
 
     public void SwitchPlayers()
     {
-        if(currentPlayer == null || currentPlayer == players[(players.Length - 1)] || players.Length == 1)
+        SetCurrentPlayerCameraPosition();
+        if (currentPlayer == null || currentPlayer == players[(players.Length - 1)] || players.Length == 1)
         {
             IncreasePlayerResources();
             currentPlayer = players[0];
+            SetCurrentPlayerCamera();
         }
         else
         {
             IncreasePlayerResources();
             for (int i = 0; i < players.Length; i++)
             {
-                if(currentPlayer == players[i])
+                if (currentPlayer == players[i])
                 {
                     currentPlayer = players[(i + 1)];
+                    SetCurrentPlayerCamera();
                     return;
                 }
             }
@@ -74,14 +77,20 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void SetCurrentPlayerCameraPosition(Camera camera)
+    private void SetCurrentPlayerCamera()
     {
-        currentPlayer.cameraPosition = camera.transform.position;
+        GameManager gm = GameManager.GetGameManager();
+        gm.currentCamera.transform.position = GetCurrentPlayerCameraPosition();
     }
 
-    public Camera GetCurrentPlayerCamera(Camera camera)
+    public void SetCurrentPlayerCameraPosition()
     {
-        camera.transform.position = currentPlayer.cameraPosition;
-        return camera;
+        GameManager gm = GameManager.GetGameManager();
+        currentPlayer.cameraPosition = gm.currentCamera.transform.position;
+    }
+
+    public Vector3 GetCurrentPlayerCameraPosition()
+    {
+        return currentPlayer.cameraPosition;
     }
 }

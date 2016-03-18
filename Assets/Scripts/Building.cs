@@ -8,6 +8,7 @@ public class Building : MonoBehaviour {
     public int damage;
     public int armor;
     public int[] buildingCost;
+    public Player player;
 
 
 	// Use this for initialization

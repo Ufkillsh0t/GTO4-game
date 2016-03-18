@@ -4,10 +4,9 @@ using System.Collections;
 public class Player : MonoBehaviour {
 
     public int[] resources;
-
     public string playerName;
-
     public Vector3 cameraPosition;
+    public Building[] buildings;
 
     void Awake()
     {
