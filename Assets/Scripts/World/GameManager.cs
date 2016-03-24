@@ -6,7 +6,10 @@ public class GameManager : MonoBehaviour
 {
 
     public static GameManager instance;
-    public GameObject selectedTile;
+    public Tile selectedTile;
+
+    //Buildings
+    public GameObject[] buildings;
 
     //UI
     public Canvas canvas;
@@ -37,6 +40,8 @@ public class GameManager : MonoBehaviour
 
         informationPanel = (GameObject)Resources.Load("Prefabs/UI/UIPanel");
         textPreFab = (GameObject)Resources.Load("Prefabs/UI/UIText");
+        buildings = System.Array.ConvertAll(Resources.LoadAll("Prefabs/Models/Buildings"), item => (GameObject)item); //Laat alle gameObjecten van de folder Building in. Alle buildings moeten een building script hebben.
+        //Debug.Log(buildings[0].GetComponent<Building>().ID);
 
         infoPanel = (GameObject)Instantiate(informationPanel);
         infoPanel.transform.SetParent(canvas.transform, false);
@@ -123,5 +128,14 @@ public class GameManager : MonoBehaviour
             ResourceType r = (ResourceType)i - 1;
             t.text = r.ToString() + ": " + playerController.currentPlayer.resources[(int)r];
         }
+    }
+
+    public void AddBuilding(int buildingType)
+    {
+        //Controler voor genoeg resources.
+        GameObject g = selectedTile.SpawnObject(buildings[buildingType]);
+        Building building = g.gameObject.GetComponent<Building>();
+        building.OnSpawn(selectedTile, playerController.currentPlayer);
+        playerController.currentPlayer.AddBuilding(building);
     }
 }

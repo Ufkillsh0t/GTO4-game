@@ -28,7 +28,7 @@ public class Player : MonoBehaviour, IResources {
             {
                 newBuildings[i] = buildings[i];
             }
-            newBuildings[buildings.Length + 1] = b;
+            newBuildings[buildings.Length] = b;
             buildings = newBuildings;
         }
     }

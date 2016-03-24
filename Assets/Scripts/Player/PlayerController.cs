@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
     public void SwitchPlayers()
     {
         SetCurrentPlayerCameraPosition();
+        GameManager.GetGameManager().selectedTile.ResetTile();
         if (currentPlayer == null || currentPlayer == players[(players.Length - 1)] || players.Length == 1)
         {
             IncreasePlayerResources();
