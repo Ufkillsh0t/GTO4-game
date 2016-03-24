@@ -77,10 +77,10 @@ public class GameManager : MonoBehaviour
         {
             Player p = gameObject.AddComponent<Player>();
             string playerNameString = "Player" + (i + 1).ToString();
-            p.addPlayerName(playerNameString);
+            p.AddPlayerName(playerNameString);
             for (int j = 0; j < amountOfResources; j++)
             {
-                p.addResources((ResourceType)j, startResources[j]);
+                p.AddResources((ResourceType)j, startResources[j]);
             }
             playerController.AddPlayers(p);
         }

@@ -12,8 +12,13 @@ public class Building : MonoBehaviour, IBuildUnit {
     private int amountOfResources;
     public Player player;
 
+    private static int uniqueID;
+    public int ID { get { return uniqueID; } }
+
     void Awake()
     {
+        uniqueID = uniqueID + 1;
+        ID = uniqueID;
         CheckBuildingCostArrayLength();
         player = GameManager.GetGameManager().GetPlayerController.currentPlayer;
     }
@@ -39,6 +44,11 @@ public class Building : MonoBehaviour, IBuildUnit {
     }
 
     public bool Defend()
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool Ugrade()
     {
         throw new NotImplementedException();
     }

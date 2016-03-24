@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
     {
         for (int i = 0; i < defaultResourceIncrease.Length; i++)
         {
-            currentPlayer.addResources((ResourceType)i, defaultResourceIncrease[i]);
+            currentPlayer.AddResources((ResourceType)i, defaultResourceIncrease[i]);
         }
     }
 
