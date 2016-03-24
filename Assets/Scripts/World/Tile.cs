@@ -89,14 +89,14 @@ public class Tile : MonoBehaviour
         }
         else
         {
-            GameObject current = Instantiate(g);
-            current.transform.parent = transform;
-            current.transform.position = transform.parent.position;
-            current.transform.localPosition = new Vector3(0f, 0f, -0.5f);
-            current.transform.rotation = Quaternion.identity;           
+            currentGameObject = Instantiate(g);
+            currentGameObject.transform.parent = transform;
+            currentGameObject.transform.position = transform.parent.position;
+            currentGameObject.transform.localPosition = new Vector3(0f, 0f, 0.5f);
+            currentGameObject.transform.rotation = Quaternion.identity;           
             //current.transform.localRotation = Quaternion.identity;
-            Debug.Log(current);
-            return current;
+            Debug.Log(currentGameObject);
+            return currentGameObject;
         }
     }
 }

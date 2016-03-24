@@ -134,8 +134,11 @@ public class GameManager : MonoBehaviour
     {
         //Controler voor genoeg resources.
         GameObject g = selectedTile.SpawnObject(buildings[buildingType]);
-        Building building = g.gameObject.GetComponent<Building>();
-        building.OnSpawn(selectedTile, playerController.currentPlayer);
-        playerController.currentPlayer.AddBuilding(building);
+        if (g != null)
+        {
+            Building building = g.gameObject.GetComponent<Building>();
+            building.OnSpawn(selectedTile, playerController.currentPlayer);
+            playerController.currentPlayer.AddBuilding(building);
+        }
     }
 }

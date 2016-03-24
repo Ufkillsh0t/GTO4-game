@@ -26,7 +26,7 @@ public class GridGenerator : MonoBehaviour
     {
         if (tilePrefab == null)
         {
-            tilePrefab = Resources.Load<Transform>("Prefabs/Tile/Tile");
+            tilePrefab = Resources.Load<Transform>("Prefabs/Tile/TestTile");
         }
 
         if (!tilePrefab)
