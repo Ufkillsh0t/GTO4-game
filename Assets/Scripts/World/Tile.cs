@@ -10,7 +10,6 @@ public class Tile : MonoBehaviour
     public bool tilePressed;
     public int ID;
 
-
     void Awake()
     {
         render = gameObject.GetComponent<Renderer>(); //Verkrijgt de renderer van dit object.

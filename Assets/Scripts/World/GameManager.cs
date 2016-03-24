@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     public Camera currentCamera;
 
     private PlayerController playerController;
+    public PlayerController GetPlayerController { get { return playerController; } }
 
     void Awake()
     {

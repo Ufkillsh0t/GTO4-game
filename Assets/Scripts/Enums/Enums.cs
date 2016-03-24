@@ -3,5 +3,7 @@ using System.Collections;
 
 public enum ResourceType { Gold, Lumber, Mana }
 
-public enum BuildingType { Attack, Defense, Harvester }
+public enum BuildingType { Defense, Harvester }
+
+public enum UnitType { Attack, Defense }
 
