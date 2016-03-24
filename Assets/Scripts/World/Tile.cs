@@ -93,7 +93,8 @@ public class Tile : MonoBehaviour
             current.transform.parent = transform;
             current.transform.position = transform.parent.position;
             current.transform.localPosition = new Vector3(0f, 0f, -0.5f);
-            current.transform.localRotation = Quaternion.identity;
+            current.transform.rotation = Quaternion.identity;           
+            //current.transform.localRotation = Quaternion.identity;
             Debug.Log(current);
             return current;
         }
