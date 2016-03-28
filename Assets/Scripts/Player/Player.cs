@@ -2,7 +2,8 @@
 using System.Collections;
 using System;
 
-public class Player : MonoBehaviour, IResources {
+public class Player : MonoBehaviour, IResources
+{
 
     public int[] resources;
     public string playerName;
@@ -16,7 +17,7 @@ public class Player : MonoBehaviour, IResources {
 
     public void AddBuilding(Building b)
     {
-        if(buildings == null)
+        if (buildings == null)
         {
             buildings = new Building[1];
             buildings[0] = b;
@@ -24,7 +25,7 @@ public class Player : MonoBehaviour, IResources {
         else
         {
             Building[] newBuildings = new Building[buildings.Length + 1];
-            for(int i = 0; i < buildings.Length; i++)
+            for (int i = 0; i < buildings.Length; i++)
             {
                 newBuildings[i] = buildings[i];
             }
@@ -41,15 +42,36 @@ public class Player : MonoBehaviour, IResources {
     {
         Building[] newBuildings = new Building[buildings.Length - 1];
         int j = 0; //Voor het toevoegen van de juiste buildings;
-        for(int i = 0; i < buildings.Length; i++)
+        for (int i = 0; i < buildings.Length; i++)
         {
-            if(b.ID != buildings[i].ID)
+            if (b.ID != buildings[i].ID)
             {
                 newBuildings[j] = buildings[i];
                 j++;
             }
         }
         buildings = newBuildings;
+    }
+
+    public bool EnoughResources(int[] cost)
+    {
+        if (cost.Length != resources.Length)
+        {
+            Debug.LogError("There are more costValues then there are resources!");
+            return false;
+        }
+        else
+        {
+            for (int i = 0; i < resources.Length; i++)
+            {
+                if(cost[i] > resources[i])
+                {
+                    Debug.Log("Cost of resource " + (ResourceType)i + " is too high!");
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 
     public void AddPlayerName(string playerName)

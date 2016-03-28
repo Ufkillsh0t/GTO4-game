@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public Tile selectedTile;
 
     //Buildings
-    public GameObject[] buildings;
+    public GameObject[] buildings; //Misschien buildings van maken met GetComponent in de load?
 
     //UI
     public Canvas canvas;
@@ -132,13 +132,18 @@ public class GameManager : MonoBehaviour
 
     public void AddBuilding(int buildingType)
     {
-        //Controler voor genoeg resources.
-        GameObject g = selectedTile.SpawnObject(buildings[buildingType]);
-        if (g != null)
+        //Controleer voor genoeg resources.
+        Building building = buildings[buildingType].GetComponent<Building>();
+
+        if (building != null && playerController.currentPlayer.EnoughResources(building.buildingCost))
         {
-            Building building = g.gameObject.GetComponent<Building>();
+            GameObject g = selectedTile.SpawnObject(building.gameObject);
             building.OnSpawn(selectedTile, playerController.currentPlayer);
             playerController.currentPlayer.AddBuilding(building);
+        }
+        else
+        {
+            Debug.Log("Couldn't spawn building due too a low amount of resources or the building couldn't be initialized!");
         }
     }
 }

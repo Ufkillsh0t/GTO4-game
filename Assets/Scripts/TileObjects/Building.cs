@@ -44,8 +44,17 @@ public class Building : MonoBehaviour, IBuildUnit {
     {
         currentTile = t;
         player = p;
-        //TODO: verwijderen resources van player.
-        p.RemoveResources(ResourceType.Mana, 10); //Test
+        for(int i = 0; i < buildingCost.Length; i++)
+        {
+            if (p.resources[i] > buildingCost[i])
+            {
+                p.resources[i] -= buildingCost[i];
+            }
+            else
+            {
+                Debug.LogError("A object has been spawned that has a higher cost than the players resources!");
+            }
+        }
         Debug.Log("Tile ID:" + t.ID + " player:" + p.playerName);
     }
 
