@@ -65,7 +65,7 @@ public class PlayerController : MonoBehaviour
 
     public void CheckResourceArrayLength()
     {
-        amountOfResources = System.Enum.GetNames(typeof(ResourceType)).Length;
+        amountOfResources = GameManager.amountOfResources;
         if (defaultResourceIncrease.Length < amountOfResources)
         {
             Debug.LogError("Array length needs to be:" + amountOfResources);

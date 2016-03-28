@@ -9,10 +9,11 @@ public class Player : MonoBehaviour, IResources
     public string playerName;
     public Vector3 cameraPosition;
     public Building[] buildings;
+    public Unit[] units;
 
     void Awake()
     {
-        resources = new int[System.Enum.GetNames(typeof(ResourceType)).Length];
+        resources = new int[GameManager.amountOfResources];
     }
 
     public void AddBuilding(Building b)
@@ -51,6 +52,44 @@ public class Player : MonoBehaviour, IResources
             }
         }
         buildings = newBuildings;
+    }
+
+    public void AddUnit(Unit u)
+    {
+        if (units == null)
+        {
+            units = new Unit[1];
+            units[0] = u;
+        }
+        else
+        {
+            Unit[] newUnits = new Unit[units.Length + 1];
+            for (int i = 0; i < units.Length; i++)
+            {
+                newUnits[i] = units[i];
+            }
+            newUnits[buildings.Length] = u;
+            units = newUnits;
+        }
+    }
+
+    /// <summary>
+    /// Verwijdert een gebouw uit de array met gebouwen.
+    /// </summary>
+    /// <param name="b"></param>
+    public void RemoveUnit(Building b)
+    {
+        Unit[] newUnits = new Unit[units.Length - 1];
+        int j = 0; //Voor het toevoegen van de juiste buildings;
+        for (int i = 0; i < units.Length; i++)
+        {
+            if (b.ID != units[i].ID)
+            {
+                newUnits[j] = newUnits[i];
+                j++;
+            }
+        }
+        units = newUnits;
     }
 
     public bool EnoughResources(int[] cost)

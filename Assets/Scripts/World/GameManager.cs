@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     //Buildings
     public GameObject[] buildings; //Misschien buildings van maken met GetComponent in de load?
+    public GameObject[] units;
 
     //UI
     public Canvas canvas;
@@ -23,10 +24,10 @@ public class GameManager : MonoBehaviour
 
     [Range(1, 4)]
     public int amountOfPlayers;
-    private int amountOfResources;
 
     //Gold, Lumber, Mana
     public int[] startResources;
+    public static int amountOfResources;
 
     public Camera currentCamera;
 
@@ -41,6 +42,7 @@ public class GameManager : MonoBehaviour
         informationPanel = (GameObject)Resources.Load("Prefabs/UI/UIPanel");
         textPreFab = (GameObject)Resources.Load("Prefabs/UI/UIText");
         buildings = System.Array.ConvertAll(Resources.LoadAll("Prefabs/Models/Buildings"), item => (GameObject)item); //Laat alle gameObjecten van de folder Building in. Alle buildings moeten een building script hebben.
+        units = System.Array.ConvertAll(Resources.LoadAll("Prefabs/Models/Units"), item => (GameObject)item); //zelfde als hierboven.
         //Debug.Log(buildings[0].GetComponent<Building>().ID);
 
         infoPanel = (GameObject)Instantiate(informationPanel);
@@ -137,13 +139,24 @@ public class GameManager : MonoBehaviour
 
         if (building != null && playerController.currentPlayer.EnoughResources(building.buildingCost))
         {
-            GameObject g = selectedTile.SpawnObject(building.gameObject);
+            GameObject g = selectedTile.SpawnObject(building.gameObject); //Hoeft niet perse een gameOBject te retourneren, kan eventueel wel handig zijn voor toekomstig gebruik.
             building.OnSpawn(selectedTile, playerController.currentPlayer);
             playerController.currentPlayer.AddBuilding(building);
         }
         else
         {
             Debug.Log("Couldn't spawn building due too a low amount of resources or the building couldn't be initialized!");
+        }
+    }
+
+    public void AddUnit(int unitType)
+    {
+        Unit unit = units[unitType].GetComponent<Unit>();
+        if(units != null && playerController.currentPlayer.EnoughResources(unit.unitCost))
+        {
+            GameObject g = selectedTile.SpawnObject(unit.gameObject);
+            unit.OnSpawn(selectedTile, playerController.currentPlayer);
+            playerController.currentPlayer.AddUnit(unit);
         }
     }
 }

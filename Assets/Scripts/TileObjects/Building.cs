@@ -2,7 +2,8 @@
 using System.Collections;
 using System;
 
-public class Building : MonoBehaviour, IBuildUnit {
+public class Building : MonoBehaviour, IBuildUnit
+{
 
     public BuildingType type;
     public int health;
@@ -27,7 +28,7 @@ public class Building : MonoBehaviour, IBuildUnit {
 
     public void CheckBuildingCostArrayLength()
     {
-        amountOfResources = System.Enum.GetNames(typeof(ResourceType)).Length;
+        amountOfResources = GameManager.amountOfResources;
         if (buildingCost.Length < amountOfResources)
         {
             Debug.LogError("Array length needs to be:" + amountOfResources);
@@ -44,7 +45,7 @@ public class Building : MonoBehaviour, IBuildUnit {
     {
         currentTile = t;
         player = p;
-        for(int i = 0; i < buildingCost.Length; i++)
+        for (int i = 0; i < buildingCost.Length; i++)
         {
             if (p.resources[i] > buildingCost[i])
             {

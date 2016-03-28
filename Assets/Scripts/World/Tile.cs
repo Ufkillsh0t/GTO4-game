@@ -82,7 +82,7 @@ public class Tile : MonoBehaviour
 
     public GameObject SpawnObject(GameObject g)
     {
-        if(currentGameObject != null)
+        if (currentGameObject != null)
         {
             Debug.Log("There already is an object on this tile!");
             return null;
@@ -92,8 +92,8 @@ public class Tile : MonoBehaviour
             currentGameObject = Instantiate(g);
             currentGameObject.transform.parent = transform;
             currentGameObject.transform.position = transform.parent.position;
-            currentGameObject.transform.localPosition = new Vector3(0f, 0f, 0.5f);
-            currentGameObject.transform.rotation = Quaternion.identity;           
+            currentGameObject.transform.localPosition = new Vector3(0f, 0f, (currentGameObject.GetComponent<Renderer>().bounds.size.y / 2));
+            currentGameObject.transform.rotation = Quaternion.identity;
             //current.transform.localRotation = Quaternion.identity;
             Debug.Log(currentGameObject);
             return currentGameObject;
