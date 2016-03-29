@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
 
     //Gold, Lumber, Mana
     public int[] startResources;
-    public static int amountOfResources;
+    public static int amountOfResources = System.Enum.GetNames(typeof(ResourceType)).Length;
 
     public Camera currentCamera;
 
@@ -106,7 +106,6 @@ public class GameManager : MonoBehaviour
 
     public void CheckResourceArrayLength()
     {
-        amountOfResources = System.Enum.GetNames(typeof(ResourceType)).Length;
         if (startResources.Length < amountOfResources)
         {
             Debug.LogError("Array length needs to be:" + amountOfResources);
@@ -139,9 +138,15 @@ public class GameManager : MonoBehaviour
 
         if (building != null && playerController.currentPlayer.EnoughResources(building.buildingCost))
         {
-            GameObject g = selectedTile.SpawnObject(building.gameObject); //Hoeft niet perse een gameOBject te retourneren, kan eventueel wel handig zijn voor toekomstig gebruik.
-            building.OnSpawn(selectedTile, playerController.currentPlayer);
-            playerController.currentPlayer.AddBuilding(building);
+            if (selectedTile.SpawnObject(building.gameObject))
+            {
+                building.OnSpawn(selectedTile, playerController.currentPlayer);
+                playerController.currentPlayer.AddBuilding(building);
+            }
+            else
+            {
+                Debug.Log("There is already a object on that tile");
+            }
         }
         else
         {
@@ -154,9 +159,14 @@ public class GameManager : MonoBehaviour
         Unit unit = units[unitType].GetComponent<Unit>();
         if(units != null && playerController.currentPlayer.EnoughResources(unit.unitCost))
         {
-            GameObject g = selectedTile.SpawnObject(unit.gameObject);
-            unit.OnSpawn(selectedTile, playerController.currentPlayer);
-            playerController.currentPlayer.AddUnit(unit);
+            if (selectedTile.SpawnObject(unit.gameObject)) {
+                unit.OnSpawn(selectedTile, playerController.currentPlayer);
+                playerController.currentPlayer.AddUnit(unit);
+            }
+            else
+            {
+                Debug.Log("There is already a object on that tile");
+            }
         }
     }
 }

@@ -80,12 +80,12 @@ public class Tile : MonoBehaviour
         render.material.color = defaultMaterialColor;
     }
 
-    public GameObject SpawnObject(GameObject g)
+    public bool SpawnObject(GameObject g)
     {
         if (currentGameObject != null)
         {
             Debug.Log("There already is an object on this tile!");
-            return null;
+            return false;
         }
         else
         {
@@ -96,7 +96,7 @@ public class Tile : MonoBehaviour
             currentGameObject.transform.rotation = Quaternion.identity;
             //current.transform.localRotation = Quaternion.identity;
             Debug.Log(currentGameObject);
-            return currentGameObject;
+            return true;
         }
     }
 }
