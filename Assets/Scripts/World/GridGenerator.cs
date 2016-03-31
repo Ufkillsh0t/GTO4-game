@@ -21,6 +21,13 @@ public class GridGenerator : MonoBehaviour
 
     public Transform[,] terrain;
 
+    private static GridGenerator instance;
+
+    void Awake()
+    {
+        instance = this;
+    }
+
     // Use this for initialization
     void OnEnable()
     {
@@ -35,6 +42,11 @@ public class GridGenerator : MonoBehaviour
         }
 
         GenerateTerrain();
+    }
+
+    public static GridGenerator GetGridGenerator()
+    {
+        return instance;
     }
 
     /// <summary>

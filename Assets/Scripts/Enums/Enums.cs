@@ -7,3 +7,5 @@ public enum BuildingType { Defense, Harvester }
 
 public enum UnitType { Attack, Defense }
 
+public enum RangeType {  Sphere, Cross}
+

@@ -138,10 +138,11 @@ public class GameManager : MonoBehaviour
 
         if (building != null && playerController.currentPlayer.EnoughResources(building.buildingCost))
         {
-            if (selectedTile.SpawnObject(building.gameObject))
+            Building spawnedBuilding = selectedTile.SpawnObject(building.gameObject).GetComponent<Building>();
+            if (spawnedBuilding != null)
             {
-                building.OnSpawn(selectedTile, playerController.currentPlayer);
-                playerController.currentPlayer.AddBuilding(building);
+                spawnedBuilding.OnSpawn(selectedTile, playerController.currentPlayer);
+                playerController.currentPlayer.AddBuilding(spawnedBuilding);
             }
             else
             {
@@ -157,11 +158,13 @@ public class GameManager : MonoBehaviour
     public void AddUnit(int unitType)
     {
         Unit unit = units[unitType].GetComponent<Unit>();
-        if(units != null && playerController.currentPlayer.EnoughResources(unit.unitCost))
+        if (units != null && playerController.currentPlayer.EnoughResources(unit.unitCost))
         {
-            if (selectedTile.SpawnObject(unit.gameObject)) {
-                unit.OnSpawn(selectedTile, playerController.currentPlayer);
-                playerController.currentPlayer.AddUnit(unit);
+            Unit spawnedUnit = selectedTile.SpawnObject(unit.gameObject).GetComponent<Unit>();
+            if (spawnedUnit != null)
+            {
+                spawnedUnit.OnSpawn(selectedTile, playerController.currentPlayer);
+                playerController.currentPlayer.AddUnit(spawnedUnit);
             }
             else
             {

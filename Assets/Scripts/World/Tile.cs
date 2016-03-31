@@ -5,11 +5,18 @@ public class Tile : MonoBehaviour
 {
     private static int uniqueID; //Eventueel voor unieke identificatie van de tiles;
     private Renderer render;
+
     private Color defaultMaterialColor;
+    public Color DefaultMaterialColor { get { return defaultMaterialColor; } }
+
+    public Color highlightedColor = Color.yellow;
 
     public GameObject currentGameObject;
     public bool tilePressed;
+    public bool highlighted;
     public int ID;
+
+    public Transform shape;
 
     void Awake()
     {
@@ -30,13 +37,25 @@ public class Tile : MonoBehaviour
     void OnMouseEnter()
     {
         render.material.color = Color.red;
+        if (currentGameObject != null)
+        {
+            HighLightNearbyTiles(2, RangeType.Cross);
+        }
     }
 
     void OnMouseExit()
     {
         if (!tilePressed)
         {
-            render.material.color = defaultMaterialColor;
+            if (highlighted)
+            {
+                render.material.color = highlightedColor;
+            }
+            else
+            {
+                render.material.color = defaultMaterialColor;
+            }
+
             //Code hieronder is misschien overbodig.
             GameManager gm = GameManager.GetGameManager();
             if (gm.selectedTile != null)
@@ -46,6 +65,13 @@ public class Tile : MonoBehaviour
                 {
                     gm.selectedTile = this;
                 }
+            }
+        }
+        else
+        {
+            if (currentGameObject != null)
+            {
+                UnlightNearbyTiles(2, RangeType.Cross);
             }
         }
     }
@@ -80,12 +106,58 @@ public class Tile : MonoBehaviour
         render.material.color = defaultMaterialColor;
     }
 
-    public bool SpawnObject(GameObject g)
+    public void UnlightNearbyTiles(float range, RangeType type)
+    {
+        if (type == RangeType.Cross)
+        {
+            RaycastHit[] hit = Physics.BoxCastAll(gameObject.transform.position, new Vector3(0.5f, 0.5f), new Vector3(1f, 0f, 0f), Quaternion.identity, range); //new Ray(gameObject.transform.position, new Vector3(1, 0, 1)), range 4 of 6de overload gebruiken (kan dus eventueel met layers.)
+            Debug.DrawRay(gameObject.transform.position, new Vector3(1f, 0f, 0f), Color.yellow, 10);
+            foreach (RaycastHit r in hit)
+            {
+                if (r.collider.gameObject.tag == "Tile")
+                {
+                    Tile t = r.collider.gameObject.GetComponent<Tile>();
+                    t.render.material.color = t.DefaultMaterialColor;
+                }
+            }
+        }
+        else
+        {
+
+        }
+    }
+
+    public void HighLightNearbyTiles(float range, RangeType type)
+    {
+        /*GridGenerator gen = GridGenerator.GetGridGenerator();
+        gen.til*/
+
+        
+        if (type == RangeType.Cross)
+        {
+            RaycastHit[] hit = Physics.BoxCastAll(gameObject.transform.position, new Vector3(0.5f, 0.5f), new Vector3(1f, 0f, 0f), Quaternion.identity, range); //new Ray(gameObject.transform.position, new Vector3(1, 0, 1)), range 4 of 6de overload gebruiken (kan dus eventueel met layers.)
+            Debug.DrawRay(gameObject.transform.position, new Vector3(1f, 0f, 0f), Color.yellow, 10);
+            foreach (RaycastHit r in hit)
+            {
+                if (r.collider.gameObject.tag == "Tile")
+                {
+                    Tile t = r.collider.gameObject.GetComponent<Tile>();
+                    t.render.material.color = Color.yellow;
+                }
+            }
+        }
+        else
+        {
+
+        }
+    }
+
+    public GameObject SpawnObject(GameObject g)
     {
         if (currentGameObject != null)
         {
             Debug.Log("There already is an object on this tile!");
-            return false;
+            return currentGameObject;
         }
         else
         {
@@ -96,7 +168,7 @@ public class Tile : MonoBehaviour
             currentGameObject.transform.rotation = Quaternion.identity;
             //current.transform.localRotation = Quaternion.identity;
             Debug.Log(currentGameObject);
-            return true;
+            return currentGameObject;
         }
     }
 }
