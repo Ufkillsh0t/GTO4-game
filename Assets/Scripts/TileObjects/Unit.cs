@@ -18,6 +18,13 @@ public class Unit : MonoBehaviour, IBuildUnit
     private static int uniqueID;
     public int ID;
 
+    public Player Player
+    {
+        get
+        {
+            return player;
+        }
+    }
 
     void Awake()
     {

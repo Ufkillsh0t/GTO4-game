@@ -5,19 +5,26 @@ public class Tile : MonoBehaviour
 {
     private static int uniqueID; //Eventueel voor unieke identificatie van de tiles;
     private Renderer render;
+    private GameManager gm;
+    private GridGenerator gen;
 
     private Color defaultMaterialColor;
     public Color DefaultMaterialColor { get { return defaultMaterialColor; } }
 
     public Color highlightedColor = Color.yellow;
+    public Color selectedColor = Color.green;
+    public Color hoverColor = Color.green;
+    public Color blockedTileColor = Color.red;
 
     public GameObject currentGameObject;
-    public bool tilePressed;
+    public IBuildUnit buildUnit;
+    public bool selected;
+    public bool hover;
     public bool highlighted;
     public int ID;
 
-    public int x;
-    public int y;
+    public int xTile;
+    public int yTile;
 
     public Transform shape;
 
@@ -25,32 +32,39 @@ public class Tile : MonoBehaviour
     {
         render = gameObject.GetComponent<Renderer>(); //Verkrijgt de renderer van dit object.
         defaultMaterialColor = render.material.color; //Verkrijgt de huidige kleur van dit object.
-        tilePressed = false; //Kijkt of de tile ingedrukt is of niet.
+        selected = false; //Kijkt of de tile ingedrukt is of niet.
         uniqueID = uniqueID + 1;
         ID = uniqueID;
     }
 
     void OnMouseDown()
     {
-        render.material.color = Color.red;
-        tilePressed = !tilePressed;
-        GetGameManagerTile();
+        ResetGameManagerTile();
+        render.material.color = selectedColor;
+        selected = !selected;
+        highlighted = false;
     }
 
     void OnMouseEnter()
     {
-        render.material.color = Color.red;
-        if (currentGameObject != null)
+        render.material.color = selectedColor;
+        hover = true;
+        if (buildUnit != null)
         {
-            HighLightNearbyTiles(2, RangeType.Cross);
+            HighLightNearbyTiles(2, RangeType.Cross, true);
         }
     }
 
     void OnMouseExit()
     {
-        if (!tilePressed)
+        hover = false;
+        if (!selected)
         {
-            if (highlighted)
+            if (buildUnit != null)
+            {
+                HighLightNearbyTiles(2, RangeType.Cross, false);
+            }
+            else if (highlighted)
             {
                 render.material.color = highlightedColor;
             }
@@ -58,33 +72,26 @@ public class Tile : MonoBehaviour
             {
                 render.material.color = defaultMaterialColor;
             }
-
-            //Code hieronder is misschien overbodig.
-            GameManager gm = GameManager.GetGameManager();
-            if (gm.selectedTile != null)
-            {
-                Tile t = gm.selectedTile;
-                if (t.ID == ID)
-                {
-                    gm.selectedTile = this;
-                }
-            }
-        }
-        else
-        {
-            if (currentGameObject != null)
-            {
-                UnlightNearbyTiles(2, RangeType.Cross);
-            }
         }
     }
 
+    //Code hieronder is misschien overbodig.
+    //gm = GameManager.GetGameManager();
+    //if (gm.selectedTile != null)
+    //{
+    //    Tile t = gm.selectedTile;
+    //    if (t.ID == ID)
+    //    {
+    //        gm.selectedTile = this;
+    //    }
+    //}
+
     /// <summary>
-    /// Verkrijgt de huidig geselecteerde tile in de gamemanager.
+    /// Reset de huidig geselecteerde tile in de gamemanager.
     /// </summary>
-    public void GetGameManagerTile()
+    public void ResetGameManagerTile()
     {
-        GameManager gm = GameManager.GetGameManager();
+        gm = GameManager.GetGameManager();
         if (gm.selectedTile != null)
         {
             Tile t = gm.selectedTile;
@@ -103,12 +110,45 @@ public class Tile : MonoBehaviour
     /// <summary>
     /// Zet de coördinaten van tile vast in paramaters.
     /// </summary>
-    /// <param name="x"></param>
-    /// <param name="y"></param>
+    /// <param name="x">x coörd van de tile</param>
+    /// <param name="y">y coörd van de tile</param>
     public void SetCoords(int x, int y)
     {
-        this.x = x;
-        this.y = y;
+        xTile = x;
+        yTile = y;
+    }
+
+    /// <summary>
+    /// Dit zorgt er voor dat een tile gehighlight wordt of geunlight.
+    /// </summary>
+    /// <param name="highlight">Of de tile gehighlight moet worden of niet.</param>
+    public void HighlightTile(bool highlight)
+    {
+        if (highlight && buildUnit == null)
+        {
+            highlighted = true;
+            render.material.color = highlightedColor;
+        }
+        else if (selected && highlight)
+        {
+            render.material.color = selectedColor;
+        }
+        else if (buildUnit != null && hover)
+        {
+            if (buildUnit.Player.GetPlayerID == gm.GetPlayerController.currentPlayer.GetPlayerID)
+            {
+                render.material.color = hoverColor;
+            }
+            else
+            {
+                render.material.color = blockedTileColor;
+            }
+        }
+        else
+        {
+            highlighted = false;
+            render.material.color = defaultMaterialColor;
+        }
     }
 
     /// <summary>
@@ -116,55 +156,85 @@ public class Tile : MonoBehaviour
     /// </summary>
     public void ResetTile()
     {
-        tilePressed = false;
+        selected = false;
         render.material.color = defaultMaterialColor;
+        if (buildUnit != null)
+        {
+            HighLightNearbyTiles(2, RangeType.Cross, false);
+        }
     }
 
-    public void UnlightNearbyTiles(float range, RangeType type)
+    //RaycastHit[] hit = Physics.BoxCastAll(gameObject.transform.position, new Vector3(0.5f, 0.5f), new Vector3(1f, 0f, 0f), Quaternion.identity, range); //new Ray(gameObject.transform.position, new Vector3(1, 0, 1)), range 4 of 6de overload gebruiken (kan dus eventueel met layers.)
+    //Debug.DrawRay(gameObject.transform.position, new Vector3(1f, 0f, 0f), Color.yellow, 10);
+    //foreach (RaycastHit r in hit)
+    //{
+    //    if (r.collider.gameObject.tag == "Tile")
+    //    {
+    //        Tile t = r.collider.gameObject.GetComponent<Tile>();
+    //        t.render.material.color = t.DefaultMaterialColor;
+    //    }
+    //}
+
+    /// <summary>
+    /// Highlight de tiles rondom deze tile binnen een bepaalde range afhankelijk van het range type.
+    /// </summary>
+    /// <param name="range"></param>
+    /// <param name="type"></param>
+    /// <param name="highlight"></param>
+    public void HighLightNearbyTiles(int range, RangeType type, bool highlight)
     {
-        if (type == RangeType.Cross)
+        if (buildUnit != null)
         {
-            RaycastHit[] hit = Physics.BoxCastAll(gameObject.transform.position, new Vector3(0.5f, 0.5f), new Vector3(1f, 0f, 0f), Quaternion.identity, range); //new Ray(gameObject.transform.position, new Vector3(1, 0, 1)), range 4 of 6de overload gebruiken (kan dus eventueel met layers.)
-            Debug.DrawRay(gameObject.transform.position, new Vector3(1f, 0f, 0f), Color.yellow, 10);
-            foreach (RaycastHit r in hit)
+            if (buildUnit.Player.GetPlayerID == gm.GetPlayerController.currentPlayer.GetPlayerID)
             {
-                if (r.collider.gameObject.tag == "Tile")
+                gen = GridGenerator.GetGridGenerator();
+
+                int minX = xTile - range;
+                int minY = yTile - range;
+                int maxX = xTile + range;
+                int maxY = yTile + range;
+                if (minX < 0) minX = 0;
+                if (minY < 0) minY = 0;
+                if (maxX >= gen.terrainWidth) maxX = gen.terrainWidth - 1;
+                if (maxY >= gen.terrainHeight) maxY = gen.terrainHeight - 1;
+
+                if (type == RangeType.Cross)
                 {
-                    Tile t = r.collider.gameObject.GetComponent<Tile>();
-                    t.render.material.color = t.DefaultMaterialColor;
+                    for (int x = minX; x <= maxX; x++)
+                    {
+                        gen.terrain[x, yTile].HighlightTile(highlight);
+                    }
+                    for (int y = minY; y <= maxY; y++)
+                    {
+                        gen.terrain[xTile, y].HighlightTile(highlight);
+                    }
                 }
+                else
+                {
+                    //Formule voor sphere highlighting
+                }
+            }
+            else
+            {
+                HighlightTile(false);
             }
         }
         else
         {
-
+            Debug.Log("Er is geen gebouw dat gehighlight kan worden!");
         }
     }
 
-    public void HighLightNearbyTiles(float range, RangeType type)
-    {
-        /*GridGenerator gen = GridGenerator.GetGridGenerator();
-        gen.til*/
-
-        
-        if (type == RangeType.Cross)
-        {
-            RaycastHit[] hit = Physics.BoxCastAll(gameObject.transform.position, new Vector3(0.5f, 0.5f), new Vector3(1f, 0f, 0f), Quaternion.identity, range); //new Ray(gameObject.transform.position, new Vector3(1, 0, 1)), range 4 of 6de overload gebruiken (kan dus eventueel met layers.)
-            Debug.DrawRay(gameObject.transform.position, new Vector3(1f, 0f, 0f), Color.yellow, 10);
-            foreach (RaycastHit r in hit)
-            {
-                if (r.collider.gameObject.tag == "Tile")
-                {
-                    Tile t = r.collider.gameObject.GetComponent<Tile>();
-                    t.render.material.color = Color.yellow;
-                }
-            }
-        }
-        else
-        {
-
-        }
-    }
+    //RaycastHit[] hit = Physics.BoxCastAll(gameObject.transform.position, new Vector3(0.5f, 0.5f), new Vector3(1f, 0f, 0f), Quaternion.identity, range); //new Ray(gameObject.transform.position, new Vector3(1, 0, 1)), range 4 of 6de overload gebruiken (kan dus eventueel met layers.)
+    //Debug.DrawRay(gameObject.transform.position, new Vector3(1f, 0f, 0f), Color.yellow, 10);
+    //foreach (RaycastHit r in hit)
+    //{
+    //    if (r.collider.gameObject.tag == "Tile")
+    //    {
+    //        Tile t = r.collider.gameObject.GetComponent<Tile>();
+    //        t.render.material.color = Color.yellow;
+    //    }
+    //}
 
     public GameObject SpawnObject(GameObject g)
     {
@@ -181,6 +251,12 @@ public class Tile : MonoBehaviour
             currentGameObject.transform.localPosition = new Vector3(0f, 0f, (currentGameObject.GetComponent<Renderer>().bounds.size.y / 2));
             currentGameObject.transform.rotation = Quaternion.identity;
             //current.transform.localRotation = Quaternion.identity;
+            if (currentGameObject != null)
+            {
+                buildUnit = currentGameObject.GetComponent<IBuildUnit>();
+                //HighLightNearbyTiles(2, RangeType.Cross, true);
+            }
+
             Debug.Log(currentGameObject);
             return currentGameObject;
         }

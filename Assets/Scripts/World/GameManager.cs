@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
 
         if (building != null && playerController.currentPlayer.EnoughResources(building.buildingCost))
         {
-            Building spawnedBuilding = selectedTile.SpawnObject(building.gameObject).GetComponent<Building>();
+            Building spawnedBuilding = selectedTile.SpawnObject(building.gameObject).GetComponent<Building>(); //test
             if (spawnedBuilding != null)
             {
                 spawnedBuilding.OnSpawn(selectedTile, playerController.currentPlayer);

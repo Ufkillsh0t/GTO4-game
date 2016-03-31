@@ -2,6 +2,7 @@
 using System.Collections;
 
 public interface IBuildUnit {
+    Player Player { get; }
     bool Attack();
     bool Defend();
     bool Ugrade();

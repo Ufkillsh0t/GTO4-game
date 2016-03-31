@@ -4,15 +4,18 @@ using System;
 
 public class Player : MonoBehaviour, IResources
 {
-
+    private static int id;
     public int[] resources;
     public string playerName;
     public Vector3 cameraPosition;
     public Building[] buildings;
     public Unit[] units;
 
+    public int GetPlayerID { get { return id; } }
+
     void Awake()
     {
+        id += 1;
         resources = new int[GameManager.amountOfResources];
     }
 
