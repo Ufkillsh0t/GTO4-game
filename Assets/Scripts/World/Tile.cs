@@ -16,6 +16,9 @@ public class Tile : MonoBehaviour
     public bool highlighted;
     public int ID;
 
+    public int x;
+    public int y;
+
     public Transform shape;
 
     void Awake()
@@ -95,6 +98,17 @@ public class Tile : MonoBehaviour
         {
             gm.selectedTile = this;
         }
+    }
+
+    /// <summary>
+    /// Zet de coördinaten van tile vast in paramaters.
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    public void SetCoords(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
     }
 
     /// <summary>

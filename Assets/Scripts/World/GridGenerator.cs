@@ -3,8 +3,7 @@ using System.Collections;
 
 public class GridGenerator : MonoBehaviour
 {
-
-    public Transform tilePrefab;
+    public GameObject tilePrefab;
 
     public float pointX = -5;
 
@@ -19,7 +18,7 @@ public class GridGenerator : MonoBehaviour
     [Range(1, 128)] //Can be used for offsets or objects which are larger than 1 x 1.
     public float tilesize = 1f;
 
-    public Transform[,] terrain;
+    public Tile[,] terrain;
 
     private static GridGenerator instance;
 
@@ -33,7 +32,7 @@ public class GridGenerator : MonoBehaviour
     {
         if (tilePrefab == null)
         {
-            tilePrefab = Resources.Load<Transform>("Prefabs/Tile/TestTile");
+            tilePrefab = Resources.Load<GameObject>("Prefabs/Tile/TestTile");
         }
 
         if (!tilePrefab)
@@ -54,7 +53,7 @@ public class GridGenerator : MonoBehaviour
     /// </summary>
     public void Refresh()
     {
-        foreach(Transform child in terrain)
+        foreach(Tile child in terrain)
         {
             Destroy(child.gameObject);
         }
@@ -66,15 +65,18 @@ public class GridGenerator : MonoBehaviour
     /// </summary>
     public void GenerateTerrain()
     {
-        terrain = new Transform[terrainWidth, terrainHeight];
+        terrain = new Tile[terrainWidth, terrainHeight];
 
         for (int x = 0; x < terrainWidth; x++)
         {
             for (int y = 0; y < terrainHeight; y++)
             {
-                Transform tile = Instantiate(tilePrefab, new Vector3(pointX + (x * tilesize), 0, pointZ + (y * tilesize)), tilePrefab.rotation) as Transform;
+                GameObject tileObject = Instantiate(tilePrefab, new Vector3(pointX + (x * tilesize), 0, pointZ + (y * tilesize)), tilePrefab.transform.rotation) as GameObject;
 
-                tile.parent = transform;
+                tileObject.transform.parent = transform;
+
+                Tile tile = tileObject.GetComponent<Tile>();
+                tile.SetCoords(x, y);
 
                 terrain[x, y] = tile;
             }
@@ -87,7 +89,7 @@ public class GridGenerator : MonoBehaviour
     /// <param name="x">X positie in de array</param>
     /// <param name="y">Y positie in de array</param>
     /// <returns></returns>
-    public Transform GetTileTerrain(int x, int y)
+    public Tile GetTileTerrain(int x, int y)
     {
         if (x < 0 || y < 0 || x > terrainWidth || y > terrainHeight)
         {
@@ -103,7 +105,7 @@ public class GridGenerator : MonoBehaviour
     /// <param name="x">De x float in de wereld</param>
     /// <param name="y">De y float in de wereld</param>
     /// <returns></returns>
-    public Transform GetTileWorldSpace(float x, float y)
+    public Tile GetTileWorldSpace(float x, float y)
     {
         if(x < pointX || y < pointZ || x > (pointX + (terrainWidth * tilesize)) || y > (pointZ + (terrainHeight * tilesize)))
         {
