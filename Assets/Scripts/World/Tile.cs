@@ -40,7 +40,21 @@ public class Tile : MonoBehaviour
     void OnMouseDown()
     {
         ResetGameManagerTile();
-        render.material.color = selectedColor;
+        if (buildUnit != null)
+        {
+            if (buildUnit.Player.GetPlayerID == gm.GetPlayerController.currentPlayer.GetPlayerID)
+            {
+                render.material.color = selectedColor;
+            }
+            else
+            {
+                render.material.color = blockedTileColor;
+            }
+        }
+        else
+        {
+            render.material.color = selectedColor;
+        }
         selected = !selected;
         highlighted = false;
     }
@@ -129,25 +143,34 @@ public class Tile : MonoBehaviour
             highlighted = true;
             render.material.color = highlightedColor;
         }
-        else if (selected && highlight)
-        {
+        /*else if (selected && highlight) //Zal een andere kleur krijgen, moveObjectColor?
+        { 
             render.material.color = selectedColor;
+        }*/
+        else if (selected && !highlight)
+        {
+            HighlightBlockSelected();
         }
         else if (buildUnit != null && hover)
         {
-            if (buildUnit.Player.GetPlayerID == gm.GetPlayerController.currentPlayer.GetPlayerID)
-            {
-                render.material.color = hoverColor;
-            }
-            else
-            {
-                render.material.color = blockedTileColor;
-            }
+            HighlightBlockSelected();
         }
         else
         {
             highlighted = false;
             render.material.color = defaultMaterialColor;
+        }
+    }
+
+    public void HighlightBlockSelected()
+    {
+        if (buildUnit.Player.GetPlayerID == gm.GetPlayerController.currentPlayer.GetPlayerID)
+        {
+            render.material.color = selectedColor;
+        }
+        else
+        {
+            render.material.color = blockedTileColor;
         }
     }
 
@@ -200,7 +223,7 @@ public class Tile : MonoBehaviour
 
                 if (type == RangeType.Cross)
                 {
-                    for (int x = minX; x <= maxX; x++)
+                    for (int x = minX; x <= maxX; x++) //Todo: niet door drawen wanneer er iets in de weg zit en vanuit het object loopen, zodat je makkelijk uit de for loop kan gaan wanneer een object in de weg zit.
                     {
                         gen.terrain[x, yTile].HighlightTile(highlight);
                     }

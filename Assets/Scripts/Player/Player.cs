@@ -10,12 +10,14 @@ public class Player : MonoBehaviour, IResources
     public Vector3 cameraPosition;
     public Building[] buildings;
     public Unit[] units;
+    public int ID;
 
-    public int GetPlayerID { get { return id; } }
+    public int GetPlayerID { get { return ID; } }
 
     void Awake()
     {
         id += 1;
+        ID = id;
         resources = new int[GameManager.amountOfResources];
     }
 
