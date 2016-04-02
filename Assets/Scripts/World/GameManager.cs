@@ -143,6 +143,7 @@ public class GameManager : MonoBehaviour
             {
                 spawnedBuilding.OnSpawn(selectedTile, playerController.currentPlayer);
                 playerController.currentPlayer.AddBuilding(spawnedBuilding);
+                selectedTile.HighLightNearbyTiles(2, RangeType.Cross, true);
             }
             else
             {
@@ -165,6 +166,7 @@ public class GameManager : MonoBehaviour
             {
                 spawnedUnit.OnSpawn(selectedTile, playerController.currentPlayer);
                 playerController.currentPlayer.AddUnit(spawnedUnit);
+                selectedTile.HighLightNearbyTiles(2, RangeType.Cross, true);
             }
             else
             {

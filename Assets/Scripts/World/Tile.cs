@@ -15,6 +15,7 @@ public class Tile : MonoBehaviour
     public Color selectedColor = Color.green;
     public Color hoverColor = Color.green;
     public Color blockedTileColor = Color.red;
+    public Color SelectedHighlightColor = Color.blue;
 
     public GameObject currentGameObject;
     public IBuildUnit buildUnit;
@@ -61,11 +62,18 @@ public class Tile : MonoBehaviour
 
     void OnMouseEnter()
     {
-        render.material.color = selectedColor;
         hover = true;
         if (buildUnit != null)
         {
             HighLightNearbyTiles(2, RangeType.Cross, true);
+        }
+        else if (highlighted && hover)
+        {
+            render.material.color = SelectedHighlightColor;
+        }
+        else
+        {
+            render.material.color = selectedColor;
         }
     }
 
@@ -143,17 +151,17 @@ public class Tile : MonoBehaviour
             highlighted = true;
             render.material.color = highlightedColor;
         }
-        /*else if (selected && highlight) //Zal een andere kleur krijgen, moveObjectColor?
-        { 
-            render.material.color = selectedColor;
-        }*/
-        else if (selected && !highlight)
+        else if (selected && !highlight && buildUnit != null)
         {
             HighlightBlockSelected();
         }
         else if (buildUnit != null && hover)
         {
             HighlightBlockSelected();
+        }
+        else if (highlight && hover)
+        {
+            render.material.color = SelectedHighlightColor;
         }
         else
         {
