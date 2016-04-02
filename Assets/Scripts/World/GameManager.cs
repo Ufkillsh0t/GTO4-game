@@ -116,7 +116,20 @@ public class GameManager : MonoBehaviour
             if(hit.collider.gameObject.tag == "Tile")
             {
                 Tile t = hit.collider.gameObject.GetComponent<Tile>();
-                Debug.Log(t);
+            }
+            if(hit.collider.gameObject.tag == "TileObject")
+            {
+                IBuildUnit tileObject = hit.collider.gameObject.GetComponent<IBuildUnit>();
+                if(tileObject is Building)
+                {
+                    Building b = (Building)tileObject;
+                    //Debug.Log(b.ID);
+                }
+                if(tileObject is Unit)
+                {
+                    Unit u = (Unit)tileObject;
+                    //Debug.Log(u);
+                }
             }
         }    
     }
