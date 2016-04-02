@@ -97,11 +97,28 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         UiUpdate();
+        RayCastTest();
     }
 
     public static GameManager GetGameManager()
     {
         return instance;
+    }
+
+    public void RayCastTest() //Deze methode werkt morgen aan het selecteren en hoveren zelf werken en unit movement!
+    {
+        Ray ray = currentCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, 100))
+        {
+            Debug.DrawLine(ray.origin, hit.point);
+            if(hit.collider.gameObject.tag == "Tile")
+            {
+                Tile t = hit.collider.gameObject.GetComponent<Tile>();
+                Debug.Log(t);
+            }
+        }    
     }
 
     public void CheckResourceArrayLength()
