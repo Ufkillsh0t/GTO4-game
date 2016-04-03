@@ -51,6 +51,8 @@ public class Tile : MonoBehaviour
     /// </summary>
     public void MouseClick()
     {
+        ResetGameManagerTile();
+        selected = !selected;
         Debug.Log("Test click");
     }
 

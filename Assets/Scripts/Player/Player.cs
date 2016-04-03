@@ -21,6 +21,10 @@ public class Player : MonoBehaviour, IResources
         resources = new int[GameManager.amountOfResources];
     }
 
+    /// <summary>
+    /// Voegt een gebouw toe aan deze speler.
+    /// </summary>
+    /// <param name="b">Het gebouw dat toegevoegd moet worden</param>
     public void AddBuilding(Building b)
     {
         if (buildings == null)
@@ -43,7 +47,7 @@ public class Player : MonoBehaviour, IResources
     /// <summary>
     /// Verwijdert een gebouw uit de array met gebouwen.
     /// </summary>
-    /// <param name="b"></param>
+    /// <param name="b">Het gebouw dat verwijderd moet worden.</param>
     public void RemoveBuilding(Building b)
     {
         Building[] newBuildings = new Building[buildings.Length - 1];
@@ -59,6 +63,10 @@ public class Player : MonoBehaviour, IResources
         buildings = newBuildings;
     }
 
+    /// <summary>
+    /// Voegt een unit toe aan deze speler.
+    /// </summary>
+    /// <param name="u">Unit die je aan deze speler wilt toevoegen!</param>
     public void AddUnit(Unit u)
     {
         if (units == null)
@@ -73,7 +81,7 @@ public class Player : MonoBehaviour, IResources
             {
                 newUnits[i] = units[i];
             }
-            newUnits[buildings.Length] = u;
+            newUnits[units.Length] = u;
             units = newUnits;
         }
     }
@@ -81,7 +89,7 @@ public class Player : MonoBehaviour, IResources
     /// <summary>
     /// Verwijdert een gebouw uit de array met gebouwen.
     /// </summary>
-    /// <param name="b"></param>
+    /// <param name="b">Unit die je van deze speler wilt verwijderen.</param>
     public void RemoveUnit(Building b)
     {
         Unit[] newUnits = new Unit[units.Length - 1];
@@ -97,6 +105,11 @@ public class Player : MonoBehaviour, IResources
         units = newUnits;
     }
 
+    /// <summary>
+    /// Kijkt of de speler genoeg resources heeft om iets te kopen.
+    /// </summary>
+    /// <param name="cost">De hoeveelheid die een gebouw of unit kost.</param>
+    /// <returns>Of de speler genoeg resources heeft voor de gegeven kosten</returns>
     public bool EnoughResources(int[] cost)
     {
         if (cost.Length != resources.Length)
@@ -118,16 +131,30 @@ public class Player : MonoBehaviour, IResources
         }
     }
 
+    /// <summary>
+    /// Voegt een playernaam toe aan deze speler.
+    /// </summary>
+    /// <param name="playerName"></param>
     public void AddPlayerName(string playerName)
     {
         this.playerName = playerName;
     }
 
+    /// <summary>
+    /// Voegt resources aan deze speler toe.
+    /// </summary>
+    /// <param name="resource">Welk type resource toegevoegd moet worden.</param>
+    /// <param name="amount">Hoeveel er moet worden toegevoegd van de gegeven resource</param>
     public void AddResources(ResourceType resource, int amount)
     {
         resources[(int)resource] += amount;
     }
 
+    /// <summary>
+    /// Verwijdert resources van deze speler.
+    /// </summary>
+    /// <param name="resource">Van welke type resource er wat verwijder moet worden.</param>
+    /// <param name="amount">Hoeveel er van het gegeven type resource verwijderd moet worden.</param>
     public void RemoveResources(ResourceType resource, int amount)
     {
         resources[(int)resource] -= amount;
