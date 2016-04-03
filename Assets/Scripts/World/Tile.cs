@@ -67,14 +67,15 @@ public class Tile : MonoBehaviour
         {
             ColorTile(TileColor.Highlight);
         }
-        if (!selected)
+        if (!selected && hover)
         {
             ColorTile(TileColor.Default);
-            if(buildUnit != null)
+            if (buildUnit != null)
             {
                 HighLightNearbyTiles(buildUnit.GetRange(), buildUnit.GetRangeType(), false);
             }
         }
+        hover = false;
     }
 
     /// <summary>
@@ -82,11 +83,13 @@ public class Tile : MonoBehaviour
     /// </summary>
     public void HoverTile()
     {
+        hover = true;
         if (!highlighted && buildUnit != null)
         {
             if (buildUnit.Player.ID == gm.GetPlayerController.currentPlayer.ID)
             {
                 ColorTile(TileColor.Hover);
+                HighLightNearbyTiles(buildUnit.GetRange(), buildUnit.GetRangeType(), true);
             }
             else
             {
@@ -100,7 +103,6 @@ public class Tile : MonoBehaviour
                 if (buildUnit.Player.ID == gm.GetPlayerController.currentPlayer.ID)
                 {
                     ColorTile(TileColor.Hover);
-                    HighLightNearbyTiles(buildUnit.GetRange(), buildUnit.GetRangeType(), true);
                 }
                 else
                 {
@@ -125,6 +127,7 @@ public class Tile : MonoBehaviour
     {
         ResetGameManagerTile();
         selected = !selected;
+        highlighted = false;
         if (buildUnit != null)
         {
             if (buildUnit.Player.ID == gm.GetPlayerController.currentPlayer.ID)
@@ -166,11 +169,19 @@ public class Tile : MonoBehaviour
 
             if (type == RangeType.Cross)
             {
-                for (int x = minX; x <= maxX; x++) //Todo: niet door drawen wanneer er iets in de weg zit en vanuit het object loopen, zodat je makkelijk uit de for loop kan gaan wanneer een object in de weg zit.
+                for (int x = xTile; x >= minX; x--) //Todo: niet door drawen wanneer er iets in de weg zit en vanuit het object loopen, zodat je makkelijk uit de for loop kan gaan wanneer een object in de weg zit.
                 {
                     gen.terrain[x, yTile].HighlightTile(highlight);
                 }
-                for (int y = minY; y <= maxY; y++)
+                for (int x = xTile; x <= maxX; x++)
+                {
+                    gen.terrain[x, yTile].HighlightTile(highlight);
+                }
+                for (int y = yTile; y >= minY; y--)
+                {
+                    gen.terrain[xTile, y].HighlightTile(highlight);
+                }
+                for (int y = yTile; y <= maxY; y++)
                 {
                     gen.terrain[xTile, y].HighlightTile(highlight);
                 }
@@ -192,14 +203,21 @@ public class Tile : MonoBehaviour
     /// <param name="highlight">If this object should be highlighted or not</param>
     public void HighlightTile(bool highlight)
     {
-        highlighted = highlight;
-        if (highlighted)
+        if (!selected)
         {
-            ColorTile(TileColor.Highlight);
-        }
-        else
-        {
-            ColorTile(TileColor.Default);
+            highlighted = highlight;
+            if (hover && highlighted)
+            {
+                ColorTile(TileColor.Hover);
+            }
+            else if (highlighted)
+            {
+                ColorTile(TileColor.Highlight);
+            }
+            else
+            {
+                ColorTile(TileColor.Default);
+            }
         }
     }
 
