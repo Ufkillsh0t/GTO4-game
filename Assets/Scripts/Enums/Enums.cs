@@ -9,3 +9,4 @@ public enum UnitType { Attack, Defense }
 
 public enum RangeType {  Sphere, Cross}
 
+public enum TileColor {  Selected, Hover, Blocked, Highlight, Move, Attack, Default }

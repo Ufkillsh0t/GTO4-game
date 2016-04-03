@@ -11,11 +11,12 @@ public class Tile : MonoBehaviour
     private Color defaultMaterialColor;
     public Color DefaultMaterialColor { get { return defaultMaterialColor; } }
 
-    public Color highlightedColor = Color.yellow;
-    public Color selectedColor = Color.green;
+    public Color attackColor = Color.magenta;
+    public Color blockedColor = Color.red;
+    public Color highlightColor = Color.yellow;
     public Color hoverColor = Color.green;
-    public Color blockedTileColor = Color.red;
-    public Color SelectedHighlightColor = Color.blue;
+    public Color moveColor = Color.blue;
+    public Color selectedColor = Color.green;
 
     public GameObject currentGameObject;
     public IBuildUnit buildUnit;
@@ -53,6 +54,7 @@ public class Tile : MonoBehaviour
     {
         ResetGameManagerTile();
         selected = !selected;
+        ColorTile(TileColor.Selected);
         Debug.Log("Test click");
     }
 
@@ -62,6 +64,39 @@ public class Tile : MonoBehaviour
     public void MouseExit()
     {
         Debug.Log("Test exit");
+    }
+
+    /// <summary>
+    /// Geeft de tile een van de 7 mogelijke kleuren.
+    /// </summary>
+    /// <param name="color">De kleur die de tile moet worden!</param>
+    public void ColorTile(TileColor color)
+    {
+        switch (color)
+        {
+            case TileColor.Hover:
+                render.material.color = hoverColor;
+                break;
+            case TileColor.Selected:
+                render.material.color = selectedColor;
+                break;
+            case TileColor.Blocked:
+                render.material.color = blockedColor;
+                break;
+            case TileColor.Highlight:
+                render.material.color = highlightColor;
+                break;
+            case TileColor.Move:
+                render.material.color = moveColor;
+                break;
+            case TileColor.Attack:
+                render.material.color = attackColor;
+                break;
+            default:
+            case TileColor.Default:
+                render.material.color = defaultMaterialColor;
+                break;
+        }
     }
 
     /// <summary>
@@ -91,7 +126,7 @@ public class Tile : MonoBehaviour
     public void ResetTile()
     {
         selected = false;
-        render.material.color = defaultMaterialColor;
+        ColorTile(TileColor.Default);
     }
 
     /// <summary>
