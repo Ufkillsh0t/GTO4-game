@@ -52,10 +52,7 @@ public class Tile : MonoBehaviour
     /// </summary>
     public void MouseClick()
     {
-        ResetGameManagerTile();
-        selected = !selected;
-        ColorTile(TileColor.Selected);
-        Debug.Log("Test click");
+        SelectTile();
     }
 
     /// <summary>
@@ -63,7 +60,31 @@ public class Tile : MonoBehaviour
     /// </summary>
     public void MouseExit()
     {
-        Debug.Log("Test exit");
+
+    }
+
+    /// <summary>
+    /// Geeft de selecteer kleur aan de gegeven tile.
+    /// </summary>
+    public void SelectTile()
+    {
+        ResetGameManagerTile();
+        selected = !selected;
+        if (buildUnit != null)
+        {
+            if (buildUnit.Player.ID == gm.GetPlayerController.currentPlayer.ID)
+            {
+                ColorTile(TileColor.Selected);
+            }
+            else
+            {
+                ColorTile(TileColor.Blocked);
+            }
+        }
+        else
+        {
+            ColorTile(TileColor.Selected);
+        }
     }
 
     /// <summary>
