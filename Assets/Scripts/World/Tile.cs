@@ -38,75 +38,29 @@ public class Tile : MonoBehaviour
         ID = uniqueID;
     }
 
-    void OnMouseDown()
+    /// <summary>
+    /// Wordt uitgevoerd wanneer er een muis over een tile hovert.
+    /// </summary>
+    public void MouseHover()
     {
-        ResetGameManagerTile();
-        if (buildUnit != null)
-        {
-            if (buildUnit.Player.GetPlayerID == gm.GetPlayerController.currentPlayer.GetPlayerID)
-            {
-                render.material.color = selectedColor;
-            }
-            else
-            {
-                render.material.color = blockedTileColor;
-            }
-        }
-        else
-        {
-            render.material.color = selectedColor;
-        }
-        selected = !selected;
-        highlighted = false;
+
     }
 
-    void OnMouseEnter()
+    /// <summary>
+    /// Wordt uitgevoerd wanneer er op dit tile geklikt word.
+    /// </summary>
+    public void MouseClick()
     {
-        hover = true;
-        if (buildUnit != null)
-        {
-            HighLightNearbyTiles(2, RangeType.Cross, true);
-        }
-        else if (highlighted && hover)
-        {
-            render.material.color = SelectedHighlightColor;
-        }
-        else
-        {
-            render.material.color = selectedColor;
-        }
+        Debug.Log("Test click");
     }
 
-    void OnMouseExit()
+    /// <summary>
+    /// Wordt uitgevoerd wanneer een andere tile geselecteerd word.
+    /// </summary>
+    public void MouseExit()
     {
-        hover = false;
-        if (!selected)
-        {
-            if (buildUnit != null)
-            {
-                HighLightNearbyTiles(2, RangeType.Cross, false);
-            }
-            else if (highlighted)
-            {
-                render.material.color = highlightedColor;
-            }
-            else
-            {
-                render.material.color = defaultMaterialColor;
-            }
-        }
+        Debug.Log("Test exit");
     }
-
-    //Code hieronder is misschien overbodig.
-    //gm = GameManager.GetGameManager();
-    //if (gm.selectedTile != null)
-    //{
-    //    Tile t = gm.selectedTile;
-    //    if (t.ID == ID)
-    //    {
-    //        gm.selectedTile = this;
-    //    }
-    //}
 
     /// <summary>
     /// Reset de huidig geselecteerde tile in de gamemanager.
@@ -130,6 +84,15 @@ public class Tile : MonoBehaviour
     }
 
     /// <summary>
+    /// Reset de tile naar zijn default color.
+    /// </summary>
+    public void ResetTile()
+    {
+        selected = false;
+        render.material.color = defaultMaterialColor;
+    }
+
+    /// <summary>
     /// Zet de coördinaten van tile vast in paramaters.
     /// </summary>
     /// <param name="x">x coörd van de tile</param>
@@ -141,132 +104,10 @@ public class Tile : MonoBehaviour
     }
 
     /// <summary>
-    /// Dit zorgt er voor dat een tile gehighlight wordt of geunlight.
+    /// Spawnt een object op deze tile
     /// </summary>
-    /// <param name="highlight">Of de tile gehighlight moet worden of niet.</param>
-    public void HighlightTile(bool highlight)
-    {
-        if (highlight && buildUnit == null)
-        {
-            highlighted = true;
-            render.material.color = highlightedColor;
-        }
-        else if (selected && !highlight && buildUnit != null)
-        {
-            HighlightBlockSelected();
-        }
-        else if (buildUnit != null && hover)
-        {
-            HighlightBlockSelected();
-        }
-        else if (highlight && hover)
-        {
-            render.material.color = SelectedHighlightColor;
-        }
-        else
-        {
-            highlighted = false;
-            render.material.color = defaultMaterialColor;
-        }
-    }
-
-    public void HighlightBlockSelected()
-    {
-        if (buildUnit.Player.GetPlayerID == gm.GetPlayerController.currentPlayer.GetPlayerID)
-        {
-            render.material.color = selectedColor;
-        }
-        else
-        {
-            render.material.color = blockedTileColor;
-        }
-    }
-
-    /// <summary>
-    /// Reset de tile naar zijn default color.
-    /// </summary>
-    public void ResetTile()
-    {
-        selected = false;
-        render.material.color = defaultMaterialColor;
-        if (buildUnit != null)
-        {
-            HighLightNearbyTiles(2, RangeType.Cross, false);
-        }
-    }
-
-    //RaycastHit[] hit = Physics.BoxCastAll(gameObject.transform.position, new Vector3(0.5f, 0.5f), new Vector3(1f, 0f, 0f), Quaternion.identity, range); //new Ray(gameObject.transform.position, new Vector3(1, 0, 1)), range 4 of 6de overload gebruiken (kan dus eventueel met layers.)
-    //Debug.DrawRay(gameObject.transform.position, new Vector3(1f, 0f, 0f), Color.yellow, 10);
-    //foreach (RaycastHit r in hit)
-    //{
-    //    if (r.collider.gameObject.tag == "Tile")
-    //    {
-    //        Tile t = r.collider.gameObject.GetComponent<Tile>();
-    //        t.render.material.color = t.DefaultMaterialColor;
-    //    }
-    //}
-
-    /// <summary>
-    /// Highlight de tiles rondom deze tile binnen een bepaalde range afhankelijk van het range type.
-    /// </summary>
-    /// <param name="range"></param>
-    /// <param name="type"></param>
-    /// <param name="highlight"></param>
-    public void HighLightNearbyTiles(int range, RangeType type, bool highlight)
-    {
-        if (buildUnit != null)
-        {
-            if (buildUnit.Player.GetPlayerID == gm.GetPlayerController.currentPlayer.GetPlayerID)
-            {
-                gen = GridGenerator.GetGridGenerator();
-
-                int minX = xTile - range;
-                int minY = yTile - range;
-                int maxX = xTile + range;
-                int maxY = yTile + range;
-                if (minX < 0) minX = 0;
-                if (minY < 0) minY = 0;
-                if (maxX >= gen.terrainWidth) maxX = gen.terrainWidth - 1;
-                if (maxY >= gen.terrainHeight) maxY = gen.terrainHeight - 1;
-
-                if (type == RangeType.Cross)
-                {
-                    for (int x = minX; x <= maxX; x++) //Todo: niet door drawen wanneer er iets in de weg zit en vanuit het object loopen, zodat je makkelijk uit de for loop kan gaan wanneer een object in de weg zit.
-                    {
-                        gen.terrain[x, yTile].HighlightTile(highlight);
-                    }
-                    for (int y = minY; y <= maxY; y++)
-                    {
-                        gen.terrain[xTile, y].HighlightTile(highlight);
-                    }
-                }
-                else
-                {
-                    //Formule voor sphere highlighting
-                }
-            }
-            else
-            {
-                HighlightTile(false);
-            }
-        }
-        else
-        {
-            Debug.Log("Er is geen gebouw dat gehighlight kan worden!");
-        }
-    }
-
-    //RaycastHit[] hit = Physics.BoxCastAll(gameObject.transform.position, new Vector3(0.5f, 0.5f), new Vector3(1f, 0f, 0f), Quaternion.identity, range); //new Ray(gameObject.transform.position, new Vector3(1, 0, 1)), range 4 of 6de overload gebruiken (kan dus eventueel met layers.)
-    //Debug.DrawRay(gameObject.transform.position, new Vector3(1f, 0f, 0f), Color.yellow, 10);
-    //foreach (RaycastHit r in hit)
-    //{
-    //    if (r.collider.gameObject.tag == "Tile")
-    //    {
-    //        Tile t = r.collider.gameObject.GetComponent<Tile>();
-    //        t.render.material.color = Color.yellow;
-    //    }
-    //}
-
+    /// <param name="g">Het game object wat je wilt spawnen</param>
+    /// <returns>Het gespawnde GameObject (Een clone van het meegegeven GameObject)</returns>
     public GameObject SpawnObject(GameObject g)
     {
         if (currentGameObject != null)
@@ -281,11 +122,9 @@ public class Tile : MonoBehaviour
             currentGameObject.transform.position = transform.parent.position;
             currentGameObject.transform.localPosition = new Vector3(0f, 0f, (currentGameObject.GetComponent<Renderer>().bounds.size.y / 2));
             currentGameObject.transform.rotation = Quaternion.identity;
-            //current.transform.localRotation = Quaternion.identity;
             if (currentGameObject != null)
             {
                 buildUnit = currentGameObject.GetComponent<IBuildUnit>();
-                //HighLightNearbyTiles(2, RangeType.Cross, true);
             }
 
             Debug.Log(currentGameObject);

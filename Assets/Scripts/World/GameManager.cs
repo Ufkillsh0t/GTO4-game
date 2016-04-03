@@ -96,16 +96,23 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        RayCastMouse();
         UiUpdate();
-        RayCastTest();
     }
 
+    /// <summary>
+    /// Retourneert de huidige instantie van de GameManager
+    /// </summary>
+    /// <returns>De huidige GameManager</returns>
     public static GameManager GetGameManager()
     {
         return instance;
     }
 
-    public void RayCastTest() //Deze methode werkt morgen aan het selecteren en hoveren zelf werken en unit movement!
+    /// <summary>
+    /// Voert een RayCast uit naar de mouse positie van de huidige camera.
+    /// </summary>
+    public void RayCastMouse() //Deze methode werkt morgen aan het selecteren en hoveren zelf werken en unit movement!
     {
         Ray ray = currentCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -113,27 +120,71 @@ public class GameManager : MonoBehaviour
         if (Physics.Raycast(ray, out hit, 100))
         {
             Debug.DrawLine(ray.origin, hit.point);
-            if(hit.collider.gameObject.tag == "Tile")
-            {
-                Tile t = hit.collider.gameObject.GetComponent<Tile>();
-            }
-            if(hit.collider.gameObject.tag == "TileObject")
-            {
-                IBuildUnit tileObject = hit.collider.gameObject.GetComponent<IBuildUnit>();
-                if(tileObject is Building)
-                {
-                    Building b = (Building)tileObject;
-                    //Debug.Log(b.ID);
-                }
-                if(tileObject is Unit)
-                {
-                    Unit u = (Unit)tileObject;
-                    //Debug.Log(u);
-                }
-            }
+            RayCastMouseHit(hit);
         }    
     }
 
+    /// <summary>
+    /// Kijkt wat voor object de raycast heeft geraakt.
+    /// </summary>
+    /// <param name="hit">Het object dat de raycast heeft geraakt.</param>
+    public void RayCastMouseHit(RaycastHit hit)
+    {
+        if (hit.collider.gameObject.tag == "Tile")
+        {
+            Tile t = hit.collider.gameObject.GetComponent<Tile>();
+            TileSelection(t);
+        }
+        if (hit.collider.gameObject.tag == "TileObject")
+        {
+            IBuildUnit ibu = hit.collider.gameObject.GetComponent<IBuildUnit>();
+            BuildUnitSelection(ibu);
+        }
+    }
+
+    /// <summary>
+    /// Kijkt of het meegegeven object een geselecteerde of hoverende kleur nodig heeft.
+    /// </summary>
+    /// <param name="t"></param>
+    public void TileSelection(Tile t)
+    {
+        if (Input.GetMouseButtonDown(0) && !t.selected) //Later nog optie voor het klikken met de rechter muisknop.
+        {
+            if (selectedTile != null)
+            {
+                if (t.ID != selectedTile.ID)
+                {
+                    selectedTile.MouseExit();
+                    t.MouseClick();
+                }
+                else
+                {
+                    Debug.Log("Het huidige tile is geselecteerd in de gamemanger maar niet in zijn script zelf!");
+                }
+            }
+            else
+            {
+                t.MouseClick();
+            }
+        }
+        else
+        {
+            t.MouseHover();
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="ibu"></param>
+    public void BuildUnitSelection(IBuildUnit ibu)
+    {
+
+    }
+
+    /// <summary>
+    /// Kijkt of de resource array genoeg resources heeft.
+    /// </summary>
     public void CheckResourceArrayLength()
     {
         if (startResources.Length < amountOfResources)
@@ -148,6 +199,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Update de UI
+    /// </summary>
     public void UiUpdate()
     {
         Text playerName = panelText[0].GetComponent<Text>();
@@ -161,6 +215,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Voegt een gebouw toe aan het speelveld en de huidige speler.
+    /// </summary>
+    /// <param name="buildingType">Welk gebouw je wilt spawnen</param>
     public void AddBuilding(int buildingType)
     {
         //Controleer voor genoeg resources.
@@ -173,7 +231,7 @@ public class GameManager : MonoBehaviour
             {
                 spawnedBuilding.OnSpawn(selectedTile, playerController.currentPlayer);
                 playerController.currentPlayer.AddBuilding(spawnedBuilding);
-                selectedTile.HighLightNearbyTiles(2, RangeType.Cross, true);
+                //selectedTile.HighLightNearbyTiles(2, RangeType.Cross, true);
             }
             else
             {
@@ -186,6 +244,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Voegt een Unit toe aan het speelveld en de huidige speler.
+    /// </summary>
+    /// <param name="unitType">Welk type Unit je wilt spawnen</param>
     public void AddUnit(int unitType)
     {
         Unit unit = units[unitType].GetComponent<Unit>();
@@ -196,7 +258,7 @@ public class GameManager : MonoBehaviour
             {
                 spawnedUnit.OnSpawn(selectedTile, playerController.currentPlayer);
                 playerController.currentPlayer.AddUnit(spawnedUnit);
-                selectedTile.HighLightNearbyTiles(2, RangeType.Cross, true);
+                //selectedTile.HighLightNearbyTiles(2, RangeType.Cross, true);
             }
             else
             {

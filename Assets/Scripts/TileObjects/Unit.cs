@@ -72,12 +72,27 @@ public class Unit : MonoBehaviour, IBuildUnit
         throw new NotImplementedException();
     }
 
-    public bool Defend()
+    public bool Defend(int damage)
     {
         throw new NotImplementedException();
     }
 
-    public bool Ugrade()
+    public bool Upgrade()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Select()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Hover()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Exit()
     {
         throw new NotImplementedException();
     }
