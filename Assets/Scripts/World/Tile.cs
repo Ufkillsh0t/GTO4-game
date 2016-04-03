@@ -44,7 +44,10 @@ public class Tile : MonoBehaviour
     /// </summary>
     public void MouseHover()
     {
-
+        if (selected == false)
+        {
+            HoverTile();
+        }
     }
 
     /// <summary>
@@ -60,7 +63,32 @@ public class Tile : MonoBehaviour
     /// </summary>
     public void MouseExit()
     {
+        if (!selected)
+        {
+            ColorTile(TileColor.Default);
+        }
+    }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public void HoverTile()
+    {
+        if (buildUnit != null)
+        {
+            if (buildUnit.Player.ID == gm.GetPlayerController.currentPlayer.ID)
+            {
+                ColorTile(TileColor.Hover);
+            }
+            else
+            {
+                ColorTile(TileColor.Blocked);
+            }
+        }
+        else
+        {
+            ColorTile(TileColor.Hover);
+        }
     }
 
     /// <summary>

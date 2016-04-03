@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance;
     public Tile selectedTile;
+    public Tile hoverTile;
 
     //Buildings
     public GameObject[] buildings; //Misschien buildings van maken met GetComponent in de load?
@@ -150,26 +151,45 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !t.selected) //Later nog optie voor het klikken met de rechter muisknop.
         {
-            if (selectedTile != null)
+            SelectTile(t);
+        }
+        if(hoverTile == null)
+        {
+            hoverTile = t;
+            if (!hoverTile.selected)
             {
-                if (t.ID != selectedTile.ID)
-                {
-                    selectedTile.MouseExit();
-                    t.MouseClick();
-                }
-                else
-                {
-                    Debug.Log("Het huidige tile is geselecteerd in de gamemanger maar niet in zijn script zelf!");
-                }
+                t.MouseHover();
+            }
+        }
+        if(hoverTile != null && hoverTile.ID != t.ID)
+        {
+            hoverTile.MouseExit();
+            hoverTile = t;
+            t.MouseHover();
+        }
+    }
+
+    /// <summary>
+    /// Selecteerd een gegeven tile.
+    /// </summary>
+    /// <param name="t">De tile die geselecteerd moet worden.</param>
+    public void SelectTile(Tile t)
+    {
+        if (selectedTile != null)
+        {
+            if (t.ID != selectedTile.ID)
+            {
+                selectedTile.MouseExit();
+                t.MouseClick();
             }
             else
             {
-                t.MouseClick();
+                Debug.Log("Het huidige tile is geselecteerd in de gamemanger maar niet in zijn script zelf!");
             }
         }
         else
         {
-            t.MouseHover();
+            t.MouseClick();
         }
     }
 
