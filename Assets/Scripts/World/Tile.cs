@@ -63,18 +63,26 @@ public class Tile : MonoBehaviour
     /// </summary>
     public void MouseExit()
     {
+        if (highlighted)
+        {
+            ColorTile(TileColor.Highlight);
+        }
         if (!selected)
         {
             ColorTile(TileColor.Default);
+            if(buildUnit != null)
+            {
+                HighLightNearbyTiles(buildUnit.GetRange(), buildUnit.GetRangeType(), false);
+            }
         }
     }
 
     /// <summary>
-    /// 
+    /// Wordt uitgevoerd wanneer de mouse op een tile zit.
     /// </summary>
     public void HoverTile()
     {
-        if (buildUnit != null)
+        if (!highlighted && buildUnit != null)
         {
             if (buildUnit.Player.ID == gm.GetPlayerController.currentPlayer.ID)
             {
@@ -83,6 +91,25 @@ public class Tile : MonoBehaviour
             else
             {
                 ColorTile(TileColor.Blocked);
+            }
+        }
+        else if (highlighted)
+        {
+            if (buildUnit != null)
+            {
+                if (buildUnit.Player.ID == gm.GetPlayerController.currentPlayer.ID)
+                {
+                    ColorTile(TileColor.Hover);
+                    HighLightNearbyTiles(buildUnit.GetRange(), buildUnit.GetRangeType(), true);
+                }
+                else
+                {
+                    ColorTile(TileColor.Attack);
+                }
+            }
+            else
+            {
+                ColorTile(TileColor.Move);
             }
         }
         else
@@ -103,6 +130,7 @@ public class Tile : MonoBehaviour
             if (buildUnit.Player.ID == gm.GetPlayerController.currentPlayer.ID)
             {
                 ColorTile(TileColor.Selected);
+                HighLightNearbyTiles(buildUnit.GetRange(), buildUnit.GetRangeType(), true);
             }
             else
             {
@@ -112,6 +140,66 @@ public class Tile : MonoBehaviour
         else
         {
             ColorTile(TileColor.Selected);
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="range"></param>
+    /// <param name="type"></param>
+    /// <param name="highlight"></param>
+    public void HighLightNearbyTiles(int range, RangeType type, bool highlight)
+    {
+        if (range > 0)
+        {
+            gen = GridGenerator.GetGridGenerator();
+
+            int minX = xTile - range;
+            int minY = yTile - range;
+            int maxX = xTile + range;
+            int maxY = yTile + range;
+            if (minX < 0) minX = 0;
+            if (minY < 0) minY = 0;
+            if (maxX >= gen.terrainWidth) maxX = gen.terrainWidth - 1;
+            if (maxY >= gen.terrainHeight) maxY = gen.terrainHeight - 1;
+
+            if (type == RangeType.Cross)
+            {
+                for (int x = minX; x <= maxX; x++) //Todo: niet door drawen wanneer er iets in de weg zit en vanuit het object loopen, zodat je makkelijk uit de for loop kan gaan wanneer een object in de weg zit.
+                {
+                    gen.terrain[x, yTile].HighlightTile(highlight);
+                }
+                for (int y = minY; y <= maxY; y++)
+                {
+                    gen.terrain[xTile, y].HighlightTile(highlight);
+                }
+            }
+            else
+            {
+                //Formule voor sphere highlighting
+            }
+        }
+        else
+        {
+            Debug.Log("Range is 0 of" + this + " " + ID);
+        }
+    }
+
+    /// <summary>
+    /// Highlights the current tile.
+    /// </summary>
+    /// <param name="highlight">If this object should be highlighted or not</param>
+    public void HighlightTile(bool highlight)
+    {
+        highlighted = highlight;
+        if (highlighted)
+        {
+            ColorTile(TileColor.Highlight);
+        }
+        else
+        {
+            ColorTile(TileColor.Default);
         }
     }
 
@@ -176,6 +264,10 @@ public class Tile : MonoBehaviour
     {
         selected = false;
         ColorTile(TileColor.Default);
+        if (buildUnit != null)
+        {
+            HighLightNearbyTiles(buildUnit.GetRange(), buildUnit.GetRangeType(), false);
+        }
     }
 
     /// <summary>

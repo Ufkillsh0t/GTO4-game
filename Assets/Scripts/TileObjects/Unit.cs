@@ -5,7 +5,9 @@ using System;
 public class Unit : MonoBehaviour, IBuildUnit
 {
 
-    public UnitType type;
+    public UnitType unitType;
+    public RangeType rangeType;
+    public int range;
     public int health;
     public int damage;
     public int armor;
@@ -95,5 +97,15 @@ public class Unit : MonoBehaviour, IBuildUnit
     public void Exit()
     {
         throw new NotImplementedException();
+    }
+
+    public int GetRange()
+    {
+        return range;
+    }
+
+    public RangeType GetRangeType()
+    {
+        return rangeType;
     }
 }

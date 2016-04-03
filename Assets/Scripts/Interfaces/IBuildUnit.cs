@@ -3,7 +3,19 @@ using System.Collections;
 
 public interface IBuildUnit {
     Player Player { get; }
-    
+
+    /// <summary>
+    /// Geeft de range van het IBuildUnit object.
+    /// </summary>
+    /// <returns>De range van dit IBuildUnit object</returns>
+    int GetRange();
+
+    /// <summary>
+    /// Verkrijgt het rangeType van dit object.
+    /// </summary>
+    /// <returns>Het rangeType van dit object</returns>
+    RangeType GetRangeType();
+
     /// <summary>
     /// Valt een andere IBuiltUnit object aan;
     /// </summary>
