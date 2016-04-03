@@ -63,17 +63,21 @@ public class Tile : MonoBehaviour
     /// </summary>
     public void MouseExit()
     {
-        if (highlighted)
-        {
-            ColorTile(TileColor.Highlight);
-        }
         if (!selected && hover)
         {
             ColorTile(TileColor.Default);
             if (buildUnit != null)
             {
                 HighLightNearbyTiles(buildUnit.GetRange(), buildUnit.GetRangeType(), false);
+                if(gm.selectedTile != null)
+                {
+                    gm.selectedTile.SelectTile();
+                }
             }
+        }
+        if (highlighted)
+        {
+            ColorTile(TileColor.Highlight);
         }
         hover = false;
     }
@@ -126,7 +130,7 @@ public class Tile : MonoBehaviour
     public void SelectTile()
     {
         ResetGameManagerTile();
-        selected = !selected;
+        selected = true;
         highlighted = false;
         if (buildUnit != null)
         {
