@@ -13,9 +13,21 @@ public class Building : MonoBehaviour, IBuildUnit
     public int armor;
     public int[] buildingCost;
     private int amountOfResources;
+
+    private Renderer render;
+    private GameManager gm;
+
     public Player player;
     public GameObject building;
     public Tile currentTile;
+
+    public Color selectedColor = Color.cyan;
+    public Color hoverColor = Color.yellow;
+    public Color blockedColor = Color.grey;
+    public Color attackColor = Color.red;
+
+    private Color defaultMaterialColor;
+    public Color DefaultMaterialColor { get { return defaultMaterialColor; } }
 
     private static int uniqueID;
     public int ID;
@@ -30,6 +42,8 @@ public class Building : MonoBehaviour, IBuildUnit
 
     void Awake()
     {
+        render = gameObject.GetComponent<Renderer>(); //Verkrijgt de renderer van dit object.
+        gm = GameManager.GetGameManager();
         uniqueID = uniqueID + 1;
         ID = uniqueID;
         CheckBuildingCostArrayLength();
@@ -86,7 +100,14 @@ public class Building : MonoBehaviour, IBuildUnit
 
     public void Select()
     {
-        throw new NotImplementedException();
+        if (currentTile.ID == gm.selectedTile.ID)
+        {
+            ColorObject(BuildUnitColor.Selected);
+        }
+        else
+        {
+            currentTile.MouseClick();
+        }
     }
 
     public void Hover()
@@ -107,5 +128,28 @@ public class Building : MonoBehaviour, IBuildUnit
     public RangeType GetRangeType()
     {
         return rangeType;
+    }
+
+    public void ColorObject(BuildUnitColor col)
+    {
+        switch (col)
+        {
+            case BuildUnitColor.Hover:
+                render.material.color = hoverColor;
+                break;
+            case BuildUnitColor.Selected:
+                render.material.color = selectedColor;
+                break;
+            case BuildUnitColor.Blocked:
+                render.material.color = blockedColor;
+                break;
+            case BuildUnitColor.Attack:
+                render.material.color = attackColor;
+                break;
+            default:
+            case BuildUnitColor.Default:
+                render.material.color = defaultMaterialColor;
+                break;
+        }
     }
 }

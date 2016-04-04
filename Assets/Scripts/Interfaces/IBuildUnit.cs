@@ -42,6 +42,12 @@ public interface IBuildUnit {
     void OnSpawn(Tile t, Player p);
 
     /// <summary>
+    /// Geeft de building een kleur;
+    /// </summary>
+    /// <param name="col"></param>
+    void ColorObject(BuildUnitColor col);
+
+    /// <summary>
     /// Wordt uitgevoerd wanneer dit object is geselecteerd.
     /// </summary>
     void Select();

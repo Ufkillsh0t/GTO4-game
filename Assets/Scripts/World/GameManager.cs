@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.DrawLine(ray.origin, hit.point);
             RayCastMouseHit(hit);
-        }    
+        }
     }
 
     /// <summary>
@@ -149,11 +149,15 @@ public class GameManager : MonoBehaviour
     /// <param name="t"></param>
     public void TileSelection(Tile t)
     {
-        if (Input.GetMouseButtonDown(0) && !t.selected) //Later nog optie voor het klikken met de rechter muisknop.
+        if (Input.GetMouseButtonDown(0) && !t.selected && !t.highlighted) //Later nog optie voor het klikken met de rechter muisknop.
         {
             SelectTile(t);
         }
-        if(hoverTile == null)
+        else if (Input.GetMouseButtonDown(1) && !t.selected && t.highlighted)
+        {
+            SelectTile(t);
+        }
+        if (hoverTile == null)
         {
             hoverTile = t;
             if (!hoverTile.selected)
@@ -161,7 +165,7 @@ public class GameManager : MonoBehaviour
                 t.MouseHover();
             }
         }
-        if(hoverTile != null && hoverTile.ID != t.ID)
+        if (hoverTile != null && hoverTile.ID != t.ID)
         {
             hoverTile.MouseExit();
             hoverTile = t;
@@ -199,7 +203,10 @@ public class GameManager : MonoBehaviour
     /// <param name="ibu"></param>
     public void BuildUnitSelection(IBuildUnit ibu)
     {
-
+        if (Input.GetMouseButtonDown(0))
+        {
+            ibu.Select();
+        }
     }
 
     /// <summary>

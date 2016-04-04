@@ -10,3 +10,5 @@ public enum UnitType { Attack, Defense }
 public enum RangeType {  Sphere, Cross}
 
 public enum TileColor {  Selected, Hover, Blocked, Highlight, Move, Attack, Default }
+
+public enum BuildUnitColor { Selected, Hover, Blocked, Attack , Default}
