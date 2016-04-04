@@ -69,7 +69,7 @@ public class Tile : MonoBehaviour
             if (buildUnit != null)
             {
                 HighLightNearbyTiles(buildUnit.GetRange(), buildUnit.GetRangeType(), false);
-                if(gm.selectedTile != null)
+                if (gm.selectedTile != null)
                 {
                     gm.selectedTile.SelectTile();
                 }
@@ -77,7 +77,14 @@ public class Tile : MonoBehaviour
         }
         if (highlighted)
         {
-            ColorTile(TileColor.Highlight);
+            if (buildUnit != null && buildUnit.Player.ID == gm.GetPlayerController.currentPlayer.ID)
+            {
+                ColorTile(TileColor.Blocked);
+            }
+            else
+            {
+                ColorTile(TileColor.Highlight);
+            }
         }
         hover = false;
     }
@@ -166,6 +173,10 @@ public class Tile : MonoBehaviour
             int minY = yTile - range;
             int maxX = xTile + range;
             int maxY = yTile + range;
+            int lxTile = xTile - 1;
+            int hxTile = xTile + 1;
+            int lyTile = yTile - 1;
+            int hyTile = yTile + 1;
             if (minX < 0) minX = 0;
             if (minY < 0) minY = 0;
             if (maxX >= gen.terrainWidth) maxX = gen.terrainWidth - 1;
@@ -173,22 +184,10 @@ public class Tile : MonoBehaviour
 
             if (type == RangeType.Cross)
             {
-                for (int x = xTile; x >= minX; x--) //Todo: niet door drawen wanneer er iets in de weg zit en vanuit het object loopen, zodat je makkelijk uit de for loop kan gaan wanneer een object in de weg zit.
-                {
-                    gen.terrain[x, yTile].HighlightTile(highlight);
-                }
-                for (int x = xTile; x <= maxX; x++)
-                {
-                    gen.terrain[x, yTile].HighlightTile(highlight);
-                }
-                for (int y = yTile; y >= minY; y--)
-                {
-                    gen.terrain[xTile, y].HighlightTile(highlight);
-                }
-                for (int y = yTile; y <= maxY; y++)
-                {
-                    gen.terrain[xTile, y].HighlightTile(highlight);
-                }
+                HighLightTilesLeft(lxTile, minX, highlight);
+                HighLightTilesRight(hxTile, maxX, highlight);
+                HighLightTilesUp(hyTile, maxY, highlight);
+                HighLightTilesDown(lyTile, minY, highlight);
             }
             else
             {
@@ -198,6 +197,102 @@ public class Tile : MonoBehaviour
         else
         {
             Debug.Log("Range is 0 of" + this + " " + ID);
+        }
+    }
+
+    /// <summary>
+    /// Highlights alle tiles aan de linkerkant van de huidige tile.
+    /// </summary>
+    /// <param name="lxTile">Begin tile die gehighlight moet worden</param>
+    /// <param name="minX">Hoeveel tiles er gehighlight mogen worden</param>
+    /// <param name="highlight">Of de bool gehighlight of geunlight moet worden</param>
+    public void HighLightTilesLeft(int lxTile, int minX, bool highlight)
+    {
+        bool blocked = false;
+        for (int x = lxTile; x >= minX; x--) //Todo: niet door drawen wanneer er iets in de weg zit en vanuit het object loopen, zodat je makkelijk uit de for loop kan gaan wanneer een object in de weg zit.
+        {
+            Tile t = gen.terrain[x, yTile];
+            if (t.buildUnit == null && !blocked)
+            {
+                t.HighlightTile(highlight);
+            }
+            if (t.buildUnit != null && !blocked)
+            {
+                blocked = true;
+                t.HighlightTile(highlight);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Highlight alle tiles aan de rechterkant van de huidige tile.
+    /// </summary>
+    /// <param name="hxTile">Begin tile die gehighlight moet worden</param>
+    /// <param name="maxX">Hoeveel tiles er gehighlight mogen worden</param>
+    /// <param name="highlight">Of de bool gehighlight of geunlight moet worden</param>
+    public void HighLightTilesRight(int hxTile, int maxX, bool highlight)
+    {
+        bool blocked = false;
+        for (int x = hxTile; x <= maxX; x++)
+        {
+            Tile t = gen.terrain[x, yTile];
+            if (t.buildUnit == null && !blocked)
+            {
+                t.HighlightTile(highlight);
+            }
+            if (t.buildUnit != null && !blocked)
+            {
+                blocked = true;
+                t.HighlightTile(highlight);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Highlight alle tiles aan de zuidelijke kant van de huidige tile.
+    /// </summary>
+    /// <param name="lyTile">Begin tile die gehighlight moet worden</param>
+    /// <param name="minY">Hoeveel tiles er gehighlight mogen worden</param>
+    /// <param name="highlight">Of de bool gehighlight of geunlight moet worden</param>
+    public void HighLightTilesDown(int lyTile, int minY, bool highlight)
+    {
+        bool blocked = false;
+        for (int y = lyTile; y >= minY; y--)
+        {
+            Tile t = gen.terrain[xTile, y];
+            if (t.buildUnit == null && !blocked)
+            {
+                t.HighlightTile(highlight);
+            }
+            if (t.buildUnit != null && !blocked)
+            {
+                blocked = true;
+                t.HighlightTile(highlight);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Highlight alle tiles aan de noordelijke kant van de huidige tile.
+    /// </summary>
+    /// <param name="hyTile">Begin tile die gehighlight moet worden</param>
+    /// <param name="maxY">Hoeveel tiles er gehighlight mogen worden</param>
+    /// <param name="highlight">Of de bool gehighlight of geunlight moet worden</param>
+    public void HighLightTilesUp(int hyTile, int maxY, bool highlight)
+    {
+        bool blocked = false;
+        for (int y = hyTile; y <= maxY; y++)
+        {
+            Tile t = gen.terrain[xTile, y];
+            if (t.buildUnit == null && !blocked)
+            {
+                t.HighlightTile(highlight);
+            }
+            if (t.buildUnit != null && !blocked)
+            {
+                blocked = true;
+                t.HighlightTile(highlight);
+            }
         }
     }
 
@@ -216,7 +311,14 @@ public class Tile : MonoBehaviour
             }
             else if (highlighted)
             {
-                ColorTile(TileColor.Highlight);
+                if (buildUnit != null && buildUnit.Player.ID == gm.GetPlayerController.currentPlayer.ID)
+                {
+                    ColorTile(TileColor.Blocked);
+                }
+                else
+                {
+                    ColorTile(TileColor.Highlight);
+                }
             }
             else
             {
