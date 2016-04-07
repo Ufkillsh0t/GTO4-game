@@ -201,7 +201,24 @@ public class Unit : MonoBehaviour, IBuildUnit
 
     public bool Move(Tile t)
     {
-        throw new NotImplementedException();
+        //snelle movement test;
+        if (t.buildUnit == null)
+        {
+            t.buildUnit = this;
+            currentTile.MouseExit();
+            currentTile.ResetTile();
+            currentTile.buildUnit = null;
+            currentTile = t;
+            //currentTile.gameObject = this;
+            float y = currentTile.transform.position.y;
+            gameObject.transform.position = new Vector3(currentTile.transform.position.x, y + (render.bounds.size.y / 2), currentTile.transform.position.z);
+            currentTile.gameObject.transform.SetParent(transform);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public bool CanMove()

@@ -433,7 +433,7 @@ public class Tile : MonoBehaviour
     /// <returns>Het gespawnde GameObject (Een clone van het meegegeven GameObject)</returns>
     public GameObject SpawnObject(GameObject g)
     {
-        if (currentGameObject != null)
+        if (buildUnit != null)
         {
             Debug.Log("There already is an object on this tile!");
             return currentGameObject;
