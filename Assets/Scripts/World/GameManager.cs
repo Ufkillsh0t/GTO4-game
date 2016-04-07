@@ -223,7 +223,14 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                selectedTile.buildUnit.Attack();
+                if (ibu.getTile().buildUnit.Player.ID != playerController.currentPlayer.ID)
+                {
+                    selectedTile.buildUnit.Attack();
+                }
+                else
+                {
+                    ibu.Select();
+                }
                 //ibu.Defend();
             }
         }
