@@ -207,6 +207,10 @@ public class GameManager : MonoBehaviour
         {
             ibu.Select();
         }
+        else
+        {
+            ibu.Hover();
+        }
     }
 
     /// <summary>
@@ -258,7 +262,7 @@ public class GameManager : MonoBehaviour
             {
                 spawnedBuilding.OnSpawn(selectedTile, playerController.currentPlayer);
                 playerController.currentPlayer.AddBuilding(spawnedBuilding);
-                selectedTile.HighLightNearbyTiles(selectedTile.buildUnit.GetRange(), selectedTile.buildUnit.GetRangeType(), true);
+                selectedTile.MouseClick();
             }
             else
             {
@@ -285,7 +289,7 @@ public class GameManager : MonoBehaviour
             {
                 spawnedUnit.OnSpawn(selectedTile, playerController.currentPlayer);
                 playerController.currentPlayer.AddUnit(spawnedUnit);
-                selectedTile.HighLightNearbyTiles(selectedTile.buildUnit.GetRange(), selectedTile.buildUnit.GetRangeType(), true);
+                selectedTile.MouseClick();
             }
             else
             {

@@ -103,7 +103,14 @@ public class Building : MonoBehaviour, IBuildUnit
     {
         if (currentTile.ID == gm.selectedTile.ID)
         {
-            ColorObject(BuildUnitColor.Selected);
+            if (gm.GetPlayerController.currentPlayer.ID != currentTile.buildUnit.Player.ID)
+            {
+                ColorObject(BuildUnitColor.Blocked);
+            }
+            else
+            {
+                ColorObject(BuildUnitColor.Selected);
+            }
         }
         else
         {
@@ -113,12 +120,27 @@ public class Building : MonoBehaviour, IBuildUnit
 
     public void Hover()
     {
-        ColorObject(BuildUnitColor.Hover);
+        if (!currentTile.hover)
+        {
+            currentTile.MouseHover();
+        }
+        if (currentTile.hover && !currentTile.selected)
+        {
+            if (gm.GetPlayerController.currentPlayer.ID != currentTile.buildUnit.Player.ID)
+            {
+                ColorObject(BuildUnitColor.Blocked);
+            }
+            else
+            {
+                ColorObject(BuildUnitColor.Hover);
+            }
+        }
     }
 
     public void Exit()
     {
         ColorObject(BuildUnitColor.Default);
+        //currentTile.MouseExit();
     }
 
     public void Blocked()

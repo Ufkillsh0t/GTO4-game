@@ -96,7 +96,7 @@ public class Tile : MonoBehaviour
     public void HoverTile()
     {
         hover = true;
-        if (!highlighted && buildUnit != null)
+        if (!highlighted && !selected && buildUnit != null)
         {
             if (buildUnit.Player.ID == gm.GetPlayerController.currentPlayer.ID)
             {
@@ -107,6 +107,7 @@ public class Tile : MonoBehaviour
             else
             {
                 ColorTile(TileColor.Blocked);
+                buildUnit.Blocked();
             }
         }
         else if (highlighted)
@@ -146,12 +147,13 @@ public class Tile : MonoBehaviour
             if (buildUnit.Player.ID == gm.GetPlayerController.currentPlayer.ID)
             {
                 buildUnit.Select();
+                ColorTile(TileColor.Selected);
                 HighLightNearbyTiles(buildUnit.GetRange(), buildUnit.GetRangeType(), true);
-                buildUnit.ColorObject(BuildUnitColor.Selected);
             }
             else
             {
                 ColorTile(TileColor.Blocked);
+                buildUnit.Blocked();
             }
         }
         else
