@@ -32,6 +32,7 @@ public class Tile : MonoBehaviour
 
     void Awake()
     {
+        gm = GameManager.GetGameManager();
         render = gameObject.GetComponent<Renderer>(); //Verkrijgt de renderer van dit object.
         defaultMaterialColor = render.material.color; //Verkrijgt de huidige kleur van dit object.
         selected = false; //Kijkt of de tile ingedrukt is of niet.
@@ -63,6 +64,7 @@ public class Tile : MonoBehaviour
     /// </summary>
     public void MouseExit()
     {
+        Debug.Log("Mouse exit");
         if (!selected && hover)
         {
             ColorTile(TileColor.Default);
@@ -95,6 +97,15 @@ public class Tile : MonoBehaviour
     /// </summary>
     public void HoverTile()
     {
+        if (gm == null)
+        {
+            gm = GameManager.GetGameManager();
+        }
+        if (gm.hoverTile != null && gm.hoverTile.ID != ID)
+        {
+            gm.hoverTile.MouseExit();
+        }
+
         hover = true;
         if (!highlighted && !selected && buildUnit != null)
         {
@@ -117,10 +128,12 @@ public class Tile : MonoBehaviour
                 if (buildUnit.Player.ID == gm.GetPlayerController.currentPlayer.ID)
                 {
                     ColorTile(TileColor.Hover);
+                    buildUnit.Hover();
                 }
                 else
                 {
                     ColorTile(TileColor.Attack);
+                    buildUnit.ColorObject(BuildUnitColor.Attack);
                 }
             }
             else
@@ -132,6 +145,7 @@ public class Tile : MonoBehaviour
         {
             ColorTile(TileColor.Hover);
         }
+        gm.hoverTile = this;
     }
 
     /// <summary>

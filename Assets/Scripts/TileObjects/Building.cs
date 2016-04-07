@@ -124,7 +124,7 @@ public class Building : MonoBehaviour, IBuildUnit
         {
             currentTile.MouseHover();
         }
-        if (currentTile.hover && !currentTile.selected)
+        if (currentTile.hover && !currentTile.selected && !currentTile.highlighted)
         {
             if (gm.GetPlayerController.currentPlayer.ID != currentTile.buildUnit.Player.ID)
             {

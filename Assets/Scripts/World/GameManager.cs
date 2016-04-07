@@ -159,16 +159,15 @@ public class GameManager : MonoBehaviour
         }
         if (hoverTile == null)
         {
-            hoverTile = t;
-            if (!hoverTile.selected)
+            Debug.Log("hover");
+            //hoverTile = t;
+            if (!t.selected)
             {
                 t.MouseHover();
             }
         }
         if (hoverTile != null && hoverTile.ID != t.ID)
         {
-            hoverTile.MouseExit();
-            hoverTile = t;
             t.MouseHover();
         }
     }
