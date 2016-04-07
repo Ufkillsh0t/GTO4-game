@@ -127,8 +127,9 @@ public class Tile : MonoBehaviour
             {
                 if (buildUnit.Player.ID == gm.GetPlayerController.currentPlayer.ID)
                 {
+                    Debug.Log("Higlight?");
                     ColorTile(TileColor.Hover);
-                    buildUnit.Hover();
+                    buildUnit.ColorObject(BuildUnitColor.Hover);
                 }
                 else
                 {

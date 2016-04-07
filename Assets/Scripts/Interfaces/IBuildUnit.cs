@@ -29,10 +29,35 @@ public interface IBuildUnit {
     bool Defend(int damage);
 
     /// <summary>
+    /// Moves an object to another tile.
+    /// </summary>
+    /// <param name="t">Moves the object to the given tile.</param>
+    /// <returns>If the object has been moved or not</returns>
+    bool Move(Tile t);
+
+    /// <summary>
+    /// Checks if this object can move or not;
+    /// </summary>
+    /// <returns></returns>
+    bool CanMove();
+
+    /// <summary>
     /// Upgrade of verbeterd de huidige waarde van het IBuildUnit object.
     /// </summary>
     /// <returns>Of de upgrade is gelukt of niet</returns>
     bool Upgrade();
+
+    /// <summary>
+    /// Returns if the tile on which this buildunit is standing is hightlighted.
+    /// </summary>
+    /// <returns></returns>
+    bool TileHighlighted();
+
+    /// <summary>
+    /// Gets the tile of the buildunit;
+    /// </summary>
+    /// <returns></returns>
+    Tile getTile();
 
     /// <summary>
     /// Wordt uitgevoerd wanneer dit object is gespawnt, hierdoor wordt er een tile en speler meegegeven aan dit object.

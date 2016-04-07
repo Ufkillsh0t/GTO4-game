@@ -11,6 +11,7 @@ public class Unit : MonoBehaviour, IBuildUnit
     public int health;
     public int damage;
     public int armor;
+    public bool moveAble;
     public int[] unitCost;
     private int amountOfResources;
 
@@ -179,5 +180,32 @@ public class Unit : MonoBehaviour, IBuildUnit
                 render.material.color = defaultMaterialColor;
                 break;
         }
+    }
+
+    public bool TileHighlighted()
+    {
+        if(currentTile != null)
+        {
+            return currentTile.highlighted;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public Tile getTile()
+    {
+        return currentTile;
+    }
+
+    public bool Move(Tile t)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool CanMove()
+    {
+        return moveAble;
     }
 }

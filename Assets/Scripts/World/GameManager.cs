@@ -153,10 +153,23 @@ public class GameManager : MonoBehaviour
         {
             SelectTile(t);
         }
+        else if (Input.GetMouseButtonDown(0) && !t.selected && t.highlighted && t.hover)
+        {
+            if(selectedTile.buildUnit != null && t.buildUnit != null)
+            {
+                selectedTile.buildUnit.Attack();
+                //t.buildUnit.Defend();
+            }
+            if (selectedTile.buildUnit != null && selectedTile.buildUnit.CanMove() && t.buildUnit == null)
+            {
+                selectedTile.buildUnit.Move(t);
+            }
+        }
         else if (Input.GetMouseButtonDown(1) && !t.selected && t.highlighted)
         {
             SelectTile(t);
         }
+
         if (hoverTile == null)
         {
             Debug.Log("hover");
@@ -204,7 +217,22 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            ibu.Select();
+            if (!ibu.TileHighlighted() && !ibu.getTile().selected)
+            {
+                ibu.Select();
+            }
+            else
+            {
+                selectedTile.buildUnit.Attack();
+                //ibu.Defend();
+            }
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            if (ibu.TileHighlighted() && !ibu.getTile().selected)
+            {
+                ibu.Select();
+            }
         }
         else
         {
