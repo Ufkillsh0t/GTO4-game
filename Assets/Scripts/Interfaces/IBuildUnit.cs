@@ -61,4 +61,9 @@ public interface IBuildUnit {
     /// Wordt uitgevoerd wanneer de speler een ander object selecteerd met de muis.
     /// </summary>
     void Exit();
+
+    /// <summary>
+    /// Wordt uitgevoerd indien deze buildunit niet van de speler is.
+    /// </summary>
+    void Blocked();
 }

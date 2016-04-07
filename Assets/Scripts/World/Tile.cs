@@ -59,7 +59,7 @@ public class Tile : MonoBehaviour
     }
 
     /// <summary>
-    /// Wordt uitgevoerd wanneer een andere tile geselecteerd word.
+    /// Wordt uitgevoerd wanneer je een hoverend tile exit.
     /// </summary>
     public void MouseExit()
     {
@@ -69,6 +69,7 @@ public class Tile : MonoBehaviour
             if (buildUnit != null)
             {
                 HighLightNearbyTiles(buildUnit.GetRange(), buildUnit.GetRangeType(), false);
+                buildUnit.Exit();
                 if (gm.selectedTile != null)
                 {
                     gm.selectedTile.SelectTile();
@@ -101,6 +102,7 @@ public class Tile : MonoBehaviour
             {
                 ColorTile(TileColor.Hover);
                 HighLightNearbyTiles(buildUnit.GetRange(), buildUnit.GetRangeType(), true);
+                buildUnit.Hover();
             }
             else
             {
@@ -143,8 +145,9 @@ public class Tile : MonoBehaviour
         {
             if (buildUnit.Player.ID == gm.GetPlayerController.currentPlayer.ID)
             {
-                ColorTile(TileColor.Selected);
+                buildUnit.Select();
                 HighLightNearbyTiles(buildUnit.GetRange(), buildUnit.GetRangeType(), true);
+                buildUnit.ColorObject(BuildUnitColor.Selected);
             }
             else
             {
@@ -391,6 +394,7 @@ public class Tile : MonoBehaviour
         if (buildUnit != null)
         {
             HighLightNearbyTiles(buildUnit.GetRange(), buildUnit.GetRangeType(), false);
+            buildUnit.Exit();
         }
     }
 

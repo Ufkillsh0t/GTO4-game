@@ -22,7 +22,7 @@ public class Building : MonoBehaviour, IBuildUnit
     public Tile currentTile;
 
     public Color selectedColor = Color.cyan;
-    public Color hoverColor = Color.yellow;
+    public Color hoverColor = Color.magenta;
     public Color blockedColor = Color.grey;
     public Color attackColor = Color.red;
 
@@ -43,6 +43,7 @@ public class Building : MonoBehaviour, IBuildUnit
     void Awake()
     {
         render = gameObject.GetComponent<Renderer>(); //Verkrijgt de renderer van dit object.
+        defaultMaterialColor = render.material.color;
         gm = GameManager.GetGameManager();
         uniqueID = uniqueID + 1;
         ID = uniqueID;
@@ -112,12 +113,17 @@ public class Building : MonoBehaviour, IBuildUnit
 
     public void Hover()
     {
-        throw new NotImplementedException();
+        ColorObject(BuildUnitColor.Hover);
     }
 
     public void Exit()
     {
-        throw new NotImplementedException();
+        ColorObject(BuildUnitColor.Default);
+    }
+
+    public void Blocked()
+    {
+        ColorObject(BuildUnitColor.Blocked);
     }
 
     public int GetRange()
@@ -152,4 +158,5 @@ public class Building : MonoBehaviour, IBuildUnit
                 break;
         }
     }
+
 }
