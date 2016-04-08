@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
+        turns = amountOfTurnsPerPlayer;
         CheckResourceArrayLength();
     }
 

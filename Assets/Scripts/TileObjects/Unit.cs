@@ -204,17 +204,21 @@ public class Unit : MonoBehaviour, IBuildUnit
         //snelle movement test;
         if (t.buildUnit == null)
         {
-            t.buildUnit = this;
-            currentTile.MouseExit();
-            currentTile.ResetTile();
-            currentTile.buildUnit = null;
-            currentTile = t;
-            gm.GetPlayerController.Turn();
-            currentTile.MouseClick();
-            //currentTile.gameObject = this;
-            float y = currentTile.transform.position.y;
-            gameObject.transform.position = new Vector3(currentTile.transform.position.x, y + (render.bounds.size.y / 2), currentTile.transform.position.z);
-            return true;
+            if (currentTile.selected)
+            {
+                currentTile.buildUnit = null;
+                currentTile = t;
+                gm.GetPlayerController.Turn();
+                currentTile.MouseClick();
+                //currentTile.gameObject = this;
+                float y = currentTile.transform.position.y;
+                gameObject.transform.position = new Vector3(currentTile.transform.position.x, y + (render.bounds.size.y / 2), currentTile.transform.position.z);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {
