@@ -9,6 +9,10 @@ public class PlayerController : MonoBehaviour
 
     public int[] defaultResourceIncrease;
     private int amountOfResources;
+    public int amountOfTurnsPerPlayer;
+    public int currentTurn;
+    private int turns;
+
 
     void Awake()
     {
@@ -38,6 +42,8 @@ public class PlayerController : MonoBehaviour
         {
             IncreasePlayerResources();
             currentPlayer = players[0];
+            turns = amountOfTurnsPerPlayer;
+            currentTurn = 1;
             SetCurrentPlayerCamera();
         }
         else
@@ -48,10 +54,30 @@ public class PlayerController : MonoBehaviour
                 if (currentPlayer == players[i])
                 {
                     currentPlayer = players[(i + 1)];
+                    turns = amountOfTurnsPerPlayer;
+                    currentTurn = 1;
                     SetCurrentPlayerCamera();
                     return;
                 }
             }
+        }
+    }
+
+    public void ResetTurns()
+    {
+        turns = amountOfTurnsPerPlayer;
+    }
+
+    public void Turn()
+    {
+        if ((turns - 1) > 0)
+        {
+            turns--;
+            currentTurn++;
+        }
+        else
+        {
+            SwitchPlayers();
         }
     }
 

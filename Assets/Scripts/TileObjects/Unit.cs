@@ -209,7 +209,8 @@ public class Unit : MonoBehaviour, IBuildUnit
             currentTile.ResetTile();
             currentTile.buildUnit = null;
             currentTile = t;
-            currentTile.MouseHover();
+            gm.GetPlayerController.Turn();
+            currentTile.MouseClick();
             //currentTile.gameObject = this;
             float y = currentTile.transform.position.y;
             gameObject.transform.position = new Vector3(currentTile.transform.position.x, y + (render.bounds.size.y / 2), currentTile.transform.position.z);
