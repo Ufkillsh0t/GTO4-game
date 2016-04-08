@@ -20,7 +20,7 @@ public interface IBuildUnit {
     /// Valt een andere IBuiltUnit object aan;
     /// </summary>
     /// <returns>Of de aanval is gelukt of niet</returns>
-    bool Attack();
+    bool Attack(Tile t);
 
     /// <summary>
     /// Verdedigt zich tegen een aanval van een tegenstander.

@@ -90,13 +90,13 @@ public class Player : MonoBehaviour, IResources
     /// Verwijdert een gebouw uit de array met gebouwen.
     /// </summary>
     /// <param name="b">Unit die je van deze speler wilt verwijderen.</param>
-    public void RemoveUnit(Building b)
+    public void RemoveUnit(Unit u)
     {
         Unit[] newUnits = new Unit[units.Length - 1];
         int j = 0; //Voor het toevoegen van de juiste buildings;
         for (int i = 0; i < units.Length; i++)
         {
-            if (b.ID != units[i].ID)
+            if (u.ID != units[i].ID)
             {
                 newUnits[j] = newUnits[i];
                 j++;

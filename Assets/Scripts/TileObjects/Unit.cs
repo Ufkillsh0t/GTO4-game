@@ -85,20 +85,6 @@ public class Unit : MonoBehaviour, IBuildUnit
         Debug.Log("Tile ID:" + t.ID + " player:" + p.playerName);
     }
 
-    public bool Attack()
-    {
-        throw new NotImplementedException();
-    }
-
-    public bool Defend(int damage)
-    {
-        throw new NotImplementedException();
-    }
-
-    public bool Upgrade()
-    {
-        throw new NotImplementedException();
-    }
 
     public void Select()
     {
@@ -232,5 +218,41 @@ public class Unit : MonoBehaviour, IBuildUnit
     public bool CanMove()
     {
         return moveAble;
+    }
+
+    public bool Attack(Tile t)
+    {
+        if(t.buildUnit != null)
+        {
+            if (!t.buildUnit.Defend(damage))
+            {
+                t.buildUnit = null;
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool Defend(int damage)
+    {
+        if(damage >= health)
+        {
+            player.RemoveUnit(this);
+            Destroy(gameObject);
+            return false;
+        }
+        else
+        {
+            health -= damage;
+            return true;
+        }
+    }
+
+    public bool Upgrade()
+    {
+        throw new NotImplementedException();
     }
 }

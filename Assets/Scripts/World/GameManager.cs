@@ -157,8 +157,7 @@ public class GameManager : MonoBehaviour
         {
             if(selectedTile.buildUnit != null && t.buildUnit != null)
             {
-                selectedTile.buildUnit.Attack();
-                //t.buildUnit.Defend();
+                selectedTile.buildUnit.Attack(t);
             }
             if (selectedTile.buildUnit != null && selectedTile.buildUnit.CanMove() && t.buildUnit == null)
             {
@@ -225,7 +224,7 @@ public class GameManager : MonoBehaviour
             {
                 if (ibu.getTile().buildUnit.Player.ID != playerController.currentPlayer.ID)
                 {
-                    selectedTile.buildUnit.Attack();
+                    selectedTile.buildUnit.Attack(ibu.getTile());
                 }
                 else
                 {

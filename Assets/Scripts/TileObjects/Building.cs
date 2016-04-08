@@ -85,21 +85,6 @@ public class Building : MonoBehaviour, IBuildUnit
         Debug.Log("Tile ID:" + t.ID + " player:" + p.playerName);
     }
 
-    public bool Attack()
-    {
-        throw new NotImplementedException();
-    }
-
-    public bool Defend(int damage)
-    {
-        throw new NotImplementedException();
-    }
-
-    public bool Upgrade()
-    {
-        throw new NotImplementedException();
-    }
-
     public void Select()
     {
         if (currentTile.ID == gm.selectedTile.ID)
@@ -207,5 +192,20 @@ public class Building : MonoBehaviour, IBuildUnit
     public bool CanMove()
     {
         return moveAble;
+    }
+
+    public bool Attack(Tile t)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool Defend(int damage)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool Upgrade()
+    {
+        throw new NotImplementedException();
     }
 }
