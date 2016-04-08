@@ -206,6 +206,9 @@ public class Unit : MonoBehaviour, IBuildUnit
         {
             if (currentTile.selected)
             {
+                currentTile.MouseExit();
+                currentTile.ResetTile();
+                t.buildUnit = this;
                 currentTile.buildUnit = null;
                 currentTile = t;
                 gm.GetPlayerController.Turn();
