@@ -56,12 +56,25 @@ public class Building : MonoBehaviour, IBuildUnit
         building = this.gameObject;
     }
 
+    void Start()
+    {
+        currentPosition = transform.position;
+    }
+
     void Update()
     {
-        if(gameObject.transform.position != currentPosition)
+        if (gameObject.transform.position != currentPosition && currentPosition != null)
         {
-            transform.TransformDirection(currentPosition);
-            transform.Translate(Vector3.up * Time.deltaTime);
+            transform.LookAt(currentPosition);
+            float distance = Vector3.Distance(transform.position, currentPosition);
+            if (distance <= 0.05f)
+            {
+                transform.position = currentPosition;
+            }
+            else
+            {
+                transform.Translate(Vector3.forward * Time.deltaTime);
+            }
         }
     }
 

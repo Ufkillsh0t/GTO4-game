@@ -65,10 +65,16 @@ public class Unit : MonoBehaviour, IBuildUnit
     {
         if (gameObject.transform.position != currentPosition && currentPosition != null)
         {
-            //Vector3 newDir = 
-            //Vector3.RotateTowards(transform.position,currentPosition, 0.05f * Time.deltaTime, 0.0f);
             transform.LookAt(currentPosition);
-            transform.Translate(Vector3.forward * Time.deltaTime);
+            float distance = Vector3.Distance(transform.position, currentPosition);
+            if (distance <= 0.05f)
+            {
+                transform.position = currentPosition;
+            }
+            else
+            {
+                transform.Translate(Vector3.forward * Time.deltaTime);
+            }
         }
     }
 

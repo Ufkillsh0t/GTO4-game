@@ -83,9 +83,9 @@ public class PlayerController : MonoBehaviour
     public void ShowEnemyObjects()
     {
         GridGenerator gen = GridGenerator.GetGridGenerator();
-        foreach(Tile t in gen.terrain)
+        foreach (Tile t in gen.terrain)
         {
-            if(t.buildUnit != null && t.buildUnit.Player.ID != currentPlayer.ID)
+            if (t.buildUnit != null && t.buildUnit.Player.ID != currentPlayer.ID)
             {
                 t.buildUnit.Blocked();
             }
@@ -115,6 +115,20 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < defaultResourceIncrease.Length; i++)
         {
             currentPlayer.AddResources((ResourceType)i, defaultResourceIncrease[i]);
+        }
+
+        if (currentPlayer.buildings != null)
+        {
+            foreach (Building b in currentPlayer.buildings)
+            {
+                if (b.buildingType == BuildingType.Harvester)
+                {
+                    for (int i = 0; i < b.resourcesIncrease.Length; i++)
+                    {
+                        currentPlayer.AddResources((ResourceType)i, b.resourcesIncrease[i]);
+                    }
+                }
+            }
         }
     }
 
