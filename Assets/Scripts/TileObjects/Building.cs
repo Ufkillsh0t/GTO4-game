@@ -14,6 +14,7 @@ public class Building : MonoBehaviour, IBuildUnit
     public bool moveAble;
     public bool canAttack;
     public int[] buildingCost;
+    public int[] resourcesIncrease;
     private int amountOfResources;
 
     private Renderer render;
@@ -50,6 +51,7 @@ public class Building : MonoBehaviour, IBuildUnit
         uniqueID = uniqueID + 1;
         ID = uniqueID;
         CheckBuildingCostArrayLength();
+        CheckResourceIncreaseArrayLength();
         building = this.gameObject;
     }
 
@@ -65,6 +67,21 @@ public class Building : MonoBehaviour, IBuildUnit
         {
             Debug.LogError("The array is a bit too long so not all values will be used!");
             buildingCost = new int[amountOfResources];
+        }
+    }
+
+    public void CheckResourceIncreaseArrayLength()
+    {
+        amountOfResources = GameManager.amountOfResources;
+        if (resourcesIncrease.Length < amountOfResources)
+        {
+            Debug.LogError("Array length needs to be:" + amountOfResources);
+            resourcesIncrease = new int[amountOfResources];
+        }
+        else if (resourcesIncrease.Length > amountOfResources)
+        {
+            Debug.LogError("The array is a bit too long so not all values will be used!");
+            resourcesIncrease = new int[amountOfResources];
         }
     }
 
@@ -263,8 +280,29 @@ public class Building : MonoBehaviour, IBuildUnit
         }
         else
         {
-            health -= damage;
-            return true;
+            if (armor >= damage)
+            {
+                armor -= damage;
+                return true;
+            }
+            else if(armor > 0)
+            {
+                int remainingDamage = damage - armor;
+                armor = 0;
+                health -= remainingDamage;
+                if(health <= 0)
+                {
+                    player.RemoveBuilding(this);
+                    Destroy(gameObject);
+                    return false;
+                }
+                return true;
+            }
+            else
+            {
+                health -= damage;
+                return true;
+            }
         }
     }
 

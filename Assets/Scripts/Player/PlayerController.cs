@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour
         GridGenerator gen = GridGenerator.GetGridGenerator();
         foreach (Tile t in gen.terrain)
         {
-            if (t.buildUnit != null && t.buildUnit.Player.ID != currentPlayer.ID)
+            if (t.buildUnit != null && t.buildUnit.Player.ID == currentPlayer.ID)
             {
                 t.buildUnit.ColorObject(BuildUnitColor.Default);
             }
