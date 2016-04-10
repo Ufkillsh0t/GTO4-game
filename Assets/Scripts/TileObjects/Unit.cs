@@ -127,8 +127,14 @@ public class Unit : MonoBehaviour, IBuildUnit
 
     public void Exit()
     {
-        ColorObject(BuildUnitColor.Default);
-        //currentTile.MouseExit();
+        if (gm.GetPlayerController.currentPlayer.ID == player.ID)
+        {
+            ColorObject(BuildUnitColor.Default);
+        }
+        else
+        {
+            ColorObject(BuildUnitColor.Blocked);
+        }
     }
 
     public void Blocked()

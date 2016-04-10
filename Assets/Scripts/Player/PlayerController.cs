@@ -46,6 +46,8 @@ public class PlayerController : MonoBehaviour
             turns = amountOfTurnsPerPlayer;
             currentTurn = 1;
             SetCurrentPlayerCamera();
+            ShowEnemyObjects();
+            ShowCurrentPlayerObjects();
         }
         else
         {
@@ -58,8 +60,34 @@ public class PlayerController : MonoBehaviour
                     turns = amountOfTurnsPerPlayer;
                     currentTurn = 1;
                     SetCurrentPlayerCamera();
+                    ShowEnemyObjects();
+                    ShowCurrentPlayerObjects();
                     return;
                 }
+            }
+        }
+    }
+
+    public void ShowCurrentPlayerObjects()
+    {
+        GridGenerator gen = GridGenerator.GetGridGenerator();
+        foreach (Tile t in gen.terrain)
+        {
+            if (t.buildUnit != null && t.buildUnit.Player.ID != currentPlayer.ID)
+            {
+                t.buildUnit.ColorObject(BuildUnitColor.Default);
+            }
+        }
+    }
+
+    public void ShowEnemyObjects()
+    {
+        GridGenerator gen = GridGenerator.GetGridGenerator();
+        foreach(Tile t in gen.terrain)
+        {
+            if(t.buildUnit != null && t.buildUnit.Player.ID != currentPlayer.ID)
+            {
+                t.buildUnit.Blocked();
             }
         }
     }
