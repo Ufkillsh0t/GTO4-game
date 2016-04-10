@@ -16,6 +16,7 @@ public class Unit : MonoBehaviour, IBuildUnit
     public int[] unitCost;
     public int[] resourcesIncrease;
     private int amountOfResources;
+    public float movementSpeed;
 
     private Renderer render;
     private GameManager gm;
@@ -35,6 +36,8 @@ public class Unit : MonoBehaviour, IBuildUnit
 
     private static int uniqueID;
     public int ID;
+
+    public bool moving;
 
     public Player Player
     {
@@ -70,10 +73,11 @@ public class Unit : MonoBehaviour, IBuildUnit
             if (distance <= 0.05f)
             {
                 transform.position = currentPosition;
+                moving = false;
             }
             else
             {
-                transform.Translate(Vector3.forward * Time.deltaTime);
+                transform.Translate(Vector3.forward * movementSpeed * Time.deltaTime);
             }
         }
     }
@@ -246,8 +250,10 @@ public class Unit : MonoBehaviour, IBuildUnit
                 t.buildUnit = this;
                 currentTile.buildUnit = null;
                 currentTile = t;
-                gm.GetPlayerController.Turn();
                 currentTile.MouseClick();
+                moving = true;
+                gm.GetPlayerController.Turn();
+
                 //currentTile.gameObject = this;
                 float y = currentTile.transform.position.y;
                 currentPosition = new Vector3(currentTile.transform.position.x, y + (render.bounds.size.y / 2), currentTile.transform.position.z);
@@ -337,4 +343,8 @@ public class Unit : MonoBehaviour, IBuildUnit
         throw new NotImplementedException();
     }
 
+    public bool IsMoving()
+    {
+        throw new NotImplementedException();
+    }
 }

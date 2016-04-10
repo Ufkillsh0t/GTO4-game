@@ -42,6 +42,12 @@ public interface IBuildUnit {
     bool CanMove();
 
     /// <summary>
+    /// Checks wether the unit is moving or not.
+    /// </summary>
+    /// <returns>If the unit is moving</returns>
+    bool IsMoving();
+
+    /// <summary>
     /// Checks if this object can attack another object or not.
     /// </summary>
     /// <returns>Wheter the current object can attack or not</returns>

@@ -131,7 +131,7 @@ public class Tile : MonoBehaviour
                     ColorTile(TileColor.Hover);
                     buildUnit.ColorObject(BuildUnitColor.Hover);
                 }
-                else if (gm.selectedTile.buildUnit != null && gm.selectedTile.buildUnit.CanAttack())
+                else if( gm.selectedTile.buildUnit != null && gm.selectedTile.buildUnit.CanAttack())
                 {
                     ColorTile(TileColor.Attack);
                     buildUnit.ColorObject(BuildUnitColor.Attack);

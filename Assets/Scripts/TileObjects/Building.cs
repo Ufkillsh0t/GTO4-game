@@ -16,6 +16,7 @@ public class Building : MonoBehaviour, IBuildUnit
     public int[] buildingCost;
     public int[] resourcesIncrease;
     private int amountOfResources;
+    public float movementSpeed;
 
     private Renderer render;
     private GameManager gm;
@@ -36,6 +37,8 @@ public class Building : MonoBehaviour, IBuildUnit
     private static int uniqueID;
     public int ID;
 
+    public bool moving;
+
     public Player Player
     {
         get
@@ -54,6 +57,7 @@ public class Building : MonoBehaviour, IBuildUnit
         CheckBuildingCostArrayLength();
         CheckResourceIncreaseArrayLength();
         building = this.gameObject;
+        moving = false;
     }
 
     void Start()
@@ -70,10 +74,11 @@ public class Building : MonoBehaviour, IBuildUnit
             if (distance <= 0.05f)
             {
                 transform.position = currentPosition;
+                moving = false;
             }
             else
             {
-                transform.Translate(Vector3.forward * Time.deltaTime);
+                transform.Translate(Vector3.forward * movementSpeed * Time.deltaTime);
             }
         }
     }
@@ -243,8 +248,10 @@ public class Building : MonoBehaviour, IBuildUnit
                 t.buildUnit = this;
                 currentTile.buildUnit = null;
                 currentTile = t;
-                gm.GetPlayerController.Turn();
                 currentTile.MouseClick();
+                moving = true;
+                gm.GetPlayerController.Turn();
+
                 //currentTile.gameObject = this;
                 float y = currentTile.transform.position.y;
                 currentPosition = new Vector3(currentTile.transform.position.x, y + (render.bounds.size.y / 2), currentTile.transform.position.z); //rotatie nog goed doen voor movement.
@@ -264,6 +271,11 @@ public class Building : MonoBehaviour, IBuildUnit
     public bool CanMove()
     {
         return moveAble;
+    }
+
+    public bool IsMoving()
+    {
+        return moving;
     }
 
     public bool Attack(Tile t)
@@ -333,4 +345,5 @@ public class Building : MonoBehaviour, IBuildUnit
     {
         throw new NotImplementedException();
     }
+
 }
