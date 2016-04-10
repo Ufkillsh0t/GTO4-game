@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System.Collections;
 
 public class GameManager : MonoBehaviour
@@ -115,13 +116,16 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void RayCastMouse() //Deze methode werkt morgen aan het selecteren en hoveren zelf werken en unit movement!
     {
-        Ray ray = currentCamera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, 100))
+        if (!EventSystem.current.IsPointerOverGameObject())
         {
-            Debug.DrawLine(ray.origin, hit.point);
-            RayCastMouseHit(hit);
+            Ray ray = currentCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 100))
+            {
+                Debug.DrawLine(ray.origin, hit.point);
+                RayCastMouseHit(hit);
+            }
         }
     }
 

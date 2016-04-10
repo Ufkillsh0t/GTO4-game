@@ -92,13 +92,14 @@ public class Player : MonoBehaviour, IResources
     /// <param name="b">Unit die je van deze speler wilt verwijderen.</param>
     public void RemoveUnit(Unit u)
     {
-        Unit[] newUnits = new Unit[units.Length - 1];
+        int length = units.Length - 1;
+        Unit[] newUnits = new Unit[length];
         int j = 0; //Voor het toevoegen van de juiste buildings;
         for (int i = 0; i < units.Length; i++)
         {
             if (u.ID != units[i].ID)
             {
-                newUnits[j] = newUnits[i];
+                newUnits[j] = units[i];
                 j++;
             }
         }

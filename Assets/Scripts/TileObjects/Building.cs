@@ -12,6 +12,7 @@ public class Building : MonoBehaviour, IBuildUnit
     public int damage;
     public int armor;
     public bool moveAble;
+    public bool canAttack;
     public int[] buildingCost;
     private int amountOfResources;
 
@@ -186,7 +187,32 @@ public class Building : MonoBehaviour, IBuildUnit
 
     public bool Move(Tile t)
     {
-        throw new NotImplementedException();
+        //snelle movement test;
+        if (t.buildUnit == null && moveAble)
+        {
+            if (currentTile.selected)
+            {
+                currentTile.MouseExit();
+                currentTile.ResetTile();
+                t.buildUnit = this;
+                currentTile.buildUnit = null;
+                currentTile = t;
+                gm.GetPlayerController.Turn();
+                currentTile.MouseClick();
+                //currentTile.gameObject = this;
+                float y = currentTile.transform.position.y;
+                gameObject.transform.position = new Vector3(currentTile.transform.position.x, y + (render.bounds.size.y / 2), currentTile.transform.position.z); //rotatie nog goed doen voor movement.
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public bool CanMove()
@@ -196,12 +222,44 @@ public class Building : MonoBehaviour, IBuildUnit
 
     public bool Attack(Tile t)
     {
-        throw new NotImplementedException();
+        if (t.buildUnit != null && canAttack)
+        {
+            if (!t.buildUnit.Defend(damage))
+            {
+                t.buildUnit = null;
+                gm.GetPlayerController.Turn();
+            }
+            else
+            {
+                gm.GetPlayerController.Turn();
+            }
+            return true;
+        }
+        else
+        {
+            gm.GetPlayerController.Turn();
+            return false;
+        }
+    }
+
+    public bool CanAttack()
+    {
+        return canAttack;
     }
 
     public bool Defend(int damage)
     {
-        throw new NotImplementedException();
+        if (damage >= health)
+        {
+            player.RemoveBuilding(this);
+            Destroy(gameObject);
+            return false;
+        }
+        else
+        {
+            health -= damage;
+            return true;
+        }
     }
 
     public bool Upgrade()

@@ -38,8 +38,14 @@ public interface IBuildUnit {
     /// <summary>
     /// Checks if this object can move or not;
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Wheter the current object can move or not</returns>
     bool CanMove();
+
+    /// <summary>
+    /// Checks if this object can attack another object or not.
+    /// </summary>
+    /// <returns>Wheter the current object can attack or not</returns>
+    bool CanAttack();
 
     /// <summary>
     /// Upgrade of verbeterd de huidige waarde van het IBuildUnit object.

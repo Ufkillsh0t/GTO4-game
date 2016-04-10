@@ -12,6 +12,7 @@ public class Unit : MonoBehaviour, IBuildUnit
     public int damage;
     public int armor;
     public bool moveAble;
+    public bool canAttack;
     public int[] unitCost;
     private int amountOfResources;
 
@@ -88,7 +89,7 @@ public class Unit : MonoBehaviour, IBuildUnit
 
     public void Select()
     {
-        if(currentTile.ID == gm.selectedTile.ID)
+        if (currentTile.ID == gm.selectedTile.ID)
         {
             if (gm.GetPlayerController.currentPlayer.ID != currentTile.buildUnit.Player.ID)
             {
@@ -170,7 +171,7 @@ public class Unit : MonoBehaviour, IBuildUnit
 
     public bool TileHighlighted()
     {
-        if(currentTile != null)
+        if (currentTile != null)
         {
             return currentTile.highlighted;
         }
@@ -188,7 +189,7 @@ public class Unit : MonoBehaviour, IBuildUnit
     public bool Move(Tile t)
     {
         //snelle movement test;
-        if (t.buildUnit == null)
+        if (t.buildUnit == null && moveAble)
         {
             if (currentTile.selected)
             {
@@ -222,23 +223,34 @@ public class Unit : MonoBehaviour, IBuildUnit
 
     public bool Attack(Tile t)
     {
-        if(t.buildUnit != null)
+        if (t.buildUnit != null && canAttack)
         {
             if (!t.buildUnit.Defend(damage))
             {
                 t.buildUnit = null;
+                gm.GetPlayerController.Turn();
+            }
+            else
+            {
+                gm.GetPlayerController.Turn();
             }
             return true;
         }
         else
         {
+            gm.GetPlayerController.Turn();
             return false;
         }
     }
 
+    public bool CanAttack()
+    {
+        return canAttack;
+    }
+
     public bool Defend(int damage)
     {
-        if(damage >= health)
+        if (damage >= health)
         {
             player.RemoveUnit(this);
             Destroy(gameObject);
@@ -255,4 +267,5 @@ public class Unit : MonoBehaviour, IBuildUnit
     {
         throw new NotImplementedException();
     }
+
 }

@@ -131,13 +131,13 @@ public class Tile : MonoBehaviour
                     ColorTile(TileColor.Hover);
                     buildUnit.ColorObject(BuildUnitColor.Hover);
                 }
-                else
+                else if (gm.selectedTile.buildUnit != null && gm.selectedTile.buildUnit.CanAttack())
                 {
                     ColorTile(TileColor.Attack);
                     buildUnit.ColorObject(BuildUnitColor.Attack);
                 }
             }
-            else
+            else if (gm.selectedTile.buildUnit != null && gm.selectedTile.buildUnit.CanMove())
             {
                 ColorTile(TileColor.Move);
             }
