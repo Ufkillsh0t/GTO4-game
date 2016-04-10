@@ -23,6 +23,7 @@ public class Unit : MonoBehaviour, IBuildUnit
     public Player player;
     public GameObject unit;
     public Tile currentTile;
+    public Vector3 currentPosition;
 
     public Color selectedColor = Color.cyan;
     public Color hoverColor = Color.magenta;
@@ -54,6 +55,23 @@ public class Unit : MonoBehaviour, IBuildUnit
         CheckResourceIncreaseArrayLength();
         unit = this.gameObject;
     }
+
+    void Start()
+    {
+        currentPosition = transform.position;
+    }
+
+    void Update()
+    {
+        if (gameObject.transform.position != currentPosition && currentPosition != null)
+        {
+            //Vector3 newDir = 
+            //Vector3.RotateTowards(transform.position,currentPosition, 0.05f * Time.deltaTime, 0.0f);
+            transform.LookAt(currentPosition);
+            transform.Translate(Vector3.forward * Time.deltaTime);
+        }
+    }
+
 
     public void CheckUnitCostArrayLength()
     {
@@ -226,7 +244,7 @@ public class Unit : MonoBehaviour, IBuildUnit
                 currentTile.MouseClick();
                 //currentTile.gameObject = this;
                 float y = currentTile.transform.position.y;
-                gameObject.transform.position = new Vector3(currentTile.transform.position.x, y + (render.bounds.size.y / 2), currentTile.transform.position.z);
+                currentPosition = new Vector3(currentTile.transform.position.x, y + (render.bounds.size.y / 2), currentTile.transform.position.z);
                 return true;
             }
             else

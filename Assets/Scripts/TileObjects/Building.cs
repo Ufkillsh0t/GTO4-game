@@ -23,6 +23,7 @@ public class Building : MonoBehaviour, IBuildUnit
     public Player player;
     public GameObject building;
     public Tile currentTile;
+    private Vector3 currentPosition;
 
     public Color selectedColor = Color.cyan;
     public Color hoverColor = Color.magenta;
@@ -53,6 +54,15 @@ public class Building : MonoBehaviour, IBuildUnit
         CheckBuildingCostArrayLength();
         CheckResourceIncreaseArrayLength();
         building = this.gameObject;
+    }
+
+    void Update()
+    {
+        if(gameObject.transform.position != currentPosition)
+        {
+            transform.TransformDirection(currentPosition);
+            transform.Translate(Vector3.up * Time.deltaTime);
+        }
     }
 
     public void CheckBuildingCostArrayLength()
@@ -224,7 +234,7 @@ public class Building : MonoBehaviour, IBuildUnit
                 currentTile.MouseClick();
                 //currentTile.gameObject = this;
                 float y = currentTile.transform.position.y;
-                gameObject.transform.position = new Vector3(currentTile.transform.position.x, y + (render.bounds.size.y / 2), currentTile.transform.position.z); //rotatie nog goed doen voor movement.
+                currentPosition = new Vector3(currentTile.transform.position.x, y + (render.bounds.size.y / 2), currentTile.transform.position.z); //rotatie nog goed doen voor movement.
                 return true;
             }
             else
