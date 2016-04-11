@@ -14,9 +14,11 @@ public class PlayerController : MonoBehaviour
     public int currentTurn;
     private int turns;
 
+    private bool gameOver;
 
     void Awake()
     {
+        gameOver = false;
         turns = amountOfTurnsPerPlayer;
         CheckResourceArrayLength();
         gen = GridGenerator.GetGridGenerator();
@@ -52,32 +54,35 @@ public class PlayerController : MonoBehaviour
             GameManager.GetGameManager().selectedTile.ResetTile();
         }
         GameOver();
-        if (currentPlayer == null || currentPlayer == players[(players.Length - 1)] || players.Length == 1)
+        if (!gameOver)
         {
-            IncreasePlayerResources();
-            currentPlayer = players[0];
-            turns = amountOfTurnsPerPlayer;
-            currentTurn = 1;
-            SetCurrentPlayerCamera();
-            ShowEnemyObjects();
-            ShowSpawnableTiles();
-            ShowCurrentPlayerObjects();
-        }
-        else
-        {
-            IncreasePlayerResources();
-            for (int i = 0; i < players.Length; i++)
+            if (currentPlayer == null || currentPlayer == players[(players.Length - 1)] || players.Length == 1)
             {
-                if (currentPlayer == players[i])
+                IncreasePlayerResources();
+                currentPlayer = players[0];
+                turns = amountOfTurnsPerPlayer;
+                currentTurn = 1;
+                SetCurrentPlayerCamera();
+                ShowEnemyObjects();
+                ShowSpawnableTiles();
+                ShowCurrentPlayerObjects();
+            }
+            else
+            {
+                IncreasePlayerResources();
+                for (int i = 0; i < players.Length; i++)
                 {
-                    currentPlayer = players[(i + 1)];
-                    turns = amountOfTurnsPerPlayer;
-                    currentTurn = 1;
-                    SetCurrentPlayerCamera();
-                    ShowEnemyObjects();
-                    ShowSpawnableTiles();
-                    ShowCurrentPlayerObjects();
-                    return;
+                    if (currentPlayer == players[i])
+                    {
+                        currentPlayer = players[(i + 1)];
+                        turns = amountOfTurnsPerPlayer;
+                        currentTurn = 1;
+                        SetCurrentPlayerCamera();
+                        ShowEnemyObjects();
+                        ShowSpawnableTiles();
+                        ShowCurrentPlayerObjects();
+                        return;
+                    }
                 }
             }
         }
@@ -88,23 +93,49 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void GameOver()
     {
-        for(int i = 0; i < players.Length; i++)
+        for (int i = 0; i < players.Length; i++)
         {
-            if(players[i].buildings == null || players[i].buildings.Length == 0)
+            if (players[i].buildings == null || players[i].buildings.Length == 0)
             {
                 int lowResource = 0;
-                for(int j = 0; j < players[i].resources.Length; j++)
+                for (int j = 0; j < players[i].resources.Length; j++)
                 {
-                    if(players[i].resources[j] <= 50)
+                    if (players[i].resources[j] <= 50)
                     {
                         lowResource++;
-                        if (lowResource == amountOfResources && currentPlayer.buildings == null && currentPlayer.units == null)
+                        if ((currentPlayer.buildings == null && currentPlayer.units == null))
                         {
-                            Debug.Log("GameOver");
+                            SetGameOver();
+                        }
+                        else if (currentPlayer.buildings != null && currentPlayer.units != null && currentPlayer.units.Length == 0 && currentPlayer.buildings.Length == 0)
+                        {
+                            SetGameOver();
+                        }
+                        else if (currentPlayer.buildings != null && currentPlayer.units == null && currentPlayer.buildings.Length == 0)
+                        {
+                            SetGameOver();
+                        }
+                        else if (currentPlayer.units != null && currentPlayer.buildings == null && currentPlayer.units.Length == 0)
+                        {
+                            SetGameOver();
                         }
                     }
                 }
             }
+        }
+    }
+
+    public void SetGameOver()
+    {
+        if (players[0].ID == currentPlayer.ID)
+        {
+            gameOver = true;
+            GameManager.GetGameManager().GameOverMenu(players[0]);
+        }
+        else
+        {
+            gameOver = true;
+            GameManager.GetGameManager().GameOverMenu(players[1]);
         }
     }
 
@@ -143,7 +174,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void ShowSpawnableTiles()
     {
-        foreach(Tile t in gen.terrain)
+        foreach (Tile t in gen.terrain)
         {
             if (t.PlayerID == currentPlayer.ID && t.buildUnit == null)
             {

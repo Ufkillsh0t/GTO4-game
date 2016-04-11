@@ -24,6 +24,10 @@ public class GameManager : MonoBehaviour
     private GameObject infoPanel;
     private GameObject[] panelText;
 
+    //ENDUI
+    public GameObject endPanel;
+    public GameObject shownEndPanel;
+    public Text endPanelText;
 
     [Range(1, 4)]
     public int amountOfPlayers;
@@ -44,6 +48,7 @@ public class GameManager : MonoBehaviour
         CheckResourceArrayLength();
 
         informationPanel = (GameObject)Resources.Load("Prefabs/UI/UIPanel");
+        endPanel = (GameObject)Resources.Load("Prefabs/UI/EndGamePanel");
         textPreFab = (GameObject)Resources.Load("Prefabs/UI/UIText");
         buildings = System.Array.ConvertAll(Resources.LoadAll("Prefabs/Models/Buildings"), item => (GameObject)item); //Laat alle gameObjecten van de folder Building in. Alle buildings moeten een building script hebben.
         units = System.Array.ConvertAll(Resources.LoadAll("Prefabs/Models/Units"), item => (GameObject)item); //zelfde als hierboven.
@@ -101,6 +106,13 @@ public class GameManager : MonoBehaviour
         playerController.SetPlayerSpawnPoints();
         playerController.ShowSpawnableTiles();
         playerController.currentPlayer = playerController.players[0];
+    }
+
+    public void GameOverMenu(Player p)
+    {
+        endPanelText.text = p.playerName + " has won!";
+        shownEndPanel = (GameObject)Instantiate(endPanel);
+        shownEndPanel.transform.SetParent(canvas.transform, false);
     }
 
     // Update is called once per frame
