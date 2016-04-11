@@ -119,7 +119,7 @@ public class Building : MonoBehaviour, IBuildUnit
         player = p;
         for (int i = 0; i < buildingCost.Length; i++)
         {
-            if (p.resources[i] > buildingCost[i])
+            if (p.resources[i] >= buildingCost[i])
             {
                 p.resources[i] -= buildingCost[i];
             }

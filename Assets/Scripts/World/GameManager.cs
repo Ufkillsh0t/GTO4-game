@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     public static int amountOfResources = System.Enum.GetNames(typeof(ResourceType)).Length;
 
     public Camera currentCamera;
+    public AudioSource audio;
 
     private PlayerController playerController;
     public PlayerController GetPlayerController { get { return playerController; } }
@@ -107,6 +108,15 @@ public class GameManager : MonoBehaviour
     {
         RayCastMouse();
         UiUpdate();
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            MuteAudio();
+        }
+    }
+
+    private void MuteAudio()
+    {
+        audio.mute = !audio.mute;
     }
 
     /// <summary>

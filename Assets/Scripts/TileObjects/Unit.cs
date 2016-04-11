@@ -21,6 +21,7 @@ public class Unit : MonoBehaviour, IBuildUnit
     private Renderer render;
     private GameManager gm;
 
+    public Animator ani;
     public Player player;
     public GameObject unit;
     public Tile currentTile;
@@ -74,6 +75,10 @@ public class Unit : MonoBehaviour, IBuildUnit
             {
                 transform.position = currentPosition;
                 moving = false;
+                if (ani != null)
+                {
+                    ani.SetBool("Moving", false);
+                }
             }
             else
             {
@@ -120,7 +125,7 @@ public class Unit : MonoBehaviour, IBuildUnit
         player = p;
         for (int i = 0; i < unitCost.Length; i++)
         {
-            if (p.resources[i] > unitCost[i])
+            if (p.resources[i] >= unitCost[i])
             {
                 p.resources[i] -= unitCost[i];
             }
@@ -252,6 +257,10 @@ public class Unit : MonoBehaviour, IBuildUnit
                 currentTile = t;
                 currentTile.MouseClick();
                 moving = true;
+                if(ani != null)
+                {
+                    ani.SetBool("Moving", true);
+                }
                 gm.GetPlayerController.Turn();
 
                 //currentTile.gameObject = this;

@@ -434,7 +434,18 @@ public class Tile : MonoBehaviour
     public void ResetTile()
     {
         selected = false;
-        ColorTile(TileColor.Default);
+        if (PlayerID == 0 || PlayerID != gm.GetPlayerController.currentPlayer.ID)
+        {
+            ColorTile(TileColor.Default);
+        }
+        else
+        {
+            if (buildUnit == null || buildUnit != null && !selected)
+            {
+                ColorTile(TileColor.Spawn);
+            }
+        }
+        //ColorTile(TileColor.Default);
         if (buildUnit != null)
         {
             HighLightNearbyTiles(buildUnit.GetRange(), buildUnit.GetRangeType(), false);

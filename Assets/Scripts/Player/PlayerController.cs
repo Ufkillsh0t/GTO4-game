@@ -95,10 +95,13 @@ public class PlayerController : MonoBehaviour
                 int lowResource = 0;
                 for(int j = 0; j < players[i].resources.Length; j++)
                 {
-                    if(players[i].resources[j] <= 30)
+                    if(players[i].resources[j] <= 50)
                     {
                         lowResource++;
-                        Debug.Log("GameOver");
+                        if (lowResource == amountOfResources && currentPlayer.buildings == null && currentPlayer.units == null)
+                        {
+                            Debug.Log("GameOver");
+                        }
                     }
                 }
             }
