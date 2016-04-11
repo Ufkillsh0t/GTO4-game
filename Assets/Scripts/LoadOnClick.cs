@@ -7,4 +7,9 @@ public class LoadOnClick : MonoBehaviour {
     {
         Application.LoadLevel(level);
     }
+
+    public void Exit()
+    {
+        Application.Quit();
+    }
 }

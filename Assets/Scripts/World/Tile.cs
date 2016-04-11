@@ -17,9 +17,11 @@ public class Tile : MonoBehaviour
     public Color hoverColor = Color.green;
     public Color moveColor = Color.blue;
     public Color selectedColor = Color.green;
+    public Color spawnColor = Color.HSVToRGB(100, 100, 100);
 
     public GameObject currentGameObject;
     public IBuildUnit buildUnit;
+    public int PlayerID;
     public bool selected;
     public bool hover;
     public bool highlighted;
@@ -38,6 +40,14 @@ public class Tile : MonoBehaviour
         selected = false; //Kijkt of de tile ingedrukt is of niet.
         uniqueID = uniqueID + 1;
         ID = uniqueID;
+    }
+
+    void Start()
+    {
+        if(gm == null)
+        {
+            gm = GameManager.GetGameManager();
+        }
     }
 
     /// <summary>
@@ -67,7 +77,17 @@ public class Tile : MonoBehaviour
         Debug.Log("Mouse exit");
         if (!selected && hover)
         {
-            ColorTile(TileColor.Default);
+            if (PlayerID == 0 || PlayerID != gm.GetPlayerController.currentPlayer.ID)
+            {
+                ColorTile(TileColor.Default);
+            }
+            else
+            {
+                if (buildUnit == null)
+                {
+                    ColorTile(TileColor.Spawn);
+                }
+            }
             if (buildUnit != null)
             {
                 HighLightNearbyTiles(buildUnit.GetRange(), buildUnit.GetRangeType(), false);
@@ -340,6 +360,10 @@ public class Tile : MonoBehaviour
                     ColorTile(TileColor.Highlight);
                 }
             }
+            else if(PlayerID != 0 && PlayerID == gm.GetPlayerController.currentPlayer.ID)
+            {
+                ColorTile(TileColor.Spawn);
+            }
             else
             {
                 ColorTile(TileColor.Default);
@@ -372,6 +396,9 @@ public class Tile : MonoBehaviour
                 break;
             case TileColor.Attack:
                 render.material.color = attackColor;
+                break;
+            case TileColor.Spawn:
+                render.material.color = spawnColor;
                 break;
             default:
             case TileColor.Default:

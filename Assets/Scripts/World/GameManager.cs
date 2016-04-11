@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public Tile selectedTile;
     public Tile hoverTile;
+    public GridGenerator gen;
 
     //Buildings
     public GameObject[] buildings; //Misschien buildings van maken met GetComponent in de load?
@@ -46,6 +47,8 @@ public class GameManager : MonoBehaviour
         buildings = System.Array.ConvertAll(Resources.LoadAll("Prefabs/Models/Buildings"), item => (GameObject)item); //Laat alle gameObjecten van de folder Building in. Alle buildings moeten een building script hebben.
         units = System.Array.ConvertAll(Resources.LoadAll("Prefabs/Models/Units"), item => (GameObject)item); //zelfde als hierboven.
         //Debug.Log(buildings[0].GetComponent<Building>().ID);
+
+        gen = GridGenerator.GetGridGenerator();
 
         infoPanel = (GameObject)Instantiate(informationPanel);
         infoPanel.transform.SetParent(canvas.transform, false);
@@ -93,6 +96,10 @@ public class GameManager : MonoBehaviour
             }
             playerController.AddPlayers(p);
         }
+
+        playerController.SetPlayerSpawnPoints();
+        playerController.ShowSpawnableTiles();
+        playerController.currentPlayer = playerController.players[0];
     }
 
     // Update is called once per frame

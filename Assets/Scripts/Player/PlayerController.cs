@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 
     public Player currentPlayer;
     public Player[] players;
+    private GridGenerator gen;
 
     public int[] defaultResourceIncrease;
     private int amountOfResources;
@@ -18,8 +19,13 @@ public class PlayerController : MonoBehaviour
     {
         turns = amountOfTurnsPerPlayer;
         CheckResourceArrayLength();
+        gen = GridGenerator.GetGridGenerator();
     }
 
+    /// <summary>
+    /// Voegt een speler toe aan de array met spelers.
+    /// </summary>
+    /// <param name="player">De speler die je aan der array met spelers wilt toevoegen.</param>
     public void AddPlayers(Player player)
     {
         player.cameraPosition = GameManager.GetGameManager().currentCamera.transform.position;
@@ -35,10 +41,17 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Added player");
     }
 
+    /// <summary>
+    /// Wisselt tussen de spelers.
+    /// </summary>
     public void SwitchPlayers()
     {
         SetCurrentPlayerCameraPosition();
-        GameManager.GetGameManager().selectedTile.ResetTile();
+        if (GameManager.GetGameManager().selectedTile != null)
+        {
+            GameManager.GetGameManager().selectedTile.ResetTile();
+        }
+        GameOver();
         if (currentPlayer == null || currentPlayer == players[(players.Length - 1)] || players.Length == 1)
         {
             IncreasePlayerResources();
@@ -47,6 +60,7 @@ public class PlayerController : MonoBehaviour
             currentTurn = 1;
             SetCurrentPlayerCamera();
             ShowEnemyObjects();
+            ShowSpawnableTiles();
             ShowCurrentPlayerObjects();
         }
         else
@@ -61,6 +75,7 @@ public class PlayerController : MonoBehaviour
                     currentTurn = 1;
                     SetCurrentPlayerCamera();
                     ShowEnemyObjects();
+                    ShowSpawnableTiles();
                     ShowCurrentPlayerObjects();
                     return;
                 }
@@ -68,9 +83,34 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Wordt uitgevoerd om te controleren of de speler nog genoeg resources heeft.
+    /// </summary>
+    public void GameOver()
+    {
+        for(int i = 0; i < players.Length; i++)
+        {
+            if(players[i].buildings == null || players[i].buildings.Length == 0)
+            {
+                int lowResource = 0;
+                for(int j = 0; j < players[i].resources.Length; j++)
+                {
+                    if(players[i].resources[j] <= 30)
+                    {
+                        lowResource++;
+                        Debug.Log("GameOver");
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Laat alle objecten zien van de huidige speler.
+    /// </summary>
     public void ShowCurrentPlayerObjects()
     {
-        GridGenerator gen = GridGenerator.GetGridGenerator();
+        gen = GridGenerator.GetGridGenerator();
         foreach (Tile t in gen.terrain)
         {
             if (t.buildUnit != null && t.buildUnit.Player.ID == currentPlayer.ID)
@@ -80,9 +120,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Laat alle objecten van de vijanden zien.
+    /// </summary>
     public void ShowEnemyObjects()
     {
-        GridGenerator gen = GridGenerator.GetGridGenerator();
+        gen = GridGenerator.GetGridGenerator();
         foreach (Tile t in gen.terrain)
         {
             if (t.buildUnit != null && t.buildUnit.Player.ID != currentPlayer.ID)
@@ -92,11 +135,38 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Laat alle spawnbare tiles zien.
+    /// </summary>
+    public void ShowSpawnableTiles()
+    {
+        foreach(Tile t in gen.terrain)
+        {
+            if (t.PlayerID == currentPlayer.ID && t.buildUnit == null)
+            {
+                t.ColorTile(TileColor.Spawn);
+            }
+            else
+            {
+                if (!t.selected && !t.hover)
+                {
+                    t.ColorTile(TileColor.Default);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Reset het aantal turns van de speler.
+    /// </summary>
     public void ResetTurns()
     {
         turns = amountOfTurnsPerPlayer;
     }
 
+    /// <summary>
+    /// Voert een turn uit en switcht de speler wanneer al zijn turns voorbij zijn.
+    /// </summary>
     public void Turn()
     {
         if ((turns - 1) > 0)
@@ -110,6 +180,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Verhoogt de resources van de speler.
+    /// </summary>
     public void IncreasePlayerResources()
     {
         for (int i = 0; i < defaultResourceIncrease.Length; i++)
@@ -132,6 +205,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Kijkt naar de lengte van de resource array en controleert of die groot genoeg is voor alle resources in het spel.
+    /// </summary>
     public void CheckResourceArrayLength()
     {
         amountOfResources = GameManager.amountOfResources;
@@ -147,18 +223,59 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Zet op dit moment de spawnpoints van 2 spelers klaar.
+    /// </summary>
+    public void SetPlayerSpawnPoints()
+    {
+        if (players.Length == 2)
+        {
+            int terX = gen.terrain.GetLength(0);
+            int terY = gen.terrain.GetLength(1);
+            int maxX = (int)(terX / 3.5);
+
+            //spawnable player1
+            for (int x = 0; x < maxX; x++)
+            {
+                for (int y = 0; y < terY; y++)
+                {
+                    gen.terrain[x, y].PlayerID = players[0].ID;
+                }
+            }
+
+            //spawnable player2
+            for (int x = (terX - maxX); x < terX; x++)
+            {
+                for (int y = 0; y < terY; y++)
+                {
+                    gen.terrain[x, y].PlayerID = players[1].ID;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Zet de huidige speler camera.
+    /// </summary>
     private void SetCurrentPlayerCamera()
     {
         GameManager gm = GameManager.GetGameManager();
         gm.currentCamera.transform.position = GetCurrentPlayerCameraPosition();
     }
 
+    /// <summary>
+    /// Slaat de camera positie van de speler op.
+    /// </summary>
     public void SetCurrentPlayerCameraPosition()
     {
         GameManager gm = GameManager.GetGameManager();
         currentPlayer.cameraPosition = gm.currentCamera.transform.position;
     }
 
+    /// <summary>
+    /// Verkrijgt de camera positie van de huidige speler.
+    /// </summary>
+    /// <returns></returns>
     public Vector3 GetCurrentPlayerCameraPosition()
     {
         return currentPlayer.cameraPosition;
