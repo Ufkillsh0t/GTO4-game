@@ -172,6 +172,10 @@ public class Unit : MonoBehaviour, IBuildUnit
                 //transform.Translate(Vector3.forward * movementSpeed * Time.deltaTime);
             }
         }
+        if (currentTile.hover || currentTile.selected)
+        {
+            ShowStatsText();
+        }
     }
 
 
@@ -227,7 +231,7 @@ public class Unit : MonoBehaviour, IBuildUnit
 
     public void Select()
     {
-        ShowStatsText();
+        unitStatsCanvas.SetActive(true);
         if (currentTile.ID == gm.selectedTile.ID)
         {
             if (gm.GetPlayerController.currentPlayer.ID != currentTile.buildUnit.Player.ID)
@@ -247,6 +251,7 @@ public class Unit : MonoBehaviour, IBuildUnit
 
     public void Hover()
     {
+        unitStatsCanvas.SetActive(true);
         if (!currentTile.hover)
         {
             currentTile.MouseHover();
@@ -262,11 +267,11 @@ public class Unit : MonoBehaviour, IBuildUnit
                 ColorObject(BuildUnitColor.Hover);
             }
         }
-        ShowStatsText();
     }
 
     public void Exit()
     {
+        unitStatsCanvas.SetActive(false);
         if (gm.GetPlayerController.currentPlayer.ID == player.ID)
         {
             ColorObject(BuildUnitColor.Default);
@@ -275,11 +280,11 @@ public class Unit : MonoBehaviour, IBuildUnit
         {
             ColorObject(BuildUnitColor.Blocked);
         }
-        unitStatsCanvas.SetActive(false);
     }
 
     public void Blocked()
     {
+        unitStatsCanvas.SetActive(true);
         ColorObject(BuildUnitColor.Blocked);
     }
 
