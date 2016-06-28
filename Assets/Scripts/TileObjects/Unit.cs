@@ -27,6 +27,7 @@ public class Unit : MonoBehaviour, IBuildUnit
     public Player player;
     public GameObject unit;
     public Tile currentTile;
+    private Tile attackedTile;
     public Vector3 currentPosition;
 
     public Color selectedColor = Color.cyan;
@@ -80,7 +81,7 @@ public class Unit : MonoBehaviour, IBuildUnit
             gameObject.transform.position.x <= (currentPosition.x - withinBoundry) ||
             gameObject.transform.position.z >= (currentPosition.z + withinBoundry) ||
             gameObject.transform.position.z <= (currentPosition.z - withinBoundry)) &&
-            currentPosition != null) 
+            currentPosition != null)
         {
             transform.LookAt(currentPosition);
             float distance = Vector3.Distance(transform.position, currentPosition);
@@ -93,6 +94,15 @@ public class Unit : MonoBehaviour, IBuildUnit
                 {
                     ani.SetBool("Moving", false);
                     ani.SetBool("Running", false);
+                    if (attacking)
+                    {
+                        ani.SetTrigger("Attack1Trigger");
+                        attacking = false;
+                        if (!attackedTile.buildUnit.Defend(damage))
+                        {
+                            attackedTile.buildUnit = null;
+                        }
+                    }
                 }
             }
             else
@@ -307,14 +317,31 @@ public class Unit : MonoBehaviour, IBuildUnit
     {
         if (t.buildUnit != null && canAttack)
         {
-            if(t.buildUnit.GetRange() >= 2)
-            ani.SetTrigger("Attack1Trigger");
-            attacking = true;
             transform.LookAt(new Vector3(t.transform.position.x, t.transform.position.y, t.transform.position.z));
-            if (!t.buildUnit.Defend(damage))
+            bool attacked = false;
+            if (range >= 2 && unitType != UnitType.Ranged &&
+                (t.xTile > (currentTile.xTile + 1) ||
+                 t.xTile < (currentTile.xTile - 1) ||
+                 t.yTile > (currentTile.yTile + 1) ||
+                 t.yTile < (currentTile.yTile - 1)))
             {
-                t.buildUnit = null;
-                gm.GetPlayerController.Turn();
+                attacked = AttackMove(t);
+                attackedTile = t;
+            }
+
+            if (!attacked)
+            {
+                ani.SetTrigger("Attack1Trigger");
+
+                if (!t.buildUnit.Defend(damage))
+                {
+                    t.buildUnit = null;
+                    gm.GetPlayerController.Turn();
+                }
+                else
+                {
+                    gm.GetPlayerController.Turn();
+                }
             }
             else
             {
@@ -327,6 +354,27 @@ public class Unit : MonoBehaviour, IBuildUnit
             gm.GetPlayerController.Turn();
             return false;
         }
+    }
+
+    public bool AttackMove(Tile t)
+    {
+
+        attacking = true;
+        Tile moveTo = GetMoveToTile(t);
+        return Move(moveTo, false);
+    }
+
+    public Tile GetMoveToTile(Tile t)
+    {
+        int xDiff = t.xTile - currentTile.xTile;
+        int yDiff = t.yTile - currentTile.yTile;
+
+        if (xDiff > 0) xDiff -= 1;
+        if (xDiff < 0) xDiff += 1;
+        if (yDiff < 0) yDiff -= 1;
+        if (yDiff > 0) yDiff += 1;
+
+        return GridGenerator.GetGridGenerator().GetTileTerrain((currentTile.xTile + xDiff), (currentTile.yTile + yDiff));
     }
 
     public bool CanAttack()
