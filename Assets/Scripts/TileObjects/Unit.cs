@@ -94,11 +94,9 @@ public class Unit : MonoBehaviour, IBuildUnit
         }
         if (unitStatsText != null)
         {
-            Debug.LogError("Won't be able to show player stats");
-
             unitStats = new GameObject[4];
 
-            
+
             unitStats[0] = (GameObject)Instantiate(unitStatsText);
             unitStats[0].transform.SetParent(unitStatsCanvas.transform, false);
             unitStats[0].transform.localPosition = new Vector3(unitStats[0].transform.localPosition.x, 25f, unitStats[0].transform.localPosition.z);
@@ -115,16 +113,17 @@ public class Unit : MonoBehaviour, IBuildUnit
             playerText = unitStats[2].GetComponent<Text>();
             playerText.text = "player not initialized";
         }
+        ShowStatsText();
         unitStatsCanvas.SetActive(false);
     }
 
     public void ShowStatsText()
     {
-        if (unitStatsCanvas.activeSelf == false) unitStatsCanvas.SetActive(true);
+        if (!unitStatsCanvas.activeSelf) unitStatsCanvas.SetActive(true);
 
         healthText.text = "Health: " + health.ToString();
         armorText.text = "Armor: " + armor.ToString();
-        if(player.ID != gm.GetPlayerController.currentPlayer.ID)
+        if (player != null && player.ID != gm.GetPlayerController.currentPlayer.ID)
         {
             playerText.text = "Player: Enemy";
         }
@@ -132,7 +131,6 @@ public class Unit : MonoBehaviour, IBuildUnit
         {
             playerText.text = "Player: You";
         }
-        playerText.text = "test";
     }
 
     void Start()
@@ -142,7 +140,6 @@ public class Unit : MonoBehaviour, IBuildUnit
 
     void Update()
     {
-        Debug.Log(gameObject.transform.position);
         if ((gameObject.transform.position.x >= (currentPosition.x + withinBoundry) ||
             gameObject.transform.position.x <= (currentPosition.x - withinBoundry) ||
             gameObject.transform.position.z >= (currentPosition.z + withinBoundry) ||
@@ -151,7 +148,6 @@ public class Unit : MonoBehaviour, IBuildUnit
         {
             transform.LookAt(currentPosition);
             float distance = Vector3.Distance(transform.position, currentPosition);
-            Debug.Log(distance);
             if (distance <= distanceBoundry)
             {
                 transform.position = currentPosition;
@@ -231,6 +227,7 @@ public class Unit : MonoBehaviour, IBuildUnit
 
     public void Select()
     {
+        ShowStatsText();
         if (currentTile.ID == gm.selectedTile.ID)
         {
             if (gm.GetPlayerController.currentPlayer.ID != currentTile.buildUnit.Player.ID)
@@ -254,21 +251,18 @@ public class Unit : MonoBehaviour, IBuildUnit
         {
             currentTile.MouseHover();
         }
-        else
+        if (currentTile.hover && !currentTile.selected && !currentTile.highlighted)
         {
-            if (currentTile.hover && !currentTile.selected && !currentTile.highlighted)
+            if (gm.GetPlayerController.currentPlayer.ID != currentTile.buildUnit.Player.ID)
             {
-                if (gm.GetPlayerController.currentPlayer.ID != currentTile.buildUnit.Player.ID)
-                {
-                    ColorObject(BuildUnitColor.Blocked);
-                }
-                else
-                {
-                    ColorObject(BuildUnitColor.Hover);
-                }
+                ColorObject(BuildUnitColor.Blocked);
             }
-            ShowStatsText();
+            else
+            {
+                ColorObject(BuildUnitColor.Hover);
+            }
         }
+        ShowStatsText();
     }
 
     public void Exit()
@@ -281,6 +275,7 @@ public class Unit : MonoBehaviour, IBuildUnit
         {
             ColorObject(BuildUnitColor.Blocked);
         }
+        unitStatsCanvas.SetActive(false);
     }
 
     public void Blocked()
