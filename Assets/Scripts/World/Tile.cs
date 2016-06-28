@@ -448,6 +448,7 @@ public class Tile : MonoBehaviour
         //ColorTile(TileColor.Default);
         if (buildUnit != null)
         {
+            //buildUnit.Reset();
             HighLightNearbyTiles(buildUnit.GetRange(), buildUnit.GetRangeType(), false);
             buildUnit.Exit();
         }

@@ -33,7 +33,7 @@ public interface IBuildUnit {
     /// </summary>
     /// <param name="t">Moves the object to the given tile.</param>
     /// <returns>If the object has been moved or not</returns>
-    bool Move(Tile t);
+    bool Move(Tile t, bool turn);
 
     /// <summary>
     /// Checks if this object can move or not;
@@ -103,4 +103,5 @@ public interface IBuildUnit {
     /// Wordt uitgevoerd indien deze buildunit niet van de speler is.
     /// </summary>
     void Blocked();
+    
 }

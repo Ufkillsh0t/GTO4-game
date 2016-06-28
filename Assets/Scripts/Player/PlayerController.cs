@@ -16,6 +16,9 @@ public class PlayerController : MonoBehaviour
 
     private bool gameOver;
 
+    [Range(2, 4)]
+    public float waitingTimeBetweenTurn = 2.0f;
+
     void Awake()
     {
         gameOver = false;
@@ -48,12 +51,12 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void SwitchPlayers()
     {
+        //StartCoroutine(WaitForSeconds(waitingTimeBetweenTurn));
         SetCurrentPlayerCameraPosition();
         if (GameManager.GetGameManager().selectedTile != null)
         {
             GameManager.GetGameManager().selectedTile.ResetTile();
         }
-        GameOver();
         if (!gameOver)
         {
             if (currentPlayer == null || currentPlayer == players[(players.Length - 1)] || players.Length == 1)
@@ -85,6 +88,11 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
+            GameOver();
+        }
+        else
+        {
+            GameOver();
         }
     }
 
@@ -95,48 +103,42 @@ public class PlayerController : MonoBehaviour
     {
         for (int i = 0; i < players.Length; i++)
         {
-            if (players[i].buildings == null || players[i].buildings.Length == 0)
+            int lowResource = 0;
+            for (int j = 0; j < players[i].resources.Length; j++)
             {
-                int lowResource = 0;
-                for (int j = 0; j < players[i].resources.Length; j++)
+                if (players[i].resources[j] < 50)
                 {
-                    if (players[i].resources[j] <= 50)
+                    lowResource++;
+                    if ((currentPlayer.buildings == null && currentPlayer.units == null))
                     {
-                        lowResource++;
-                        if ((currentPlayer.buildings == null && currentPlayer.units == null))
-                        {
-                            SetGameOver();
-                        }
-                        else if (currentPlayer.buildings != null && currentPlayer.units != null && currentPlayer.units.Length == 0 && currentPlayer.buildings.Length == 0)
-                        {
-                            SetGameOver();
-                        }
-                        else if (currentPlayer.buildings != null && currentPlayer.units == null && currentPlayer.buildings.Length == 0)
-                        {
-                            SetGameOver();
-                        }
-                        else if (currentPlayer.units != null && currentPlayer.buildings == null && currentPlayer.units.Length == 0)
-                        {
-                            SetGameOver();
-                        }
+                        SetGameOver(i);
+                        return;
+                    }
+                    else if ((currentPlayer.buildings != null || currentPlayer.units != null) && (currentPlayer.units.Length == 0 || currentPlayer.buildings.Length == 0))
+                    {
+                        SetGameOver(i);
+                        return;
+                    }
+                    else if (currentPlayer.buildings != null && currentPlayer.units == null && currentPlayer.buildings.Length == 0)
+                    {
+                        SetGameOver(i);
+                        return;
+                    }
+                    else if (currentPlayer.units != null && currentPlayer.buildings == null && currentPlayer.units.Length == 0)
+                    {
+                        SetGameOver(i);
+                        return;
                     }
                 }
+
             }
         }
     }
 
-    public void SetGameOver()
+    public void SetGameOver(int currentPlayer)
     {
-        if (players[0].ID == currentPlayer.ID)
-        {
-            gameOver = true;
-            GameManager.GetGameManager().GameOverMenu(players[0]);
-        }
-        else
-        {
-            gameOver = true;
-            GameManager.GetGameManager().GameOverMenu(players[1]);
-        }
+        gameOver = true;
+        GameManager.GetGameManager().GameOverMenu(players[currentPlayer]);
     }
 
     /// <summary>
@@ -313,5 +315,10 @@ public class PlayerController : MonoBehaviour
     public Vector3 GetCurrentPlayerCameraPosition()
     {
         return currentPlayer.cameraPosition;
+    }
+
+    private IEnumerator WaitForSeconds(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
     }
 }

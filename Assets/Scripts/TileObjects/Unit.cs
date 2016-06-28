@@ -17,6 +17,8 @@ public class Unit : MonoBehaviour, IBuildUnit
     public int[] resourcesIncrease;
     private int amountOfResources;
     public float movementSpeed;
+    public float withinBoundry = 0.70f;
+    public float distanceBoundry = 0.80f;
 
     private Renderer render;
     private GameManager gm;
@@ -39,6 +41,7 @@ public class Unit : MonoBehaviour, IBuildUnit
     public int ID;
 
     public bool moving;
+    public bool attacking;
 
     public Player Player
     {
@@ -73,16 +76,16 @@ public class Unit : MonoBehaviour, IBuildUnit
     void Update()
     {
         Debug.Log(gameObject.transform.position);
-        if ((gameObject.transform.position.x >= (currentPosition.x + 0.7f) ||
-            gameObject.transform.position.x <= (currentPosition.x - 0.7f) ||
-            gameObject.transform.position.z >= (currentPosition.z + 0.7f) ||
-            gameObject.transform.position.z <= (currentPosition.z - 0.7f)) &&
-            currentPosition != null)
+        if ((gameObject.transform.position.x >= (currentPosition.x + withinBoundry) ||
+            gameObject.transform.position.x <= (currentPosition.x - withinBoundry) ||
+            gameObject.transform.position.z >= (currentPosition.z + withinBoundry) ||
+            gameObject.transform.position.z <= (currentPosition.z - withinBoundry)) &&
+            currentPosition != null) 
         {
             transform.LookAt(currentPosition);
             float distance = Vector3.Distance(transform.position, currentPosition);
             Debug.Log(distance);
-            if (distance <= 0.75f)
+            if (distance <= distanceBoundry)
             {
                 transform.position = currentPosition;
                 moving = false;
@@ -216,7 +219,7 @@ public class Unit : MonoBehaviour, IBuildUnit
     }
 
     public void ColorObject(BuildUnitColor col)
-    { 
+    {
         switch (col)
         {
             case BuildUnitColor.Hover:
@@ -255,7 +258,7 @@ public class Unit : MonoBehaviour, IBuildUnit
         return currentTile;
     }
 
-    public bool Move(Tile t)
+    public bool Move(Tile t, bool turn)
     {
         //snelle movement test;
         if (t.buildUnit == null && moveAble)
@@ -269,16 +272,18 @@ public class Unit : MonoBehaviour, IBuildUnit
                 currentTile = t;
                 currentTile.MouseClick();
                 moving = true;
-                if(ani != null)
+                if (ani != null)
                 {
                     ani.SetBool("Moving", true);
                     ani.SetBool("Running", true);
                 }
-                gm.GetPlayerController.Turn();
+                currentPosition = new Vector3(currentTile.transform.position.x, currentTile.transform.position.y, currentTile.transform.position.z); //y + (render.bounds.size.y / 2) voor andere objecten
+
+                if (turn)
+                    gm.GetPlayerController.Turn();
 
                 //currentTile.gameObject = this;
                 //float y = currentTile.transform.position.y;
-                currentPosition = new Vector3(currentTile.transform.position.x, currentTile.transform.position.y, currentTile.transform.position.z); //y + (render.bounds.size.y / 2) voor andere objecten
 
                 return true;
             }
@@ -302,6 +307,10 @@ public class Unit : MonoBehaviour, IBuildUnit
     {
         if (t.buildUnit != null && canAttack)
         {
+            if(t.buildUnit.GetRange() >= 2)
+            ani.SetTrigger("Attack1Trigger");
+            attacking = true;
+            transform.LookAt(new Vector3(t.transform.position.x, t.transform.position.y, t.transform.position.z));
             if (!t.buildUnit.Defend(damage))
             {
                 t.buildUnit = null;

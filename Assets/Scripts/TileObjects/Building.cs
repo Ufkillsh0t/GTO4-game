@@ -38,6 +38,7 @@ public class Building : MonoBehaviour, IBuildUnit
     public int ID;
 
     public bool moving;
+    public bool attacking;
 
     public Player Player
     {
@@ -67,7 +68,7 @@ public class Building : MonoBehaviour, IBuildUnit
 
     void Update()
     {
-        if (gameObject.transform.position != currentPosition && currentPosition != null)
+        if (currentPosition != null && gameObject.transform.position != currentPosition)
         {
             transform.LookAt(currentPosition);
             float distance = Vector3.Distance(transform.position, currentPosition);
@@ -236,7 +237,7 @@ public class Building : MonoBehaviour, IBuildUnit
         return currentTile;
     }
 
-    public bool Move(Tile t)
+    public bool Move(Tile t, bool turn)
     {
         //snelle movement test;
         if (t.buildUnit == null && moveAble)
@@ -252,6 +253,8 @@ public class Building : MonoBehaviour, IBuildUnit
                 moving = true;
                 gm.GetPlayerController.Turn();
 
+                if (turn)
+                    transform.LookAt(t.transform);
                 //currentTile.gameObject = this;
                 float y = currentTile.transform.position.y;
                 currentPosition = new Vector3(currentTile.transform.position.x, y + (render.bounds.size.y / 2), currentTile.transform.position.z); //rotatie nog goed doen voor movement.
@@ -345,5 +348,4 @@ public class Building : MonoBehaviour, IBuildUnit
     {
         throw new NotImplementedException();
     }
-
 }

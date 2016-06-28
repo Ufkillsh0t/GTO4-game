@@ -195,7 +195,7 @@ public class GameManager : MonoBehaviour
             }
             if (selectedTile.buildUnit != null && selectedTile.buildUnit.CanMove() && t.buildUnit == null)
             {
-                selectedTile.buildUnit.Move(t);
+                selectedTile.buildUnit.Move(t, true);
             }
         }
         else if (Input.GetMouseButtonDown(1) && !t.selected && t.highlighted)
@@ -330,6 +330,7 @@ public class GameManager : MonoBehaviour
                 spawnedBuilding.OnSpawn(selectedTile, playerController.currentPlayer);
                 playerController.currentPlayer.AddBuilding(spawnedBuilding);
                 selectedTile.MouseClick();
+                playerController.Turn();
             }
             else
             {
@@ -357,6 +358,7 @@ public class GameManager : MonoBehaviour
                 spawnedUnit.OnSpawn(selectedTile, playerController.currentPlayer);
                 playerController.currentPlayer.AddUnit(spawnedUnit);
                 selectedTile.MouseClick();
+                playerController.Turn();
             }
             else
             {
