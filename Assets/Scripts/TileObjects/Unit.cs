@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.UI;
 
 public class Unit : MonoBehaviour, IBuildUnit
 {
@@ -35,6 +36,14 @@ public class Unit : MonoBehaviour, IBuildUnit
     public Color blockedColor = Color.grey;
     public Color attackColor = Color.red;
 
+    //Stats Canvas
+    public GameObject unitStatsCanvas;
+    public GameObject unitStatsText;
+    private GameObject[] unitStats;
+    private Text healthText;
+    private Text armorText;
+    private Text playerText;
+
     private Color defaultMaterialColor;
     public Color DefaultMaterialColor { get { return defaultMaterialColor; } }
 
@@ -62,11 +71,68 @@ public class Unit : MonoBehaviour, IBuildUnit
         CheckUnitCostArrayLength();
         CheckResourceIncreaseArrayLength();
         unit = this.gameObject;
+
         ani = GetComponentInParent<Animator>();
         ani.SetFloat("Input X", 0);
         ani.SetFloat("Input Z", 0);
         ani.SetBool("Moving", false);
         ani.SetBool("Running", false);
+
+        InstantiateStatsCanvas();
+    }
+
+    private void InstantiateStatsCanvas()
+    {
+        if (unitStatsCanvas == null)
+        {
+            Debug.LogError("No canvas");
+        }
+        else
+        {
+            unitStatsCanvas = (GameObject)Instantiate(unitStatsCanvas);
+            unitStatsCanvas.transform.SetParent(transform, false);
+        }
+        if (unitStatsText != null)
+        {
+            Debug.LogError("Won't be able to show player stats");
+
+            unitStats = new GameObject[4];
+
+            
+            unitStats[0] = (GameObject)Instantiate(unitStatsText);
+            unitStats[0].transform.SetParent(unitStatsCanvas.transform, false);
+            unitStats[0].transform.localPosition = new Vector3(unitStats[0].transform.localPosition.x, 25f, unitStats[0].transform.localPosition.z);
+            healthText = unitStats[0].GetComponent<Text>();
+
+            unitStats[1] = (GameObject)Instantiate(unitStatsText);
+            unitStats[1].transform.SetParent(unitStatsCanvas.transform, false);
+            unitStats[1].transform.localPosition = new Vector3(unitStats[1].transform.localPosition.x, 7.5f, unitStats[1].transform.localPosition.z);
+            armorText = unitStats[1].GetComponent<Text>();
+
+            unitStats[2] = (GameObject)Instantiate(unitStatsText);
+            unitStats[2].transform.SetParent(unitStatsCanvas.transform, false);
+            unitStats[2].transform.localPosition = new Vector3(unitStats[2].transform.localPosition.x, -10f, unitStats[2].transform.localPosition.z);
+            playerText = unitStats[2].GetComponent<Text>();
+            playerText.text = "player not initialized";
+        }
+        unitStatsCanvas.SetActive(false);
+    }
+
+    public void ShowStatsText()
+    {
+        if (unitStatsCanvas.activeSelf == false) unitStatsCanvas.SetActive(true);
+
+        healthText.text = "Health: " + health.ToString();
+        armorText.text = "Armor: " + armor.ToString();
+        if(player.ID != gm.GetPlayerController.currentPlayer.ID)
+        {
+            playerText.text = "Player: Enemy";
+        }
+        else
+        {
+            playerText.text = "Player: You";
+        }
+        playerText.text = "test";
     }
 
     void Start()
@@ -188,16 +254,20 @@ public class Unit : MonoBehaviour, IBuildUnit
         {
             currentTile.MouseHover();
         }
-        if (currentTile.hover && !currentTile.selected && !currentTile.highlighted)
+        else
         {
-            if (gm.GetPlayerController.currentPlayer.ID != currentTile.buildUnit.Player.ID)
+            if (currentTile.hover && !currentTile.selected && !currentTile.highlighted)
             {
-                ColorObject(BuildUnitColor.Blocked);
+                if (gm.GetPlayerController.currentPlayer.ID != currentTile.buildUnit.Player.ID)
+                {
+                    ColorObject(BuildUnitColor.Blocked);
+                }
+                else
+                {
+                    ColorObject(BuildUnitColor.Hover);
+                }
             }
-            else
-            {
-                ColorObject(BuildUnitColor.Hover);
-            }
+            ShowStatsText();
         }
     }
 

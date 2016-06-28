@@ -114,17 +114,17 @@ public class PlayerController : MonoBehaviour
                         SetGameOver(i);
                         return;
                     }
-                    else if ((currentPlayer.buildings != null || currentPlayer.units != null) && (currentPlayer.units.Length == 0 || currentPlayer.buildings.Length == 0))
-                    {
-                        SetGameOver(i);
-                        return;
-                    }
                     else if (currentPlayer.buildings != null && currentPlayer.units == null && currentPlayer.buildings.Length == 0)
                     {
                         SetGameOver(i);
                         return;
                     }
                     else if (currentPlayer.units != null && currentPlayer.buildings == null && currentPlayer.units.Length == 0)
+                    {
+                        SetGameOver(i);
+                        return;
+                    }
+                    else if (currentPlayer.units.Length == 0 && currentPlayer.buildings.Length == 0)
                     {
                         SetGameOver(i);
                         return;
