@@ -21,7 +21,7 @@ public class Unit : MonoBehaviour, IBuildUnit
     private Renderer render;
     private GameManager gm;
 
-    public Animator ani { get { return GetComponent<Animator>(); } }
+    public Animator ani;
     public Player player;
     public GameObject unit;
     public Tile currentTile;
@@ -58,6 +58,7 @@ public class Unit : MonoBehaviour, IBuildUnit
         CheckUnitCostArrayLength();
         CheckResourceIncreaseArrayLength();
         unit = this.gameObject;
+        ani = GetComponentInParent<Animator>();
         ani.SetFloat("Input X", 0);
         ani.SetFloat("Input Z", 0);
         ani.SetBool("Moving", false);
@@ -71,25 +72,31 @@ public class Unit : MonoBehaviour, IBuildUnit
 
     void Update()
     {
-        /*
-        if (gameObject.transform.position != currentPosition && currentPosition != null)
+        Debug.Log(gameObject.transform.position);
+        if ((gameObject.transform.position.x >= (currentPosition.x + 0.7f) ||
+            gameObject.transform.position.x <= (currentPosition.x - 0.7f) ||
+            gameObject.transform.position.z >= (currentPosition.z + 0.7f) ||
+            gameObject.transform.position.z <= (currentPosition.z - 0.7f)) &&
+            currentPosition != null)
         {
             transform.LookAt(currentPosition);
             float distance = Vector3.Distance(transform.position, currentPosition);
-            if (distance <= 0.05f)
+            Debug.Log(distance);
+            if (distance <= 0.75f)
             {
                 transform.position = currentPosition;
                 moving = false;
                 if (ani != null)
                 {
-                    ani.SetBool("Moving", true);
+                    ani.SetBool("Moving", false);
+                    ani.SetBool("Running", false);
                 }
             }
             else
             {
-                transform.Translate(Vector3.forward * movementSpeed * Time.deltaTime);
+                //transform.Translate(Vector3.forward * movementSpeed * Time.deltaTime);
             }
-        }*/
+        }
     }
 
 
@@ -265,12 +272,14 @@ public class Unit : MonoBehaviour, IBuildUnit
                 if(ani != null)
                 {
                     ani.SetBool("Moving", true);
+                    ani.SetBool("Running", true);
                 }
                 gm.GetPlayerController.Turn();
 
                 //currentTile.gameObject = this;
-                float y = currentTile.transform.position.y;
-                currentPosition = new Vector3(currentTile.transform.position.x, y + (render.bounds.size.y / 2), currentTile.transform.position.z);
+                //float y = currentTile.transform.position.y;
+                currentPosition = new Vector3(currentTile.transform.position.x, currentTile.transform.position.y, currentTile.transform.position.z); //y + (render.bounds.size.y / 2) voor andere objecten
+
                 return true;
             }
             else

@@ -5,7 +5,7 @@ public enum ResourceType { Gold, Lumber, Mana }
 
 public enum BuildingType { Defense, Harvester }
 
-public enum UnitType { Attack, Defense }
+public enum UnitType { Attack, Defense, Ranged }
 
 public enum RangeType {  Sphere, Cross}
 
