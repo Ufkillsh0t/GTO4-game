@@ -481,7 +481,7 @@ public class Tile : MonoBehaviour
             currentGameObject = Instantiate(g);
             currentGameObject.transform.parent = transform;
             currentGameObject.transform.position = transform.parent.position;
-            currentGameObject.transform.localPosition = new Vector3(0f, 0f, (currentGameObject.GetComponent<Renderer>().bounds.size.y / 2));
+            currentGameObject.transform.localPosition = new Vector3(0f, 0f, 0f); //(currentGameObject.GetComponentInChildren<Renderer>().bounds.size.y / 2)
             currentGameObject.transform.rotation = Quaternion.identity;
             if (currentGameObject != null)
             {

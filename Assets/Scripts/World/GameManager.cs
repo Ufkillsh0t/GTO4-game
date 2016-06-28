@@ -112,6 +112,7 @@ public class GameManager : MonoBehaviour
     {
         endPanelText.text = p.playerName + " has won!";
         shownEndPanel = (GameObject)Instantiate(endPanel);
+        shownEndPanel.SetActive(true);
         shownEndPanel.transform.SetParent(canvas.transform, false);
     }
 

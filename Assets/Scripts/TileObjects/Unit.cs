@@ -21,7 +21,7 @@ public class Unit : MonoBehaviour, IBuildUnit
     private Renderer render;
     private GameManager gm;
 
-    public Animator ani;
+    public Animator ani { get { return GetComponent<Animator>(); } }
     public Player player;
     public GameObject unit;
     public Tile currentTile;
@@ -50,7 +50,7 @@ public class Unit : MonoBehaviour, IBuildUnit
 
     void Awake()
     {
-        render = gameObject.GetComponent<Renderer>(); //Verkrijgt de renderer van dit object.
+        render = gameObject.GetComponentInChildren<Renderer>(); //Verkrijgt de renderer van dit object.
         defaultMaterialColor = render.material.color;
         gm = GameManager.GetGameManager();
         uniqueID = uniqueID + 1;
@@ -58,6 +58,10 @@ public class Unit : MonoBehaviour, IBuildUnit
         CheckUnitCostArrayLength();
         CheckResourceIncreaseArrayLength();
         unit = this.gameObject;
+        ani.SetFloat("Input X", 0);
+        ani.SetFloat("Input Z", 0);
+        ani.SetBool("Moving", false);
+        ani.SetBool("Running", false);
     }
 
     void Start()
@@ -67,6 +71,7 @@ public class Unit : MonoBehaviour, IBuildUnit
 
     void Update()
     {
+        /*
         if (gameObject.transform.position != currentPosition && currentPosition != null)
         {
             transform.LookAt(currentPosition);
@@ -77,14 +82,14 @@ public class Unit : MonoBehaviour, IBuildUnit
                 moving = false;
                 if (ani != null)
                 {
-                    ani.SetBool("Moving", false);
+                    ani.SetBool("Moving", true);
                 }
             }
             else
             {
                 transform.Translate(Vector3.forward * movementSpeed * Time.deltaTime);
             }
-        }
+        }*/
     }
 
 
@@ -204,7 +209,7 @@ public class Unit : MonoBehaviour, IBuildUnit
     }
 
     public void ColorObject(BuildUnitColor col)
-    {
+    { 
         switch (col)
         {
             case BuildUnitColor.Hover:
