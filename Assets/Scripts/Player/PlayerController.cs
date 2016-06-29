@@ -103,36 +103,43 @@ public class PlayerController : MonoBehaviour
     {
         for (int i = 0; i < players.Length; i++)
         {
-            int lowResource = 0;
-            for (int j = 0; j < players[i].resources.Length; j++)
+            if(!CanBuy(players[i]) && !HasBuildUnits(players[i]))
             {
-                if (players[i].resources[j] < 50)
-                {
-                    lowResource++;
-                    if ((currentPlayer.buildings == null && currentPlayer.units == null))
-                    {
-                        SetGameOver(i);
-                        return;
-                    }
-                    else if (currentPlayer.buildings != null && currentPlayer.units == null && currentPlayer.buildings.Length == 0)
-                    {
-                        SetGameOver(i);
-                        return;
-                    }
-                    else if (currentPlayer.units != null && currentPlayer.buildings == null && currentPlayer.units.Length == 0)
-                    {
-                        SetGameOver(i);
-                        return;
-                    }
-                    else if (currentPlayer.units != null && currentPlayer.buildings != null && currentPlayer.units.Length == 0 && currentPlayer.buildings.Length == 0)
-                    {
-                        SetGameOver(i);
-                        return;
-                    }
-                }
-
+                SetGameOver((i > 0) ? 0 : 1);
             }
         }
+    }
+
+    private bool HasBuildUnits(Player p)
+    {
+        int buildings = (p.buildings == null) ? 0 : p.buildings.Length;
+        int units = (p.units == null) ? 0 : p.units.Length;
+        return units > 0 || buildings > 0;
+    }
+
+    private bool CanBuy(Player p)
+    {
+        for (int i = 0; i < p.resources.Length; i++)
+        {
+            Building[] buildings = GameManager.GetGameManager().buildingClasses;
+            Unit[] units = GameManager.GetGameManager().unitClasses;
+            for (int j = 0; j < buildings.Length; j++)
+            {
+                if (p.EnoughResources(buildings[j].buildingCost))
+                {
+                    return true;
+                }
+            }
+            for (int k = 0; k < units.Length; k++)
+            {
+                if (p.EnoughResources(units[k].unitCost))
+                {
+                    return true;
+
+                }
+            }
+        }
+        return false;
     }
 
     public void SetGameOver(int currentPlayer)

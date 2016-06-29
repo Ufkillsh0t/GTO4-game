@@ -13,7 +13,9 @@ public class GameManager : MonoBehaviour
 
     //Buildings
     public GameObject[] buildings; //Misschien buildings van maken met GetComponent in de load?
+    public Building[] buildingClasses;
     public GameObject[] units;
+    public Unit[] unitClasses;
 
     //UI
     public Canvas canvas;
@@ -53,6 +55,9 @@ public class GameManager : MonoBehaviour
         textPreFab = (GameObject)Resources.Load("Prefabs/UI/UIText");
         buildings = System.Array.ConvertAll(Resources.LoadAll("Prefabs/Models/Buildings"), item => (GameObject)item); //Laat alle gameObjecten van de folder Building in. Alle buildings moeten een building script hebben.
         units = System.Array.ConvertAll(Resources.LoadAll("Prefabs/Models/Units"), item => (GameObject)item); //zelfde als hierboven.
+
+        GetBuildUnitClasses();
+
         //Debug.Log(buildings[0].GetComponent<Building>().ID);
 
         gen = GridGenerator.GetGridGenerator();
@@ -82,6 +87,22 @@ public class GameManager : MonoBehaviour
 
             ResourceType r = (ResourceType)i - 1;
             t.text = r.ToString() + ": 0";
+        }
+    }
+
+    private void GetBuildUnitClasses()
+    {
+        buildingClasses = new Building[buildings.Length];
+        unitClasses = new Unit[units.Length];
+
+        for (int i = 0; i < buildingClasses.Length; i++)
+        {
+            buildingClasses[i] = buildings[i].GetComponent<Building>();
+        }
+
+        for (int i = 0; i < unitClasses.Length; i++)
+        {
+            unitClasses[i] = units[i].GetComponent<Unit>();
         }
     }
 
