@@ -103,5 +103,10 @@ public interface IBuildUnit {
     /// Wordt uitgevoerd indien deze buildunit niet van de speler is.
     /// </summary>
     void Blocked();
-    
+
+    /// <summary>
+    /// Rotates the object on a tile towards the given tile.
+    /// </summary>
+    /// <param name="t"></param>
+    void LookAt(Tile t);
 }

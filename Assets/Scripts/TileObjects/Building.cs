@@ -239,6 +239,13 @@ public class Building : MonoBehaviour, IBuildUnit
         return currentTile;
     }
 
+    public void LookAt(Tile t)
+    {
+        Vector3 target = t.transform.position;
+        target.y = transform.position.y;
+        transform.LookAt(target);
+    }
+
     public bool Move(Tile t, bool turn)
     {
         //snelle movement test;
@@ -256,7 +263,7 @@ public class Building : MonoBehaviour, IBuildUnit
                 gm.GetPlayerController.Turn();
 
                 if (turn)
-                    transform.LookAt(t.transform);
+                    LookAt(t);
                 //currentTile.gameObject = this;
                 float y = currentTile.transform.position.y;
                 currentPosition = new Vector3(currentTile.transform.position.x, y + (render.bounds.size.y / 2), currentTile.transform.position.z); //rotatie nog goed doen voor movement.
@@ -287,13 +294,13 @@ public class Building : MonoBehaviour, IBuildUnit
     {
         if (t.buildUnit != null && canAttack)
         {
+            if (rotationalObject != null)
+            {
+                LookAt(t);
+            }
             if (!t.buildUnit.Defend(damage))
             {
                 t.buildUnit = null;
-                if(rotationalObject != null)
-                {
-                    rotationalObject.transform.LookAt(t.transform);
-                }
                 gm.GetPlayerController.Turn();
             }
             else
@@ -329,12 +336,12 @@ public class Building : MonoBehaviour, IBuildUnit
                 armor -= damage;
                 return true;
             }
-            else if(armor > 0)
+            else if (armor > 0)
             {
                 int remainingDamage = damage - armor;
                 armor = 0;
                 health -= remainingDamage;
-                if(health <= 0)
+                if (health <= 0)
                 {
                     player.RemoveBuilding(this);
                     Destroy(gameObject);
@@ -354,4 +361,5 @@ public class Building : MonoBehaviour, IBuildUnit
     {
         throw new NotImplementedException();
     }
+
 }

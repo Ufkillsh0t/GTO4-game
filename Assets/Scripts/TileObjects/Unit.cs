@@ -146,7 +146,7 @@ public class Unit : MonoBehaviour, IBuildUnit
             gameObject.transform.position.z <= (currentPosition.z - withinBoundry)) &&
             currentPosition != null)
         {
-            transform.LookAt(currentPosition);
+            LookAt(currentPosition);
             float distance = Vector3.Distance(transform.position, currentPosition);
             if (distance <= distanceBoundry)
             {
@@ -338,6 +338,20 @@ public class Unit : MonoBehaviour, IBuildUnit
         return currentTile;
     }
 
+    public void LookAt(Tile t)
+    {
+        Vector3 target = t.transform.position;
+        target.y = transform.position.y;
+        transform.LookAt(target);
+    }
+
+    public void LookAt(Vector3 t)
+    {
+        Vector3 target = t;
+        target.y = transform.position.y;
+        transform.LookAt(target);
+    }
+
     public bool Move(Tile t, bool turn)
     {
         //snelle movement test;
@@ -387,7 +401,7 @@ public class Unit : MonoBehaviour, IBuildUnit
     {
         if (t.buildUnit != null && canAttack)
         {
-            transform.LookAt(new Vector3(t.transform.position.x, t.transform.position.y, t.transform.position.z));
+            LookAt(new Vector3(t.transform.position.x, t.transform.position.y, t.transform.position.z));
             bool attacked = false;
             if (range >= 2 && unitType != UnitType.Ranged &&
                 (t.xTile > (currentTile.xTile + 1) ||
