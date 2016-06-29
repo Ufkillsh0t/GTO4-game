@@ -308,7 +308,11 @@ public class PlayerController : MonoBehaviour
     private void SetCurrentPlayerCamera()
     {
         GameManager gm = GameManager.GetGameManager();
-        gm.moveCamera.SetNewPosition(GetCurrentPlayerCameraPosition());
+        Vector3 curPos = GetCurrentPlayerCameraPosition();
+        if (gm.currentCamera.transform.position != curPos)
+        {
+            gm.moveCamera.SetNewPosition(curPos);
+        }
     }
 
     /// <summary>
