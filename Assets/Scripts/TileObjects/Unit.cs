@@ -420,6 +420,8 @@ public class Unit : MonoBehaviour, IBuildUnit
                 if (!t.buildUnit.Defend(damage))
                 {
                     t.buildUnit = null;
+                    Exit();
+                    t.MouseExit();
                     gm.GetPlayerController.Turn();
                 }
                 else

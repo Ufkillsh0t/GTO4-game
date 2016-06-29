@@ -92,10 +92,12 @@ public class Tile : MonoBehaviour
             {
                 HighLightNearbyTiles(buildUnit.GetRange(), buildUnit.GetRangeType(), false);
                 buildUnit.Exit();
+                ColorTile(TileColor.Default);
+                /*
                 if (gm.selectedTile != null)
                 {
                     gm.selectedTile.SelectTile();
-                }
+                }*/
             }
         }
         if (highlighted)

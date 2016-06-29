@@ -84,16 +84,13 @@ public class PlayerController : MonoBehaviour
                         ShowEnemyObjects();
                         ShowSpawnableTiles();
                         ShowCurrentPlayerObjects();
+                        GameOver();
                         return;
                     }
                 }
             }
-            GameOver();
         }
-        else
-        {
-            GameOver();
-        }
+        GameOver();
     }
 
     /// <summary>
@@ -103,7 +100,10 @@ public class PlayerController : MonoBehaviour
     {
         for (int i = 0; i < players.Length; i++)
         {
-            if(!CanBuy(players[i]) && !HasBuildUnits(players[i]))
+            bool canBuy = CanBuy(players[i]);
+            bool hasBuildUnits = HasBuildUnits(players[i]);
+            Debug.Log("Can Buy: " + canBuy + " Has BuildUnits: " + hasBuildUnits);
+            if (!canBuy && !hasBuildUnits)
             {
                 SetGameOver((i > 0) ? 0 : 1);
             }
@@ -127,6 +127,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (p.EnoughResources(buildings[j].buildingCost))
                 {
+                    Debug.Log("Can buy: " + buildings[j]);
                     return true;
                 }
             }
@@ -134,8 +135,8 @@ public class PlayerController : MonoBehaviour
             {
                 if (p.EnoughResources(units[k].unitCost))
                 {
+                    Debug.Log("Can buy: " + units[k]);
                     return true;
-
                 }
             }
         }
