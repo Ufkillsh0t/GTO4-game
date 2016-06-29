@@ -165,15 +165,15 @@ public class GameManager : MonoBehaviour
     /// <param name="hit">Het object dat de raycast heeft geraakt.</param>
     public void RayCastMouseHit(RaycastHit hit)
     {
-        if (hit.collider.gameObject.tag == "Tile")
-        {
-            Tile t = hit.collider.gameObject.GetComponent<Tile>();
-            TileSelection(t);
-        }
         if (hit.collider.gameObject.tag == "TileObject")
         {
             IBuildUnit ibu = hit.collider.gameObject.GetComponent<IBuildUnit>();
             BuildUnitSelection(ibu);
+        }
+        else if (hit.collider.gameObject.tag == "Tile")
+        {
+            Tile t = hit.collider.gameObject.GetComponent<Tile>();
+            TileSelection(t);
         }
     }
 

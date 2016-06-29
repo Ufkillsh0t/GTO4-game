@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.UI;
 
 public class Building : MonoBehaviour, IBuildUnit
 {
@@ -33,6 +34,18 @@ public class Building : MonoBehaviour, IBuildUnit
     public Color blockedColor = Color.grey;
     public Color attackColor = Color.red;
 
+    //Stats Canvas
+    public GameObject unitStatsCanvas;
+    public GameObject unitStatsText;
+    public int resourcePosition = 60;
+    private GameObject[] unitStats;
+    private Text healthText;
+    private Text armorText;
+    private Text playerText;
+    private Text GoldIncrease;
+    private Text LumberIncrease;
+    private Text ManaIncrease;
+
     private Color defaultMaterialColor;
     public Color DefaultMaterialColor { get { return defaultMaterialColor; } }
 
@@ -61,6 +74,83 @@ public class Building : MonoBehaviour, IBuildUnit
         CheckResourceIncreaseArrayLength();
         building = this.gameObject;
         moving = false;
+        InstantiateStatsCanvas();
+    }
+
+    private void InstantiateStatsCanvas()
+    {
+        if (unitStatsCanvas == null)
+        {
+            Debug.LogError("No canvas");
+        }
+        else
+        {
+            unitStatsCanvas = (GameObject)Instantiate(unitStatsCanvas);
+            unitStatsCanvas.transform.SetParent(transform, false);
+        }
+        if (unitStatsText != null)
+        {
+            unitStats = new GameObject[6];
+
+            unitStats[0] = (GameObject)Instantiate(unitStatsText);
+            unitStats[0].transform.SetParent(unitStatsCanvas.transform, false);
+            unitStats[0].transform.localPosition = new Vector3(unitStats[0].transform.localPosition.x, 25f, unitStats[0].transform.localPosition.z);
+            healthText = unitStats[0].GetComponent<Text>();
+
+            unitStats[1] = (GameObject)Instantiate(unitStatsText);
+            unitStats[1].transform.SetParent(unitStatsCanvas.transform, false);
+            unitStats[1].transform.localPosition = new Vector3(unitStats[1].transform.localPosition.x, 7.5f, unitStats[1].transform.localPosition.z);
+            armorText = unitStats[1].GetComponent<Text>();
+
+            unitStats[2] = (GameObject)Instantiate(unitStatsText);
+            unitStats[2].transform.SetParent(unitStatsCanvas.transform, false);
+            unitStats[2].transform.localPosition = new Vector3(unitStats[2].transform.localPosition.x, -10f, unitStats[2].transform.localPosition.z);
+            playerText = unitStats[2].GetComponent<Text>();
+            playerText.text = "player not initialized";
+
+            if(buildingType == BuildingType.Harvester)
+            {
+                unitStats[3] = (GameObject)Instantiate(unitStatsText);
+                unitStats[3].transform.SetParent(unitStatsCanvas.transform, false);
+                unitStats[3].transform.localPosition = new Vector3(unitStats[0].transform.localPosition.x + resourcePosition, 25f, unitStats[3].transform.localPosition.z);
+                GoldIncrease = unitStats[3].GetComponent<Text>();
+
+                unitStats[4] = (GameObject)Instantiate(unitStatsText);
+                unitStats[4].transform.SetParent(unitStatsCanvas.transform, false);
+                unitStats[4].transform.localPosition = new Vector3(unitStats[1].transform.localPosition.x + resourcePosition, 7.5f, unitStats[4].transform.localPosition.z);
+                LumberIncrease = unitStats[4].GetComponent<Text>();
+
+                unitStats[5] = (GameObject)Instantiate(unitStatsText);
+                unitStats[5].transform.SetParent(unitStatsCanvas.transform, false);
+                unitStats[5].transform.localPosition = new Vector3(unitStats[2].transform.localPosition.x + resourcePosition, -10f, unitStats[5].transform.localPosition.z);
+                ManaIncrease = unitStats[5].GetComponent<Text>();
+            }
+        }
+        ShowStatsText();
+        unitStatsCanvas.SetActive(false);
+    }
+
+    public void ShowStatsText()
+    {
+        if (!unitStatsCanvas.activeSelf) unitStatsCanvas.SetActive(true);
+
+        healthText.text = "Health: " + health.ToString();
+        armorText.text = "Armor: " + armor.ToString();
+        if (player != null && player.ID != gm.GetPlayerController.currentPlayer.ID)
+        {
+            playerText.text = "Player: Enemy";
+        }
+        else
+        {
+            playerText.text = "Player: You";
+        }
+
+        if(buildingType == BuildingType.Harvester)
+        {
+            GoldIncrease.text = "Gold: " + resourcesIncrease[0].ToString();
+            LumberIncrease.text = "Lumber: " + resourcesIncrease[1].ToString();
+            ManaIncrease.text = "Mana: " + resourcesIncrease[2].ToString();
+        }
     }
 
     void Start()
@@ -83,6 +173,10 @@ public class Building : MonoBehaviour, IBuildUnit
             {
                 transform.Translate(Vector3.forward * movementSpeed * Time.deltaTime);
             }
+        }
+        if (currentTile.hover || currentTile.selected)
+        {
+            ShowStatsText();
         }
     }
 
@@ -136,6 +230,7 @@ public class Building : MonoBehaviour, IBuildUnit
 
     public void Select()
     {
+        unitStatsCanvas.SetActive(true);
         if (currentTile.ID == gm.selectedTile.ID)
         {
             if (gm.GetPlayerController.currentPlayer.ID != currentTile.buildUnit.Player.ID)
@@ -155,6 +250,7 @@ public class Building : MonoBehaviour, IBuildUnit
 
     public void Hover()
     {
+        unitStatsCanvas.SetActive(true);
         if (!currentTile.hover)
         {
             currentTile.MouseHover();
@@ -174,6 +270,7 @@ public class Building : MonoBehaviour, IBuildUnit
 
     public void Exit()
     {
+        unitStatsCanvas.SetActive(false);
         if (gm.GetPlayerController.currentPlayer.ID == player.ID)
         {
             ColorObject(BuildUnitColor.Default);
@@ -186,6 +283,7 @@ public class Building : MonoBehaviour, IBuildUnit
 
     public void Blocked()
     {
+        unitStatsCanvas.SetActive(true);
         ColorObject(BuildUnitColor.Blocked);
     }
 
