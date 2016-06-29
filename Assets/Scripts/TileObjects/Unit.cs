@@ -150,12 +150,12 @@ public class Unit : MonoBehaviour, IBuildUnit
             float distance = Vector3.Distance(transform.position, currentPosition);
             if (distance <= distanceBoundry)
             {
-                transform.position = currentPosition;
-                moving = false;
-                gm.currentlyPerformingAction = false;
-                gm.GetPlayerController.Turn();
-                if (ani != null)
+                if (ani != null && moving)
                 {
+                    transform.position = currentPosition;
+                    moving = false;
+                    gm.currentlyPerformingAction = false;
+                    gm.GetPlayerController.Turn();
                     ani.SetBool("Moving", false);
                     ani.SetBool("Running", false);
                     if (attacking)
@@ -167,6 +167,13 @@ public class Unit : MonoBehaviour, IBuildUnit
                             attackedTile.buildUnit = null;
                         }
                     }
+                }
+                else
+                {
+                    transform.position = currentPosition;
+                    moving = false;
+                    gm.currentlyPerformingAction = false;
+                    gm.GetPlayerController.Turn();
                 }
             }
             else
