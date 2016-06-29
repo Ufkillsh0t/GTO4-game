@@ -256,6 +256,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
+                selectedTile.SelectTile();
                 Debug.Log("Het huidige tile is geselecteerd in de gamemanger maar niet in zijn script zelf!");
             }
         }

@@ -188,14 +188,17 @@ public class PlayerController : MonoBehaviour
         {
             if (t.PlayerID == currentPlayer.ID && t.buildUnit == null)
             {
-                t.ColorTile(TileColor.Spawn);
+                if (!t.selected && !t.hover)
+                {
+                    t.ColorTile(TileColor.Spawn);
+                }else if (t.hover)
+                {
+                    t.ColorTile(TileColor.Hover);
+                }
             }
             else
             {
-                if (!t.selected && !t.hover)
-                {
-                    t.ColorTile(TileColor.Default);
-                }
+                t.ColorTile(TileColor.Default);
             }
         }
     }
