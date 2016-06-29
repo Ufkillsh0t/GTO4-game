@@ -68,6 +68,7 @@ public class PlayerController : MonoBehaviour
                 ShowEnemyObjects();
                 ShowSpawnableTiles();
                 ShowCurrentPlayerObjects();
+                GameManager.GetGameManager().SetMessageText("Current player: " + currentPlayer.ID.ToString());
             }
             else
             {
@@ -83,6 +84,7 @@ public class PlayerController : MonoBehaviour
                         ShowEnemyObjects();
                         ShowSpawnableTiles();
                         ShowCurrentPlayerObjects();
+                        GameManager.GetGameManager().SetMessageText("Current player: " + currentPlayer.ID.ToString());
                         GameOver();
                         return;
                     }

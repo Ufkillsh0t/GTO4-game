@@ -20,6 +20,9 @@ public class GameManager : MonoBehaviour
     //UI
     public Canvas canvas;
     public GameObject informationPanel;
+    public GameObject messagePanel;
+    public GameObject messageTextObject;
+    private Text messageText;
     public GameObject textPreFab;
     public float textStartPosition = 20f;
     private float textPosition;
@@ -70,6 +73,23 @@ public class GameManager : MonoBehaviour
         textPosition = textStartPosition;
 
         panelText = new GameObject[amountOfResources + 1];
+
+        if (messagePanel != null)
+        {
+            if (messageTextObject != null)
+            {
+                messageText = messageTextObject.GetComponent<Text>();
+                messageText.text = "Welcome to the game";
+            }
+            else
+            {
+                messageText = messagePanel.GetComponent<Text>();
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Couldn't find the message panel");
+        }
 
         panelText[0] = (GameObject)Instantiate(textPreFab);
         panelText[0].transform.SetParent(infoPanel.transform, false);
@@ -135,7 +155,9 @@ public class GameManager : MonoBehaviour
 
     public void GameOverMenu(Player p)
     {
-        endPanelText.text = p.playerName + " has won!";
+        string gameOverMessage = p.playerName + " has won!";
+        endPanelText.text = gameOverMessage;
+        SetMessageText(gameOverMessage);
         shownEndPanel = (GameObject)Instantiate(endPanel);
         shownEndPanel.SetActive(true);
         shownEndPanel.transform.SetParent(canvas.transform, false);
@@ -217,7 +239,7 @@ public class GameManager : MonoBehaviour
         }
         else if (Input.GetMouseButtonDown(0) && !t.selected && t.highlighted && t.hover)
         {
-            if(selectedTile.buildUnit != null && t.buildUnit != null)
+            if (selectedTile.buildUnit != null && t.buildUnit != null)
             {
                 if (t.buildUnit.Player.ID != playerController.currentPlayer.ID)
                 {
@@ -225,7 +247,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Cannot attack your own player!");
+                    SetMessageText("Cannot attack your own player!");
                 }
             }
             if (selectedTile.buildUnit != null && selectedTile.buildUnit.CanMove() && t.buildUnit == null)
@@ -269,7 +291,7 @@ public class GameManager : MonoBehaviour
             else
             {
                 selectedTile.SelectTile();
-                Debug.Log("Het huidige tile is geselecteerd in de gamemanger maar niet in zijn script zelf!");
+                Debug.Log("Het huidige tile is geselecteerd in de gamemanager maar niet in zijn script zelf!");
             }
         }
         else
@@ -370,12 +392,13 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("There is already a object on that tile");
+                SetMessageText("There is already a object on that tile");
             }
         }
         else
         {
-            Debug.Log("Couldn't spawn building due too a low amount of resources or the building couldn't be initialized!");
+            SetMessageText("Couldn't spawn building due too a low amount of resources or the building couldn't be initialized! Resources required, Gold: " 
+                + building.buildingCost[0].ToString() + " Lumber: " + building.buildingCost[1].ToString() + " Mana: "  + building.buildingCost[2].ToString());
         }
     }
 
@@ -398,8 +421,19 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("There is already a object on that tile");
+                SetMessageText("There is already a object on that tile");
             }
         }
+        else
+        {
+            SetMessageText("Couldn't spawn building due too a low amount of resources or the building couldn't be initialized! Resources required, Gold: "
+                + unit.unitCost[0].ToString() + " Lumber: " + unit.unitCost[1].ToString() + " Mana: " + unit.unitCost[2].ToString());
+        }
+    }
+
+    public void SetMessageText(string text)
+    {
+        Debug.Log(text);
+        if (messageText != null) messageText.text = text;
     }
 }
