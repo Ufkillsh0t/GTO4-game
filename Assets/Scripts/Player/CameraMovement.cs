@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CamaraMovement : MonoBehaviour
+public class CameraMovement : MonoBehaviour
 {
 
     public float xSpeed = 3.5f;
@@ -15,6 +15,15 @@ public class CamaraMovement : MonoBehaviour
     public float minZ = -30f;
     public float maxZ = 40f;
 
+    public float returnSpeed = 1f;
+    public float returnSpeedMultiplier = 1.3f;
+    public float currentReturnSpeed = 1f;
+    public float distanceCheck = 0.5f;
+    public float maxSpeed = 20f;
+
+    public Vector3 newPosition;
+    private bool returning = false;
+
     // Use this for initialization
     void Start()
     {
@@ -23,6 +32,45 @@ public class CamaraMovement : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+        if (!returning)
+        {
+            CheckInput();
+        }
+        else
+        {
+            float distance = Vector3.Distance(newPosition, transform.position);
+            //Debug.Log(distance);
+            if (distance > distanceCheck || distance < -distanceCheck)
+            {
+                Quaternion cameraRot = transform.rotation;
+                if (currentReturnSpeed < maxSpeed)
+                {
+                    currentReturnSpeed *= returnSpeedMultiplier;
+                }
+                else
+                {
+                    currentReturnSpeed = maxSpeed;
+                }
+                transform.LookAt(newPosition);
+                transform.Translate(Vector3.forward * currentReturnSpeed * Time.deltaTime);
+                transform.rotation = cameraRot;
+            }
+            else
+            {
+                transform.position = newPosition;
+                returning = false;
+            }
+        }
+    }
+
+    public void SetNewPosition(Vector3 position)
+    {
+        newPosition = position;
+        returning = true;
+    }
+
+    private void CheckInput()
     {
         Vector3 newPosition = transform.position;
         if (Input.GetKey(KeyCode.A))

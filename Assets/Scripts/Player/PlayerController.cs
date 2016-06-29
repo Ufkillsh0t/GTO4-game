@@ -296,7 +296,7 @@ public class PlayerController : MonoBehaviour
     private void SetCurrentPlayerCamera()
     {
         GameManager gm = GameManager.GetGameManager();
-        gm.currentCamera.transform.position = GetCurrentPlayerCameraPosition();
+        gm.moveCamera.SetNewPosition(GetCurrentPlayerCameraPosition());
     }
 
     /// <summary>

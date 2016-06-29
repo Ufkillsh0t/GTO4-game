@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
     public static int amountOfResources = System.Enum.GetNames(typeof(ResourceType)).Length;
 
     public Camera currentCamera;
+    public CameraMovement moveCamera;
     public AudioSource audio;
 
     private PlayerController playerController;
@@ -90,6 +91,7 @@ public class GameManager : MonoBehaviour
         playerController = GameObject.FindGameObjectWithTag("PlayerController").GetComponent<PlayerController>();
 
         currentCamera = FindObjectOfType<Camera>();
+        moveCamera = currentCamera.GetComponent<CameraMovement>();
 
         for (int i = 0; i < amountOfPlayers; i++)
         {
