@@ -424,7 +424,7 @@ public class Building : MonoBehaviour, IBuildUnit
 
     public bool Defend(int damage)
     {
-        if (damage >= health)
+        if (armor == 0 && damage >= health)
         {
             player.RemoveBuilding(this);
             Destroy(gameObject);

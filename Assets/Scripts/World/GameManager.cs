@@ -397,7 +397,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            SetMessageText("Couldn't spawn building due too a low amount of resources or the building couldn't be initialized! Resources required, Gold: " 
+            SetMessageText("Couldn't spawn " + building.name + " due too a low amount of resources! Resources required, Gold: " 
                 + building.buildingCost[0].ToString() + " Lumber: " + building.buildingCost[1].ToString() + " Mana: "  + building.buildingCost[2].ToString());
         }
     }
@@ -426,7 +426,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            SetMessageText("Couldn't spawn building due too a low amount of resources or the building couldn't be initialized! Resources required, Gold: "
+            SetMessageText("Couldn't spawn " + unit.name + "due too a low amount of resources! Resources required, Gold: "
                 + unit.unitCost[0].ToString() + " Lumber: " + unit.unitCost[1].ToString() + " Mana: " + unit.unitCost[2].ToString());
         }
     }
