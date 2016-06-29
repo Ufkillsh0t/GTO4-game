@@ -26,6 +26,8 @@ public class Building : MonoBehaviour, IBuildUnit
     public Tile currentTile;
     private Vector3 currentPosition;
 
+    public GameObject rotationalObject;
+
     public Color selectedColor = Color.cyan;
     public Color hoverColor = Color.magenta;
     public Color blockedColor = Color.grey;
@@ -50,7 +52,7 @@ public class Building : MonoBehaviour, IBuildUnit
 
     void Awake()
     {
-        render = gameObject.GetComponent<Renderer>(); //Verkrijgt de renderer van dit object.
+        render = gameObject.GetComponentInChildren<Renderer>(); //Verkrijgt de renderer van dit object.
         defaultMaterialColor = render.material.color;
         gm = GameManager.GetGameManager();
         uniqueID = uniqueID + 1;
@@ -288,6 +290,10 @@ public class Building : MonoBehaviour, IBuildUnit
             if (!t.buildUnit.Defend(damage))
             {
                 t.buildUnit = null;
+                if(rotationalObject != null)
+                {
+                    rotationalObject.transform.LookAt(t.transform);
+                }
                 gm.GetPlayerController.Turn();
             }
             else
