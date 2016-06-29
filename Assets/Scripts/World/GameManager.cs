@@ -34,6 +34,8 @@ public class GameManager : MonoBehaviour
     [Range(1, 4)]
     public int amountOfPlayers;
 
+    public bool currentlyPerformingAction { get; set; }
+
     //Gold, Lumber, Mana
     public int[] startResources;
     public static int amountOfResources = System.Enum.GetNames(typeof(ResourceType)).Length;
@@ -188,15 +190,18 @@ public class GameManager : MonoBehaviour
     /// <param name="hit">Het object dat de raycast heeft geraakt.</param>
     public void RayCastMouseHit(RaycastHit hit)
     {
-        if (hit.collider.gameObject.tag == "TileObject")
+        if (!currentlyPerformingAction)
         {
-            IBuildUnit ibu = hit.collider.gameObject.GetComponent<IBuildUnit>();
-            BuildUnitSelection(ibu);
-        }
-        else if (hit.collider.gameObject.tag == "Tile")
-        {
-            Tile t = hit.collider.gameObject.GetComponent<Tile>();
-            TileSelection(t);
+            if (hit.collider.gameObject.tag == "TileObject")
+            {
+                IBuildUnit ibu = hit.collider.gameObject.GetComponent<IBuildUnit>();
+                BuildUnitSelection(ibu);
+            }
+            else if (hit.collider.gameObject.tag == "Tile")
+            {
+                Tile t = hit.collider.gameObject.GetComponent<Tile>();
+                TileSelection(t);
+            }
         }
     }
 
@@ -214,7 +219,14 @@ public class GameManager : MonoBehaviour
         {
             if(selectedTile.buildUnit != null && t.buildUnit != null)
             {
-                selectedTile.buildUnit.Attack(t);
+                if (t.buildUnit.Player.ID != playerController.currentPlayer.ID)
+                {
+                    selectedTile.buildUnit.Attack(t);
+                }
+                else
+                {
+                    Debug.Log("Cannot attack your own player!");
+                }
             }
             if (selectedTile.buildUnit != null && selectedTile.buildUnit.CanMove() && t.buildUnit == null)
             {
@@ -346,7 +358,7 @@ public class GameManager : MonoBehaviour
         //Controleer voor genoeg resources.
         Building building = buildings[buildingType].GetComponent<Building>();
 
-        if (building != null && playerController.currentPlayer.EnoughResources(building.buildingCost))
+        if (building != null && playerController.currentPlayer.EnoughResources(building.buildingCost) && selectedTile.buildUnit == null && selectedTile.PlayerID == playerController.currentPlayer.ID)
         {
             Building spawnedBuilding = selectedTile.SpawnObject(building.gameObject).GetComponent<Building>(); //test
             if (spawnedBuilding != null)
@@ -374,7 +386,7 @@ public class GameManager : MonoBehaviour
     public void AddUnit(int unitType)
     {
         Unit unit = units[unitType].GetComponent<Unit>();
-        if (units != null && playerController.currentPlayer.EnoughResources(unit.unitCost))
+        if (units != null && playerController.currentPlayer.EnoughResources(unit.unitCost) && selectedTile.buildUnit == null && selectedTile.PlayerID == playerController.currentPlayer.ID)
         {
             Unit spawnedUnit = selectedTile.SpawnObject(unit.gameObject).GetComponent<Unit>();
             if (spawnedUnit != null)

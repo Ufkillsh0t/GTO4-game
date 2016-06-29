@@ -152,6 +152,8 @@ public class Unit : MonoBehaviour, IBuildUnit
             {
                 transform.position = currentPosition;
                 moving = false;
+                gm.currentlyPerformingAction = false;
+                gm.GetPlayerController.Turn();
                 if (ani != null)
                 {
                     ani.SetBool("Moving", false);
@@ -372,9 +374,11 @@ public class Unit : MonoBehaviour, IBuildUnit
                     ani.SetBool("Running", true);
                 }
                 currentPosition = new Vector3(currentTile.transform.position.x, currentTile.transform.position.y, currentTile.transform.position.z); //y + (render.bounds.size.y / 2) voor andere objecten
+                gm.currentlyPerformingAction = true;
 
+                /*
                 if (turn)
-                    gm.GetPlayerController.Turn();
+                    gm.GetPlayerController.Turn();*/
 
                 //currentTile.gameObject = this;
                 //float y = currentTile.transform.position.y;
@@ -446,6 +450,7 @@ public class Unit : MonoBehaviour, IBuildUnit
     {
 
         attacking = true;
+        gm.currentlyPerformingAction = true;
         Tile moveTo = GetMoveToTile(t);
         return Move(moveTo, false);
     }

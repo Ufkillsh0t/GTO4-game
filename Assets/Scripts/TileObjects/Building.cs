@@ -168,6 +168,8 @@ public class Building : MonoBehaviour, IBuildUnit
             {
                 transform.position = currentPosition;
                 moving = false;
+                gm.currentlyPerformingAction = false;
+                gm.GetPlayerController.Turn();
             }
             else
             {
@@ -358,10 +360,11 @@ public class Building : MonoBehaviour, IBuildUnit
                 currentTile = t;
                 currentTile.MouseClick();
                 moving = true;
-                gm.GetPlayerController.Turn();
 
                 if (turn)
                     LookAt(t);
+
+                gm.currentlyPerformingAction = true;
                 //currentTile.gameObject = this;
                 float y = currentTile.transform.position.y;
                 currentPosition = new Vector3(currentTile.transform.position.x, y + (render.bounds.size.y / 2), currentTile.transform.position.z); //rotatie nog goed doen voor movement.

@@ -75,7 +75,7 @@ public class Tile : MonoBehaviour
     public void MouseExit()
     {
         Debug.Log("Mouse exit");
-        if (!selected && hover)
+        if (!selected && !highlighted && hover)
         {
             if (PlayerID == 0 || PlayerID != gm.GetPlayerController.currentPlayer.ID)
             {
@@ -90,7 +90,10 @@ public class Tile : MonoBehaviour
             }
             if (buildUnit != null)
             {
-                HighLightNearbyTiles(buildUnit.GetRange(), buildUnit.GetRangeType(), false);
+                if (buildUnit.Player.ID == gm.GetPlayerController.currentPlayer.ID)
+                {
+                    HighLightNearbyTiles(buildUnit.GetRange(), buildUnit.GetRangeType(), false);
+                }
                 buildUnit.Exit();
                 ColorTile(TileColor.Default);
                 /*

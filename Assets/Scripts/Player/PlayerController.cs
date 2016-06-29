@@ -51,7 +51,6 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void SwitchPlayers()
     {
-        //StartCoroutine(WaitForSeconds(waitingTimeBetweenTurn));
         SetCurrentPlayerCameraPosition();
         if (GameManager.GetGameManager().selectedTile != null)
         {
@@ -328,8 +327,9 @@ public class PlayerController : MonoBehaviour
         return currentPlayer.cameraPosition;
     }
 
-    private IEnumerator WaitForSeconds(float seconds)
+    private IEnumerator SwitchPlayerWait(float seconds)
     {
         yield return new WaitForSeconds(seconds);
+        SwitchPlayers();
     }
 }
