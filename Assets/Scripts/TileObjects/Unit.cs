@@ -173,6 +173,7 @@ public class Unit : MonoBehaviour, IBuildUnit
                 if (ani != null && moving)
                 {
                     transform.position = currentPosition;
+                    //transform.LookAt(attackedTile.transform);
                     moving = false;
                     gm.currentlyPerformingAction = false;
                     gm.GetPlayerController.Turn();
@@ -191,6 +192,7 @@ public class Unit : MonoBehaviour, IBuildUnit
                 else if(moving)
                 {
                     transform.position = currentPosition;
+                    //transform.LookAt(attackedTile.transform);
                     moving = false;
                     gm.currentlyPerformingAction = false;
                     gm.GetPlayerController.Turn();
