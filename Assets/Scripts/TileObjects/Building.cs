@@ -86,6 +86,7 @@ public class Building : MonoBehaviour, IBuildUnit
         else
         {
             unitStatsCanvas = (GameObject)Instantiate(unitStatsCanvas);
+            Vector3 oldScale = unitStatsCanvas.transform.lossyScale;
             unitStatsCanvas.transform.SetParent(transform, false);
 
             Debug.Log(unitStatsCanvas.transform.lossyScale.x + " | " + transform.lossyScale.x);
@@ -95,17 +96,17 @@ public class Building : MonoBehaviour, IBuildUnit
             unitStatsCanvas.transform.localPosition = new Vector3(unitStatsCanvas.transform.localPosition.x,
                 (unitStatsCanvas.transform.localPosition.y / transform.lossyScale.y), unitStatsCanvas.transform.localPosition.z);
 
-                /*
-            Canvas canvas = unitStatsCanvas.GetComponent<Canvas>());
-            canvas.transform.lossyScale
+                
+            Canvas canvas = unitStatsCanvas.GetComponent<Canvas>();
             //if(unitStatsCanvas.transform)
-            float newX = canvas.transform.lossyScale.x / transform.localScale.x / transform.lossyScale.x;
-            float newY = canvas.transform.lossyScale.y / transform.localScale.y / transform.lossyScale.y;
-            float newZ = canvas.transform.lossyScale.z / transform.localScale.z / transform.lossyScale.z;
+            float newX = oldScale.x / transform.localScale.x;
+            float newY = oldScale.y / transform.localScale.y;
+            float newZ = oldScale.z / transform.localScale.z;
 
-            Debug.Log(newX + " " + newY + " " + newZ);
+            Debug.Log(newX + " " + newY + " " + newZ + " " + oldScale.x + "  " + oldScale.y + " " + oldScale.z); //+ transform.lossyScale.x + "  " + transform.lossyScale.y + " " + transform.lossyScale.z
 
-            //Vector3 newScale = new Vector3(newX, newY, newZ);
+            Vector3 newScale = new Vector3(newX, newY, newZ);
+            canvas.transform.localScale = newScale;
 
             /*
             unitStatsCanvas.transform.localScale = newScale;

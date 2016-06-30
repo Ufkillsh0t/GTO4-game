@@ -90,7 +90,27 @@ public class Unit : MonoBehaviour, IBuildUnit
         else
         {
             unitStatsCanvas = (GameObject)Instantiate(unitStatsCanvas);
+            Vector3 oldScale = unitStatsCanvas.transform.lossyScale;
             unitStatsCanvas.transform.SetParent(transform, false);
+
+            Debug.Log(unitStatsCanvas.transform.lossyScale.x + " | " + transform.lossyScale.x);
+            Debug.Log(unitStatsCanvas.transform.lossyScale.y + " | " + transform.lossyScale.y);
+            Debug.Log(unitStatsCanvas.transform.lossyScale.z + " | " + transform.lossyScale.z);
+
+            unitStatsCanvas.transform.localPosition = new Vector3(unitStatsCanvas.transform.localPosition.x,
+                (unitStatsCanvas.transform.localPosition.y / transform.lossyScale.y), unitStatsCanvas.transform.localPosition.z);
+
+
+            Canvas canvas = unitStatsCanvas.GetComponent<Canvas>();
+            //if(unitStatsCanvas.transform)
+            float newX = oldScale.x / transform.localScale.x;
+            float newY = oldScale.y / transform.localScale.y;
+            float newZ = oldScale.z / transform.localScale.z;
+
+            Debug.Log(newX + " " + newY + " " + newZ + " " + oldScale.x + "  " + oldScale.y + " " + oldScale.z); //+ transform.lossyScale.x + "  " + transform.lossyScale.y + " " + transform.lossyScale.z
+
+            Vector3 newScale = new Vector3(newX, newY, newZ);
+            canvas.transform.localScale = newScale;
         }
         if (unitStatsText != null)
         {
