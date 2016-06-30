@@ -380,25 +380,32 @@ public class GameManager : MonoBehaviour
         //Controleer voor genoeg resources.
         Building building = buildings[buildingType].GetComponent<Building>();
 
-        if (building != null && playerController.currentPlayer.EnoughResources(building.buildingCost) && selectedTile.buildUnit == null && selectedTile.PlayerID == playerController.currentPlayer.ID)
+        if (building != null && selectedTile.buildUnit == null && selectedTile.PlayerID == playerController.currentPlayer.ID)
         {
-            Building spawnedBuilding = selectedTile.SpawnObject(building.gameObject).GetComponent<Building>(); //test
-            if (spawnedBuilding != null)
+            if (playerController.currentPlayer.EnoughResources(building.buildingCost))
             {
-                spawnedBuilding.OnSpawn(selectedTile, playerController.currentPlayer);
-                playerController.currentPlayer.AddBuilding(spawnedBuilding);
-                selectedTile.MouseClick();
-                playerController.Turn();
+                Building spawnedBuilding = selectedTile.SpawnObject(building.gameObject).GetComponent<Building>(); //test
+                if (spawnedBuilding != null)
+                {
+                    spawnedBuilding.OnSpawn(selectedTile, playerController.currentPlayer);
+                    playerController.currentPlayer.AddBuilding(spawnedBuilding);
+                    selectedTile.MouseClick();
+                    playerController.Turn();
+                }
+                else
+                {
+                    SetMessageText("There is already a object on that tile");
+                }
             }
             else
             {
-                SetMessageText("There is already a object on that tile");
+                SetMessageText("Couldn't spawn " + building.name + " due too a low amount of resources! Resources required, Gold: "
+                    + building.buildingCost[0].ToString() + " Lumber: " + building.buildingCost[1].ToString() + " Mana: " + building.buildingCost[2].ToString());
             }
         }
         else
         {
-            SetMessageText("Couldn't spawn " + building.name + " due too a low amount of resources! Resources required, Gold: " 
-                + building.buildingCost[0].ToString() + " Lumber: " + building.buildingCost[1].ToString() + " Mana: "  + building.buildingCost[2].ToString());
+            SetMessageText("Couldn't spawn " + building.name + ", are you placing it on a spawn tile?");
         }
     }
 
@@ -409,25 +416,32 @@ public class GameManager : MonoBehaviour
     public void AddUnit(int unitType)
     {
         Unit unit = units[unitType].GetComponent<Unit>();
-        if (units != null && playerController.currentPlayer.EnoughResources(unit.unitCost) && selectedTile.buildUnit == null && selectedTile.PlayerID == playerController.currentPlayer.ID)
+        if (units != null && selectedTile.buildUnit == null && selectedTile.PlayerID == playerController.currentPlayer.ID)
         {
-            Unit spawnedUnit = selectedTile.SpawnObject(unit.gameObject).GetComponent<Unit>();
-            if (spawnedUnit != null)
+            if (playerController.currentPlayer.EnoughResources(unit.unitCost))
             {
-                spawnedUnit.OnSpawn(selectedTile, playerController.currentPlayer);
-                playerController.currentPlayer.AddUnit(spawnedUnit);
-                selectedTile.MouseClick();
-                playerController.Turn();
+                Unit spawnedUnit = selectedTile.SpawnObject(unit.gameObject).GetComponent<Unit>();
+                if (spawnedUnit != null)
+                {
+                    spawnedUnit.OnSpawn(selectedTile, playerController.currentPlayer);
+                    playerController.currentPlayer.AddUnit(spawnedUnit);
+                    selectedTile.MouseClick();
+                    playerController.Turn();
+                }
+                else
+                {
+                    SetMessageText("There is already a object on that tile");
+                }
             }
             else
             {
-                SetMessageText("There is already a object on that tile");
+                SetMessageText("Couldn't spawn " + unit.name + "due too a low amount of resources! Resources required, Gold: "
+                 + unit.unitCost[0].ToString() + " Lumber: " + unit.unitCost[1].ToString() + " Mana: " + unit.unitCost[2].ToString());
             }
         }
         else
         {
-            SetMessageText("Couldn't spawn " + unit.name + "due too a low amount of resources! Resources required, Gold: "
-                + unit.unitCost[0].ToString() + " Lumber: " + unit.unitCost[1].ToString() + " Mana: " + unit.unitCost[2].ToString());
+            SetMessageText("Couldn't spawn " + unit.name + ", are you placing it on a spawn tile?");
         }
     }
 
