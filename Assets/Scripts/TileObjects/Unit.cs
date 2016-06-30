@@ -188,7 +188,7 @@ public class Unit : MonoBehaviour, IBuildUnit
                         }
                     }
                 }
-                else if(!moving)
+                else if(moving)
                 {
                     transform.position = currentPosition;
                     moving = false;
