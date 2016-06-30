@@ -87,6 +87,30 @@ public class Building : MonoBehaviour, IBuildUnit
         {
             unitStatsCanvas = (GameObject)Instantiate(unitStatsCanvas);
             unitStatsCanvas.transform.SetParent(transform, false);
+
+            Debug.Log(unitStatsCanvas.transform.lossyScale.x + " | " + transform.lossyScale.x);
+            Debug.Log(unitStatsCanvas.transform.lossyScale.y + " | " + transform.lossyScale.y);
+            Debug.Log(unitStatsCanvas.transform.lossyScale.z + " | " + transform.lossyScale.z);
+
+            unitStatsCanvas.transform.localPosition = new Vector3(unitStatsCanvas.transform.localPosition.x,
+                (unitStatsCanvas.transform.localPosition.y / transform.lossyScale.y), unitStatsCanvas.transform.localPosition.z);
+
+                /*
+            Canvas canvas = unitStatsCanvas.GetComponent<Canvas>());
+            canvas.transform.lossyScale
+            //if(unitStatsCanvas.transform)
+            float newX = canvas.transform.lossyScale.x / transform.localScale.x / transform.lossyScale.x;
+            float newY = canvas.transform.lossyScale.y / transform.localScale.y / transform.lossyScale.y;
+            float newZ = canvas.transform.lossyScale.z / transform.localScale.z / transform.lossyScale.z;
+
+            Debug.Log(newX + " " + newY + " " + newZ);
+
+            //Vector3 newScale = new Vector3(newX, newY, newZ);
+
+            /*
+            unitStatsCanvas.transform.localScale = newScale;
+            float newY = (unitStatsCanvas.transform.localPosition.y / unitStatsCanvas.transform.lossyScale.y);
+            unitStatsCanvas.transform.localPosition = new Vector3(0, newY, 0); */
         }
         if (unitStatsText != null)
         {
